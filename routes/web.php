@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+    
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,7 +17,7 @@ Route::get('/', function () {
     return view('commons.index');
 })->name('index');
 
-Route::prefix('supplier')->namespace('supplier')->name('supplier.')->group(function () {
+Route::prefix('suppliers')->namespace('suppliers')->name('supplier.')->group(function () {
     Route::get('/invoice', function () {
         return view('suppliers.invoice');
     })->name('invoice');
@@ -39,24 +39,46 @@ Route::prefix('supplier')->namespace('supplier')->name('supplier.')->group(funct
     })->name('debt');
 });
 
-Route::prefix('order')->namespace('order')->name('order.')->group(function () {
-    Route::get('/invoice', function () {
-        return view('suppliers.invoice');
-    })->name('invoice');
+Route::prefix('orders')->namespace('orders')->name('order.')->group(function () {
+    Route::get('/bill', function () {
+        return view('orders.bill');
+    })->name('bill');
 
-    Route::get('/payments', function () {
-        return view('suppliers.payments');
-    })->name('payments');
+    Route::get('/order', function () {
+        return view('orders.order');
+    })->name('order');
 
-    Route::get('/management', function () {
-        return view('suppliers.management');
-    })->name('management');
+    Route::get('/order-detail', function () {
+        return view('orders.order_detail');
+    })->name('order-detail');
 
-    Route::get('/payback', function () {
-        return view('suppliers.payback');
-    })->name('payback');
+    Route::get('/ledger', function () {
+        return view('orders.ledger');
+    })->name('ledger');
 
-    Route::get('/supplier-debt', function () {
-        return view('suppliers.debt');
-    })->name('debt');
+    Route::get('/web-order', function () {
+        return view('orders.web_order');
+    })->name('web-order');
+
+    Route::get('/payment-customers', function () {
+        return view('orders.payment_customers');
+    })->name('payment-customers');
+
+    Route::get('/customer-debt', function () {
+        return view('orders.customer_debt');
+    })->name('customer-debt');
+});
+
+Route::prefix('warehouses')->namespace('warehouses')->name('warehouses.')->group(function () {
+    Route::get('/imported', function () {
+        return view('warehouses.imported');
+    })->name('imported');
+
+    Route::get('/exported', function () {
+        return view('warehouses.exported');
+    })->name('exported');
+
+    Route::get('/inventory', function () {
+        return view('warehouses.inventory');
+    })->name('inventory');
 });

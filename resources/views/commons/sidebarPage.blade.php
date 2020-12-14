@@ -41,11 +41,11 @@
                         <p>Order</p>
                     </a>
                     <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="../components/hoaDon.php">Hoá đơn</a></li>
-                        <li><a class="dropdown-item" href="../components/soCai.php">Sổ cái</a></li>
-                        <li><a class="dropdown-item" href="../components/webOrder.php">Web order</a></li>
-                        <li><a class="dropdown-item" href="../components/tienKhachThanhToan.php">Tiền khách thanh toán</a></li>
-                        <li><a class="dropdown-item" href="../components/congNoKhachHang.php">Công nợ khách hàng</a></li>
+                        <li><a class="dropdown-item" href="{{route('order.bill')}}">Hoá đơn</a></li>
+                        <li><a class="dropdown-item" href="{{route('order.ledger')}}">Sổ cái</a></li>
+                        <li><a class="dropdown-item" href="{{route('order.web-order')}}">Web order</a></li>
+                        <li><a class="dropdown-item" href="{{route('order.payment-customers')}}">Tiền khách thanh toán</a></li>
+                        <li><a class="dropdown-item" href="{{route('order.customer-debt')}}">Công nợ khách hàng</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -55,9 +55,9 @@
                         <p>Warehouses</p>
                     </a>
                     <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="../components/hangNhap.php">Hàng Nhập </a></li>
-                        <li><a class="dropdown-item" href="../components/hangXuat.php">Hàng xuất</a></li>
-                        <li><a class="dropdown-item" href="../components/hangTonKho.php">Tồn kho</a></li>
+                        <li><a class="dropdown-item" href="{{route('warehouses.imported')}}">Hàng Nhập </a></li>
+                        <li><a class="dropdown-item" href="{{route('warehouses.exported')}}">Hàng xuất</a></li>
+                        <li><a class="dropdown-item" href="{{route('warehouses.inventory')}}">Tồn kho</a></li>
 
                     </ul>
                 </li>
