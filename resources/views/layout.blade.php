@@ -11,7 +11,7 @@
 	<script>
 		WebFont.load({
 			google: {"families":["Lato:300,400,700,900"]},
-			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['/assets/css/fonts.min.css']},
+			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ["{{asset('/assets/css/fonts.min.css')}}"]},
 			active: function() {
 				sessionStorage.fonts = true;
 			}
@@ -19,9 +19,16 @@
 	</script>
 
 	<link rel="stylesheet" href="{{asset('/assets/css/bootstrap.min.css')}}">
-	<link rel="stylesheet" href="{{asset('/assets/css/atlantis.min.css')}}">
+    <link rel="stylesheet" href="{{asset('/assets/css/atlantis.min.css')}}">
+    {{-- <link src="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"  type='text/css'>
+
+        <link rel='stylesheet' id='fontawesome-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' type='text/css' media='all' /> --}}
 	<link href="{{asset('assets/styles.css')}}" rel="stylesheet" />
-	<link href="{{asset('assets/prism.css')}}" rel="stylesheet" />
+    <link href="{{asset('assets/prism.css')}}" rel="stylesheet" />
+    <link href="{{asset('/assets/css/iconResource.css')}}" rel="stylesheet" type="text/css" />
+        <!-- https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css -->
+        <link rel="stylesheet" href="{{asset('/assets/css/progress.css')}}">
 </head>
 <body>
     @include('commons.headerPage')
