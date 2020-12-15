@@ -20,10 +20,7 @@
 
 	<link rel="stylesheet" href="{{asset('/assets/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('/assets/css/atlantis.min.css')}}">
-    {{-- <link src="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"  type='text/css'>
-
-        <link rel='stylesheet' id='fontawesome-css' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' type='text/css' media='all' /> --}}
+    <link rel="stylesheet" href="{{asset('assets/css/atlantis.css')}}">
 	<link href="{{asset('assets/styles.css')}}" rel="stylesheet" />
     <link href="{{asset('assets/prism.css')}}" rel="stylesheet" />
     <link href="{{asset('/assets/css/iconResource.css')}}" rel="stylesheet" type="text/css" />

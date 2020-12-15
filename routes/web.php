@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-    
+use App\Http\Controllers\Suppliers\InvoiceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,9 +18,9 @@ Route::get('/', function () {
 })->name('index');
 
 Route::prefix('suppliers')->namespace('suppliers')->name('supplier.')->group(function () {
-    Route::get('/invoice', function () {
-        return view('suppliers.invoice');
-    })->name('invoice');
+    Route::get('/invoice', [InvoiceController::class, 'list'])->name('invoice');
+
+    Route::post('/invoice', [InvoiceController::class, 'create'])->name('postInvoice');
 
     Route::get('/payments', function () {
         return view('suppliers.payments');

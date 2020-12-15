@@ -4220,9 +4220,12 @@ label.error {
   .alert-warning [data-notify="icon"]:before {
     background: #FFAD46; }
 
-.alert-danger {
-  border-left: 4px solid #F25961; }
-  .alert-danger [data-notify="icon"]:before {
+.alert-danger-custom {
+  font-size: 14px;
+  font-weight: bold;
+  color: #F25961;
+}
+  .alert-danger-custom [data-notify="icon"]:before {
     background: #F25961; }
 
 /*    Button    */
