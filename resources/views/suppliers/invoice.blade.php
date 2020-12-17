@@ -49,7 +49,6 @@
                             <div class="col-md-1 mb-2">
                                 <label for="validationDefault01">Nhà cung cấp</label>
                                 <select type="text" class="form-control" name="unamesupplier" id="unamesupplier">
-                                    <option value="" selected disabled>Please select</option>
                                     @foreach ($data['suppliers'] as $item)
                                     <option value="{{$item->code_name}}">{{$item->name}}</option>
                                     @endforeach
@@ -225,7 +224,7 @@
                                     <th>Nhà cung cấp</th>
                                     <th>Web order</th>
                                     <th>Jancode</th>
-                                    <th>Tên sản phẩm</th>
+                                    <th>Name</th>
                                     <th>Số lượng</th>
                                     <th>Đơn giá</th>
                                     <th>Tổng tiền hoá đơn</th>
@@ -235,10 +234,10 @@
                             </thead>
 
                             <tbody id="myTable">
-                                @foreach ($data['invoices'] as $item => $value)
+                                @foreach ($data['invoices'] as $invoice => $value)
                                 <tr>
                                     <th>{{$value->DateInvoice}}</th>
-                                    <td data-toggle="modal" data-target="#myModal{{$value->Id}}">{{$value->Invoice}}
+                                    <td data-id="{{$value->Invoice}}" class="view_transaction">{{$value->Invoice}}
                                     </td>
                                     <td>{{$value->TypeInvoice}}</td>
                                     <td>{{$value->Supplier}}</td>
@@ -248,11 +247,11 @@
                                     <td>@foreach ($value['detail'] as $item)
                                         {{$item->Jancode}}
                                         @endforeach</td>
-                                    <td>
-                                        @foreach ($value['detail'] as $item => $product)
-                                        {{$product['product']->name}}
-                                        @endforeach
-                                    </td>
+                                        <td>
+                                             @foreach ($value['detail'] as $name)
+                                                 {{$name->product->name}}
+                                             @endforeach
+                                        </td>
                                     <td>@foreach ($value['detail'] as $item)
                                         {{$item->Quantity}}
                                         @endforeach</td>
@@ -266,208 +265,18 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        @foreach ($data['invoices'] as $item => $value)
-                        <div class="modal" id="myModal{{$value->Id}}">
-                            <div class="modal-dialog modal-lg" style="min-width: 80%;">
-                                <div class="modal-content">
+                        <div class="modal" id="modalDetail">
+                            <div class="modal-dialog modal-lg" style="min-width: 80%;" >
+                              <div class="modal-content">
 
-                                    <!-- Modal Header -->
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Chi tiết hoá đơn </h4>
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    </div>
+                                <!-- Modal Header -->
 
-                                    <!-- Modal body -->
-                                    <div class="modal-body">
-                                        <div class="form-row">
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Số hoá đơn</label>
-                                                <input type="text" class="form-control" id="numBill"
-                                                    value="{{$value->Invoice}}" placeholder="Số hóa đơn">
-                                            </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Ngày hóa đơn</label>
-                                                <input class="form-control" value="{{$value->DateInvoice}}" type="date"
-                                                    id="dateBill">
-                                            </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Tổng tiền hoá đơn</label>
-                                                <input type="text" class="form-control" value="{{$value->TotalPrice}}"
-                                                    id="sumB" placeholder="Tổng tiền hóa đơn">
-                                            </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Chi phí mua hàng </label>
-                                                <input type="text" class="form-control"
-                                                    value="{{$value->PurchaseCosts}}" id="validationDefault01"
-                                                    placeholder="Chi phí mua hàng">
-                                            </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Thuế chi phí</label>
-                                                <select type="text" class="form-control" id="validationDefault01"
-                                                    aria-placeholder="Thuế chi phí">
-                                                    <option value="8"
-                                                        {{$value->TaxPurchaseCosts == 8 ? 'selected': ''}}>8%</option>
-                                                    <option value="10"
-                                                        {{$value->TaxPurchaseCosts == 10 ? 'selected': ''}}>10%</option>
-                                                    <option value="12"
-                                                        {{$value->TaxPurchaseCosts == 12 ? 'selected': ''}}>12%</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Nhà cung cấp</label>
-                                                <select type="text" class="form-control" id="validationDefault01"
-                                                    aria-placeholder="Nhà cung cấp">
-                                                    @foreach ($data['suppliers'] as $item => $supplier)
-                                                    <option value="{{$supplier->code_name}}"
-                                                        {{$value->Supplier == $supplier->code_name ? 'selected':''}}>
-                                                        {{$supplier->name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
 
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Hạn thanh toán</label>
-                                                <input class="form-control" value="{{$value->StockDate}}" type="date"
-                                                    id="example-date-input">
-                                            </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Ngày giao hàng</label>
-                                                <input class="form-control" type="date" value="{{$value->PaymentDate}}"
-                                                    id="example-date-input">
-                                            </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Mã Tracking</label>
-                                                <input type="text" class="form-control"
-                                                    value="{{$value->TrackingNumber}}" id="validationDefault01"
-                                                    placeholder="Mã Tracking">
-                                            </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Hiện trạng hoá đơn</label>
-                                                <select type="text" class="form-control" id="validationDefault01"
-                                                    required>
-                                                    <option value="Paid"
-                                                        {{$value->InvoiceStatus == 'Paid' ? 'selected':''}}>完</option>
-                                                    <option value="Unpaid"
-                                                        {{$value->InvoiceStatus == 'Unpaid' ? 'selected':''}}>未</option>
-                                                    <option value="Cancel"
-                                                        {{$value->InvoiceStatus == 'Cancel' ? 'selected':''}}>消</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Loại hoá đơn</label>
-                                                <select type="text" class="form-control" id="validationDefault01"
-                                                    required>
-                                                    <option value="Muahang"
-                                                        {{$value->TypeInvoice == 'Muahang' ? 'selected':''}}>購入</option>
-                                                    <option value="TTH"
-                                                        {{$value->TypeInvoice == 'TTH' ? 'selected':''}}>代行支払</option>
-                                                    <option value="Kinhphi"
-                                                        {{$value->TypeInvoice == 'Kinhphi' ? 'selected':''}}>経費</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Nhân viên</label>
-                                                <select id="Buyer" class="form-control" name="Buyer" required="">
-                                                    <option value="倉山" {{$value->Buyer == '倉山' ? 'selected':''}}>倉山
-                                                    </option>
-                                                    <option value="ファム" {{$value->Buyer == 'ファム' ? 'selected':''}}>ファム
-                                                    </option>
-                                                    <option value="ダン" {{$value->Buyer == 'ダン' ? 'selected':''}}>ダン
-                                                    </option>
-                                                    <option value="タオ" {{$value->Buyer == 'タオ' ? 'selected':''}}>タオ
-                                                    </option>
-                                                    <option value="アン" {{$value->Buyer == 'アン' ? 'selected':''}}>アン
-                                                    </option>
-                                                </select>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <table id="example" class="table table-bordered table-striped"
-                                        style="margin-top: 1%;">
-                                        <thead>
-                                            <tr>
-                                                <th>Web order</th>
-                                                <th>JanCode</th>
-                                                <th>Tên sản phẩm</th>
-                                                <th>Số lượng</th>
-                                                <th>Đơn giá</th>
-                                                <th>%Thuế</th>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody id="myTable">
-                                            @if ($value)
-                                            @foreach ($value['detail'] as $item => $value)
-                                            <tr>
-                                                <td>
-                                                    <div>
-                                                        <input type="text" class="form-control"
-                                                            id="Weborder_4580525435045" value="{{$value->Codeorder}}"
-                                                            required onchange="UpdateInfoModalWO()">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div>
-                                                        <input type="text" class="form-control"
-                                                            id="Jancode_4580525435045" value="{{$value->Jancode}}"
-                                                            required onchange="UpdateInfoModalJC()">
-                                                    </div>
-                                                </td>
-                                                <td>{{$value['product']->name}}</td>
-                                                <td>
-                                                    <div>
-                                                        <input type="text" class="form-control"
-                                                            id="Quantity_4580525435045" value="{{$value->Quantity}}"
-                                                            required onchange="UpdateInfoModalQuantity()">
-                                                    </div>
-                                                </td>
-                                                </td>
-                                                <td>
-                                                    <div>
-                                                        <input type="text" class="form-control" id="Price_4580525435045"
-                                                            value="{{$value->Price}}" required
-                                                            onchange="UpdateInfoModalDG()">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-group">
-                                                        <select class="form-control" style="width: 100%;" id="selected"
-                                                            onchange="UpdateInfoModalSelected()">
-                                                            <option value="8"
-                                                                {{$value->PriceTax == 8 ? 'selected': ''}}>8%</option>
-                                                            <option value="10"
-                                                                {{$value->PriceTax == 10 ? 'selected': ''}}>10%</option>
-                                                            <option value="12"
-                                                                {{$value->PriceTax == 12 ? 'selected': ''}}>12%</option>
-
-                                                        </select>
-                                                    </div>
-                                                </td>
-
-                                            </tr>
-                                            @endforeach
-                                            @endif
-                                        </tbody>
-                                    </table>
-
-                                    <!-- Modal footer -->
-                                    <div class="modal-footer">
-                                        <div style="float: right;">
-                                            <!-- <button type="submit" class="btn btn-primary" >Load Item</button> -->
-                                            <button type="submit" class="btn btn-danger">View Note</button>
-                                            <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-
-                                </div>
+                              </div>
                             </div>
-                        </div>
+                          </div>
+                      </div>
                     </div>
-                    @endforeach
                 </div>
             </div>
         </div>
@@ -480,6 +289,68 @@
     var HTML = "";
     var JanCount = 1;
     var TotalPrice = 0;
+
+    // function DetailBillUpdate() {
+    //     var numberBillUpdate = $("#numBillUpdate").val();
+    //     var dateBillUpdate = $("#dateBillUpdate").val();
+    //     var sumBillUpdate = $("#sumBillUpdate").val().replace(",", "");
+    //     var totalPriceBillUpdate = $("#totalPriceBillUpdate").val().replace(",", "");
+    //     var taxBillUpdate = $("#taxBillUpdate").val();
+    //     var supplierBillUpdate = $("#supplierBillUpdate").val();
+    //     var PaymentDateBillUpdate = $("#PaymentDateBillUpdate").val();
+    //     var StockDateBillUpdate = $("#StockDateBillUpdate").val();
+    //     var TrackingNumberBillUpdate = $("#TrackingNumberBillUpdate").val();
+    //     var PaidInvoiceBillUpdate = $("#PaidInvoiceBillUpdate").val();
+    //     var TypehoadonBillUpdate = $("#TypehoadonBillUpdate").val();
+    //     var BuyerBillUpdate = $("#BuyerBillUpdate").val();
+    //         $.ajax({
+    //                 headers: {
+    //                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //                 },
+    //                 type: 'POST',
+    //                 url: "invoice/" + "/" + numberBillUpdate,
+    //                 data: {
+    //                     numberBillUpdate: numberBillUpdate,
+    //                     dateBillUpdate: dateBillUpdate,
+    //                     sumBillUpdate: sumBillUpdate,
+    //                     totalPriceBillUpdate: totalPriceBillUpdate,
+    //                     taxBillUpdate: taxBillUpdate,
+    //                     supplierBillUpdate: supplierBillUpdate,
+    //                     PaymentDateBillUpdate: PaymentDateBillUpdate,
+    //                     StockDateBillUpdate: StockDateBillUpdate,
+    //                     TrackingNumberBillUpdate: TrackingNumberBillUpdate,
+    //                     PaidInvoiceBillUpdate: PaidInvoiceBillUpdate,
+    //                     TypehoadonBillUpdate
+    //                 },
+    //                 success: function (response) {
+    //                     if (response == 1) {
+    //                         location.reload();
+    //                     }
+    //                     if (response == 2) {
+    //                         location.reload();
+    //                     }
+    //                 }
+    //             });
+    // }
+
+    $(document).ready(function() {
+                                $('.view_transaction').click(function() {
+                                    const id = $(this).data('id');
+                                    $.ajax({
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                                                .attr('content')
+                                        },
+                                        type: 'GET',
+                                        url: "invoice" + '/' + id,
+
+                                        success: function(data) {
+                                            $('#modalDetail').modal('show');
+                                            $('.modal-content').html('').append(data);
+                                        }
+                                    });
+                                });
+                            });
 
     function Insert_Invoice() {
         var Invoice = $("#uinvoice").val();
@@ -538,11 +409,6 @@
                             "class='inputs'  onkeyup='search_jancode()' list='ujan_wh" + JanCount + "'" +
                             " required>" +
                             "<datalist id='ujan_wh" + JanCount + "'" + "></datalist>" +
-                            "</div>" +
-                            "<div class='col-md-2'>" +
-                            "<label>Name<span class='require'>*</span></label>" +
-                            "<input class='form-control' type='text' data-type='currency' id='name_product_" +
-                            JanCount + "'" + "required>" +
                             "</div>" +
                             "<div class='col-md-1'>" +
                             "<label>Quantity<span class='require'>*</span></label>" +
@@ -648,7 +514,6 @@
                     data: {
                         CodeorderItem: CodeorderItem,
                         Jancode: Jancode,
-                        NameProduct: NameProduct,
                         Quantity: Quantity,
                         Price: Price,
                         Invoice: Invoice,
@@ -681,39 +546,37 @@
             "<fieldset>" +
             "<div class='form-row' style='margin-left: 2%; margin-top: 1%; margin-right: 1%; margin-bottom: unset;'>" +
             "<div class='col-md-2 mb-2' >" +
-            "<label>Weborder<span class='require'>*</span></label>" +
-            "<input class='form-control' type='text' id='codeorder_" + JanCount + "'" + "list='listcodeorder" +
-            JanCount + "'" + " onkeyup='search_ordercode(this)' required>" +
-            "<datalist id='listcodeorder" + JanCount + "'" + "></datalist>" +
-            "</div>" +
-            "<div class='col-md-2'>" +
-            "<label>Jancode<span class='require'>*</span></label>" +
-            "<input class='form-control' type='text' id='Jancode_" + JanCount + "'" +
-            "class='inputs'  onkeyup='search_jancode()' list='ujan_wh" + JanCount + "'" + " required>" +
-            "<datalist id='ujan_wh" + JanCount + "'" + "></datalist>" +
-            "</div>" +
-            "<div class='col-md-2'>" +
-                            "<label>Name<span class='require'>*</span></label>" +
-                            "<input class='form-control' type='text' data-type='currency' id='name_product_" +
+                            "<label>Weborder<span class='require'>*</span></label>" +
+                            "<input class='form-control' type='text' id='codeorder_" + JanCount + "'" +
+                            "list='listcodeorder" + JanCount + "'" +
+                            " onkeyup='search_ordercode(this)' required>" +
+                            "<datalist id='listcodeorder" + JanCount + "'" + "></datalist>" +
+                            "</div>" +
+                            "<div class='col-md-2'>" +
+                            "<label>Jancode<span class='require'>*</span></label>" +
+                            "<input class='form-control' type='text' id='Jancode_" + JanCount + "'" +
+                            "class='inputs'  onkeyup='search_jancode()' list='ujan_wh" + JanCount + "'" +
+                            " required>" +
+                            "<datalist id='ujan_wh" + JanCount + "'" + "></datalist>" +
+                            "</div>" +
+                            "<div class='col-md-1'>" +
+                            "<label>Quantity<span class='require'>*</span></label>" +
+                            "<input class='form-control' type='text' data-type='currency' id='so_luong_" +
                             JanCount + "'" + "required>" +
                             "</div>" +
-            "<div class='col-md-1'>" +
-            "<label>Quantity<span class='require'>*</span></label>" +
-            "<input class='form-control' type='text' data-type='currency' id='so_luong_" + JanCount + "'" +
-            "required>" +
-            "</div>" +
-            "<div class='col-md-1'>" +
-            "<label>Price<span class='require'>*</span></label>" +
-            "<input class='form-control' type='text' data-type='currency' id='don_gia_" + JanCount + "'" + "required>" +
-            "</div>" +
-            "<div class='col-md-1'>" +
-            "<label>Tax<span class='require'>*</span></label>" +
-            "<select class='form-control' id='thue_jancode_" + JanCount + "'" + "required>" +
-            "   <option value='10'>10%</option>" +
-            "<option value='8'>8%</option>" +
-            "</select>" +
-            "</div>" +
-            "<div class='col-md-2'>" +
+                            "<div class='col-md-1'>" +
+                            "<label>Price<span class='require'>*</span></label>" +
+                            "<input class='form-control' type='text' data-type='currency' id='don_gia_" +
+                            JanCount + "'" + "required>" +
+                            "</div>" +
+                            "<div class='col-md-1'>" +
+                            "<label>Tax<span class='require'>*</span></label>" +
+                            "<select class='form-control' id='thue_jancode_" + JanCount + "'" +
+                            "required>" +
+                            "   <option value='10'>10%</option>" +
+                            "<option value='8'>8%</option>" +
+                            "</select>" +
+                            "</div>" +
             "<button name='add-hd' id='InsertJan_" + JanCount +
             "' class='btn btn-warning px-3' onclick='Insert_JancodeToInvoice()'>追加</button>" +
             "</div>" +

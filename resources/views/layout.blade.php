@@ -19,6 +19,8 @@
 		});
     </script>
 
+<script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+
 	<link rel="stylesheet" href="{{asset('/assets/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('/assets/css/atlantis.min.css')}}">
 	<link href="{{asset('/assets/styles.css')}}" rel="stylesheet" />

@@ -41,4 +41,8 @@ class InvoiceController extends Controller
     public function createDetail(Request $request){
         return $this->invoiceService->createInvoiceDetail($request);
     }
+
+    public function updateInvoice(Request $request, $Invoice){
+        return $this->invoiceService->updateInvoice($request, $Invoice);
+    }
 }

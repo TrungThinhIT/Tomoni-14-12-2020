@@ -56,6 +56,8 @@ class InvoiceService
         }
         $invoices = $invoices->orderBy('Dateinsert', 'DESC')->paginate($record);
 
+        // dd($invoices->first()['detail']->first()['product']->name);
+
         $data = ['invoices' => $invoices, 'accounts' => $accounts, 'suppliers' => $suppliers, 'record' => $record,
          'productName' => $productName, 'uinvoice' => $uinvoice, 'supplier'=> $supplier,
         'webOrder'=> $webOrder, 'janCode' => $janCode, 'paymentDate'=> $paymentDate, 'stockDate'=> $stockDate];
@@ -63,7 +65,15 @@ class InvoiceService
     }
 
     public function showInvoice($Invoice){
-        return InvoiceSupplier::where('Invoice', $Invoice)->with('detail.product')->get();
+        $total = 0;
+        $suppliers = DB::table('supplier')->get();
+        $object = InvoiceSupplier::where('Invoice', $Invoice)->with('detail.product')->first();
+        foreach ($object['detail'] as $key => $value) {
+            $total +=  $value->Quantity * $value->Price;
+        }
+        $data = ['object'=> $object, 'suppliers' => $suppliers, 'total'=> $total];
+        $html = view('suppliers.modalInvoiceDetail',compact('data'));
+        return $html;
     }
 
     public function searchCodeOrder(Request $request){
@@ -110,13 +120,12 @@ class InvoiceService
            'Invoice' => $request->Invoice
         ]);
 
-        $product = ProductStandard::create([
-            'jan_code' => $request->Jancode,
-            'name' => $request->NameProduct
-        ]);
-
-        if($invoiceDetail && $product){
+        if($invoiceDetail){
         return 1;
         }
+    }
+
+    public function updateInvoice(Request $request, $Invoice){
+        return 1;
     }
 }

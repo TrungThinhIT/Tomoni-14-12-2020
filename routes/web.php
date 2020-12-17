@@ -30,6 +30,8 @@ Route::prefix('suppliers')->namespace('suppliers')->name('supplier.')->group(fun
 
     Route::get('/list-code-jan', [InvoiceController::class, 'searchCodeJan'])->name('listCodeJan');
 
+    Route::post('/invoice/{Invoice}', [InvoiceController::class, 'updateInvoice'])->name('updateInvoice');
+
     Route::get('/payments', function () {
         return view('suppliers.payments');
     })->name('payments');
