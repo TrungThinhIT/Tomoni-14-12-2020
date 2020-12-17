@@ -3339,7 +3339,10 @@ label {
 
 .input-group label.error, .input-group label.success {
   width: 100%;
-  order: 100; }
+  order: 100;
+  font-weight: bold;
+  font-size: 14px;
+}
 
 .custom-control {
   position: relative; }
@@ -3463,10 +3466,7 @@ label {
       right: 1rem; }
 
 /*     Label States      */
-label.error {
-  color: #F25961 !important;
-  font-size: 80% !important;
-  margin-top: .5rem; }
+
 
 /*     Label states for select2      */
 .select2-input {

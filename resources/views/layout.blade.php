@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>Tomoni - @yield('title')</title>
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
 	<link rel="icon" href="{{asset('/assets/img/icon.ico')}}" type="image/x-icon"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-	<script src="{{asset('/assets/js/plugin/webfont/webfont.min.js')}}"></script>
+    <script src="{{asset('/assets/js/plugin/webfont/webfont.min.js')}}"></script>
 	<script>
 		WebFont.load({
 			google: {"families":["Lato:300,400,700,900"]},
@@ -16,16 +17,15 @@
 				sessionStorage.fonts = true;
 			}
 		});
-	</script>
+    </script>
 
 	<link rel="stylesheet" href="{{asset('/assets/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('/assets/css/atlantis.min.css')}}">
-    <link rel="stylesheet" href="{{asset('assets/css/atlantis.css')}}">
-	<link href="{{asset('assets/styles.css')}}" rel="stylesheet" />
-    <link href="{{asset('assets/prism.css')}}" rel="stylesheet" />
+	<link href="{{asset('/assets/styles.css')}}" rel="stylesheet" />
+    <link href="{{asset('/assets/prism.css')}}" rel="stylesheet" />
     <link href="{{asset('/assets/css/iconResource.css')}}" rel="stylesheet" type="text/css" />
-        <!-- https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css -->
-        <link rel="stylesheet" href="{{asset('/assets/css/progress.css')}}">
+    <link rel="stylesheet" href="{{asset('/assets/css/validate.css')}}">
+    @toastr_css
 </head>
 <body>
     @include('commons.headerPage')
@@ -34,21 +34,27 @@
         @yield('content', 'Default content')
     </div>
 </body>
-<script src="{{asset('/assets/js/core/jquery.3.2.1.min.js')}}"></script>
+@jquery
+    @toastr_js
+    @toastr_render
+
+<link rel="stylesheet" href="{{asset('/assets/js/supplier/invoice.js')}}">
+<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.1/jquery.validate.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.1/jquery.validate.min.js"></script>
 <script src="{{asset('/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js')}}"></script>
 <script src="{{asset('/assets/js/core/popper.min.js')}}"></script>
 <script src="{{asset('/assets/js/core/bootstrap.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart.js/chart.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js')}}"></script>
-<script src="{{asset('/assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js')}}"></script>
+{{-- <script src="{{asset('/assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js')}}"></script> --}}
 <script type="text/javascript" src="{{asset('/assets/js/plugin/jqvmap/jquery.vmap.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('/assets/js/plugin/jqvmap/maps/jquery.vmap.world.js')}}" charset="utf-8"></script>
 <script src="{{asset('/assets/js/plugin/chart-circle/circles.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js')}}"></script>
 <script src="{{asset('/assets/js/atlantis.min.js')}}"></script>
-<script src="{{asset('assets/prism.js')}}"></script>
-<script src="{{asset('assets/prism-normalize-whitespace.min.js')}}"></script>
+<script src="{{asset('/assets/prism.js')}}"></script>
+<script src="{{asset('/assets/prism-normalize-whitespace.min.js')}}"></script>
 <script type="text/javascript">
 	// Optional
 	Prism.plugins.NormalizeWhitespace.setDefaults({

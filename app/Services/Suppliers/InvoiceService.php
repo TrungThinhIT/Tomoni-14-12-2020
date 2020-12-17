@@ -3,7 +3,9 @@
 namespace App\Services\Suppliers;
 
 use App\Http\Requests\Suppliers\InvoiceRequest;
+use App\Models\InvoiceDetailSupllier;
 use App\Models\InvoiceSupplier;
+use App\Models\ProductStandard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,6 +15,7 @@ class InvoiceService
     public function showList(Request $request)
     {
         $suppliers = DB::table('supplier')->get();
+        $accounts = InvoiceSupplier::select('Account')->get();
 
         $request->record ? $record = $request->record : $record = 10;
         $uinvoice = $request->uinvoice;
@@ -51,16 +54,69 @@ class InvoiceService
         if (isset($stockDate)) {
             $invoices = InvoiceSupplier::where('StockDate', $stockDate);
         }
-        $invoices = $invoices->paginate($record);
+        $invoices = $invoices->orderBy('Dateinsert', 'DESC')->paginate($record);
 
-        $data = ['invoices' => $invoices, 'suppliers' => $suppliers, 'record' => $record,
+        $data = ['invoices' => $invoices, 'accounts' => $accounts, 'suppliers' => $suppliers, 'record' => $record,
          'productName' => $productName, 'uinvoice' => $uinvoice, 'supplier'=> $supplier,
         'webOrder'=> $webOrder, 'janCode' => $janCode, 'paymentDate'=> $paymentDate, 'stockDate'=> $stockDate];
         return $data;
     }
 
-    public function createNew(InvoiceRequest $request)
+    public function showInvoice($Invoice){
+        return InvoiceSupplier::where('Invoice', $Invoice)->with('detail.product')->get();
+    }
+
+    public function searchCodeOrder(Request $request){
+        $codeOrders = DB::table('oder')->where('codeorder', 'like', '%'. $request->search_ordercode ."%")->orderBy('codeorder', 'DESC')->limit(20)->get();
+
+        return response()->json($codeOrders);
+    }
+
+    public function searchCodeJan(Request $request){
+        $codeJans = DB::table('product_standard')->where('jan_code', 'like', '%'. $request->search_jancode ."%")->orderBy('jan_code', 'DESC')->limit(20)->get();
+        return response()->json($codeJans);
+    }
+
+    public function createInvoice(InvoiceRequest $request)
     {
-        dd($request->all());
+           $invoice = InvoiceSupplier::create([
+                'Invoice' => $request->Insert_Invoice,
+                'TotalPrice' => $request->TotalPrice,
+                'PurchaseCosts' => $request->PurchaseCosts,
+                'TaxPurchaseCosts' => $request->TaxPurchaseCosts,
+                'Supplier' => $request->UnameSupplier,
+                'PaymentDate' => $request->PaymentDate,
+                'StockDate' => $request->StockDate,
+                'InvoiceStatus' => $request->PaidInvoice,
+                'TypeInvoice' => $request->Typehoadon,
+                'Buyer' => $request->Buyer,
+                'Dateinvoice' => $request->Dateinvoice,
+                'Trackingnumber' => $request->Trackingnumber
+           ]);
+
+           if($invoice){
+               return 1;
+           }
+    }
+
+    public function createInvoiceDetail(Request $request)
+    {
+        $invoiceDetail = InvoiceDetailSupllier::create([
+           'Codeorder' => $request->CodeorderItem,
+           'jancode' => $request->Jancode,
+           'Quantity' => $request->Quantity,
+           'Price' => $request->Price,
+           'PriceTax' => $request->PriceTax,
+           'Invoice' => $request->Invoice
+        ]);
+
+        $product = ProductStandard::create([
+            'jan_code' => $request->Jancode,
+            'name' => $request->NameProduct
+        ]);
+
+        if($invoiceDetail && $product){
+        return 1;
+        }
     }
 }

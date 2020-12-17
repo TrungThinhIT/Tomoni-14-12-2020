@@ -11,6 +11,10 @@ class InvoiceSupplier extends Model
 
     protected $table = 'acountant_hddv';
 
+    public $timestamps = false;
+
+    protected $guarded = [];
+
     public function detail(){
         return $this->hasMany(InvoiceDetailSupllier::class, 'Invoice' , 'Invoice');
     }

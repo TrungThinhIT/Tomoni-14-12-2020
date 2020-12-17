@@ -14,13 +14,21 @@ use App\Http\Controllers\Suppliers\InvoiceController;
 */
 
 Route::get('/', function () {
-    return view('commons.index');
+    return view('commons.test');
 })->name('index');
 
 Route::prefix('suppliers')->namespace('suppliers')->name('supplier.')->group(function () {
     Route::get('/invoice', [InvoiceController::class, 'list'])->name('invoice');
 
+    Route::get('/invoice/{Invoice}', [InvoiceController::class, 'show'])->name('showInvoice');
+
     Route::post('/invoice', [InvoiceController::class, 'create'])->name('postInvoice');
+
+    Route::post('/invoice-detail', [InvoiceController::class, 'createDetail'])->name('postInvoiceDetail');
+
+    Route::get('/list-code-order', [InvoiceController::class, 'searchCodeOrder'])->name('listCodeOrder');
+
+    Route::get('/list-code-jan', [InvoiceController::class, 'searchCodeJan'])->name('listCodeJan');
 
     Route::get('/payments', function () {
         return view('suppliers.payments');

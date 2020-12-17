@@ -10,7 +10,9 @@ class InvoiceDetailSupllier extends Model
     use HasFactory;
 
     protected $table = 'acountant_jancodeitem';
+    public $timestamps = false;
 
+    protected $guarded = [];
     public function product(){
         return $this->hasOne(ProductStandard::class, 'jan_code', 'Jancode');
     }

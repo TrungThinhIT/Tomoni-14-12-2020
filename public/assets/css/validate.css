@@ -1,0 +1,9 @@
+.alert-danger-custom {
+    font-size: 14px;
+    font-weight: bold;
+    color: #F25961;
+}
+
+.alert-danger-custom [data-notify="icon"]:before {
+    background: #F25961;
+}

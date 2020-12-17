@@ -21,8 +21,24 @@ class InvoiceController extends Controller
         return view('suppliers.invoice', compact('data'));
     }
 
+    public function show($Invoice){
+        return $this->invoiceService->showInvoice($Invoice);
+    }
+
+    public function searchCodeOrder(Request $request){
+        return $this->invoiceService->searchCodeOrder($request);
+    }
+
+    public function searchCodeJan(Request $request){
+        return $this->invoiceService->searchCodeJan($request);
+    }
+
     public function create(InvoiceRequest $request)
     {
-       return $this->invoiceService->createNew($request);
+       return $this->invoiceService->createInvoice($request);
+    }
+
+    public function createDetail(Request $request){
+        return $this->invoiceService->createInvoiceDetail($request);
     }
 }
