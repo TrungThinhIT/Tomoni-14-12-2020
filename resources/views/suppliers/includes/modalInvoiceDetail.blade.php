@@ -97,7 +97,7 @@
       <tbody id="myTable">
 
         @foreach ($data['object']->detail as $item => $value)
-        <tr>
+        <tr id="{{$value->Id}}">
             <td>
               <div  >
                   <input type="text" class="form-control" value="{{$value->Codeorder}}" id="codeOrderBillUpdate_{{$value->Id}}" placeholder="First name" list='listcodeorder' onkeyup='search_ordercode(this)' required> <datalist id='listcodeorder'></datalist>
@@ -182,11 +182,13 @@
                 },
                 success: function (response) {
                     var len = response.length;
-                    $("#listcodeorder" + BillDetailCount).empty();
+                    $("#listcodeorder").empty();
                     for (var i = 0; i < len; i++) {
                         var name = response[i]['codeorder'];
+                        var name1 = response[i]['quantity'];
+                        var name2 = response[i]['total'];
 
-                        $("#listcodeorder").append("<option value='" + name + "'>" + name +
+                        $("#listcodeorder").append("<option value='" + name + "'>" + "Quantity: " + name1 + " Total: " + name2 +
                             "</option>");
 
                     }
@@ -206,11 +208,12 @@
 				},
 				success: function(response) {
                     var len = response.length;
-                    $("#ujan_wh"+JanCount).empty();
+                    $("#ujan_wh").empty();
                 for( var i = 0; i<len; i++){
                     var name = response[i]['jan_code'];
+                    var name2 = response[i]['name'];
 
-                    $("#ujan_wh").append("<option value='"+name+"'>"+name+"</option>");
+                    $("#ujan_wh").append("<option value='"+name+"'>"+name2+"</option>");
 
                 }
 				}

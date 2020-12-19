@@ -41,11 +41,11 @@
                         <p>Order</p>
                     </a>
                     <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{{route('order.bill')}}">Hoá đơn</a></li>
-                        <li><a class="dropdown-item" href="{{route('order.ledger')}}">Sổ cái</a></li>
-                        <li><a class="dropdown-item" href="{{route('order.web-order')}}">Web order</a></li>
-                        <li><a class="dropdown-item" href="{{route('order.payment-customers')}}">Tiền khách thanh toán</a></li>
-                        <li><a class="dropdown-item" href="{{route('order.customer-debt')}}">Công nợ khách hàng</a></li>
+                        <li><a class="dropdown-item" href="{{route('orders.ledgers.index')}}">Sổ cái</a></li>
+                        <li><a class="dropdown-item" href="{{route('orders.bill')}}">Hoá đơn</a></li>
+                        <li><a class="dropdown-item" href="{{route('orders.web-order')}}">Web order</a></li>
+                        <li><a class="dropdown-item" href="{{route('orders.payment-customers')}}">Tiền khách thanh toán</a></li>
+                        <li><a class="dropdown-item" href="{{route('orders.customer-debt')}}">Công nợ khách hàng</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">

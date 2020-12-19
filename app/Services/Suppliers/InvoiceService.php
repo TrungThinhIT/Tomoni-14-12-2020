@@ -5,7 +5,6 @@ namespace App\Services\Suppliers;
 use App\Http\Requests\Suppliers\InvoiceRequest;
 use App\Models\InvoiceDetailSupllier;
 use App\Models\InvoiceSupplier;
-use App\Models\ProductStandard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -56,8 +55,6 @@ class InvoiceService
         }
         $invoices = $invoices->orderBy('Dateinsert', 'DESC')->paginate($record);
 
-        // dd($invoices->first()['detail']->first()['product']->name);
-
         $data = ['invoices' => $invoices, 'accounts' => $accounts, 'suppliers' => $suppliers, 'record' => $record,
          'productName' => $productName, 'uinvoice' => $uinvoice, 'supplier'=> $supplier,
         'webOrder'=> $webOrder, 'janCode' => $janCode, 'paymentDate'=> $paymentDate, 'stockDate'=> $stockDate];
@@ -72,7 +69,7 @@ class InvoiceService
             $total +=  $value->Quantity * $value->Price;
         }
         $data = ['object'=> $object, 'suppliers' => $suppliers, 'total'=> $total];
-        $html = view('suppliers.modalInvoiceDetail',compact('data'));
+        $html = view('suppliers.includes.modalInvoiceDetail',compact('data'));
         return $html;
     }
 

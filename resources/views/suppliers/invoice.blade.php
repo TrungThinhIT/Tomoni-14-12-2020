@@ -104,7 +104,7 @@
                             </div>
                             <div class="col-md-2 mb-2" style="margin-top: 1%;">
                                 <!-- <label for="validationDefault01">Hiện trạng hoá đơn</label> -->
-                                <button type="button" name="add-hd" class="btn btn-primary"
+                                <button type="button" id="BtnSubmit" name="add-hd" class="btn btn-primary"
                                     onclick="Insert_Invoice()">Submit</button>
                             </div>
                         </div>
@@ -113,28 +113,18 @@
                     </fieldset>
 
                 </form>
-
-                <div class=" row col-md-12" id="ItemInvoice">
-                </div>
-                <div class=" row col-md-12" id="ItemInvoiceAdd1">
-                </div>
-                <div class=" row col-md-12" id="ItemInvoiceAdd2">
-                </div>
-                <div class=" row col-md-12" id="ItemInvoiceAdd3">
-                </div>
-                <div class=" row col-md-12" id="ItemInvoiceAdd4">
-                </div>
-                <div class=" row col-md-12" id="ItemInvoiceAdd5">
-                </div>
-                <div class=" row col-md-12" id="ItemInvoiceAdd6">
-                </div>
-                <div class=" row col-md-12" id="ItemInvoiceAdd7">
-                </div>
-                <div class=" row col-md-12" id="ItemInvoiceAdd8">
-                </div>
-                <div class=" row col-md-12" id="ItemInvoiceAdd9">
-                </div>
-
+            </fieldset>
+                <div class="card" id="ItemInvoice" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd1" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd2" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd3" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd4" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd5" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd6" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd7" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd8" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd9" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+            </fieldset>
                 <div>
                     <div style="margin: 1% 1% 1% 1%;">
                         <form action="{{route('supplier.invoice')}}" method="GET">
@@ -353,6 +343,19 @@
                             });
 
     function Insert_Invoice() {
+        document.getElementById("BtnSubmit").disabled = true;
+        document.getElementById("unamesupplier").disabled = true;
+        document.getElementById("uTotalPrice").disabled = true;
+        document.getElementById("uinvoice").disabled = true;
+        document.getElementById("uPurchaseCosts").disabled = true;
+        document.getElementById("TaxPurchaseCosts").disabled = true;
+        document.getElementById("PaymentDate").disabled = true;
+        document.getElementById("StockDate").disabled = true;
+        document.getElementById("PaidInvoice").disabled = true;
+        document.getElementById("Typehoadon").disabled = true;
+        document.getElementById("Buyer").disabled = true;
+        document.getElementById("Dateinvoice").disabled = true;
+        document.getElementById("uTracking").disabled = true;
         var Invoice = $("#uinvoice").val();
         var TotalPrice = $("#uTotalPrice").val().replace(",", "").replace(",", "");
         var PurchaseCosts = $("#uPurchaseCosts").val().replace(",", "").replace(",", "");
@@ -394,54 +397,54 @@
                     console.log(response)
                     if (response == 1) {
                         $("#ItemInvoice").html(
-                            "<fieldset>" +
-                            "<div class='form-row' style='margin-left: 2%; margin-top: 1%; margin-right: 1%; margin-bottom: unset;'>" +
-                            "<div class='col-md-2' >" +
-                            "<label>Weborder<span class='require'>*</span></label>" +
-                            "<input class='form-control' type='text' id='codeorder_" + JanCount + "'" +
-                            "list='listcodeorder" + JanCount + "'" +
+                            "<fieldset >" +
+				"<div class='form-row' style='margin-left: 2%;margin-right: 1%;'>" +
+					"<div class='col-md-2 mb-2' >" +
+						"<label for='validationDefault01'>Codeorde*</label>" +
+						"<input type='text' class='form-control' id='codeorder_" + JanCount + "'" +
+                            "list='listcodeorder"+ JanCount + "'" +
                             " onkeyup='search_ordercode(this)' required>" +
                             "<datalist id='listcodeorder" + JanCount + "'" + "></datalist>" +
-                            "</div>" +
-                            "<div class='col-md-2'>" +
-                            "<label>Jancode<span class='require'>*</span></label>" +
-                            "<input class='form-control' type='text' id='Jancode_" + JanCount + "'" +
-                            "class='inputs'  onkeyup='search_jancode()' list='ujan_wh" + JanCount + "'" +
+					"</div>" +
+					"<div class='col-md-2 mb-2'>" +
+						"<label for='validationDefault01'>Jancode*</label>" +
+						"<input type='text' class='form-control' id='Jancode_" + JanCount + "'" +
+                            "class='input'  onkeyup='search_jancode()' list='ujan_wh" + JanCount + "'" +
                             " required>" +
                             "<datalist id='ujan_wh" + JanCount + "'" + "></datalist>" +
-                            "</div>" +
-                            "<div class='col-md-1'>" +
-                            "<label>Quantity<span class='require'>*</span></label>" +
-                            "<input class='form-control' type='text' data-type='currency' id='so_luong_" +
+					"</div>" +
+					"<div class='col-md-1 mb-1'>" +
+						"<label for='validationDefault01'>Số lượng*</label>" +
+						"<input type='text' class='form-control' id='so_luong_" +
                             JanCount + "'" + "required>" +
-                            "</div>" +
-                            "<div class='col-md-1'>" +
-                            "<label>Price<span class='require'>*</span></label>" +
-                            "<input class='form-control' type='text' data-type='currency' id='don_gia_" +
+					"</div>" +
+					"<div class='col-md-1 mb-1'>" +
+						"<label for='validationDefault01'>Đơn giá*</label>" +
+						"<input type='text' class='form-control' id='don_gia_" +
                             JanCount + "'" + "required>" +
-                            "</div>" +
-                            "<div class='col-md-1'>" +
-                            "<label>Tax<span class='require'>*</span></label>" +
-                            "<select class='form-control' id='thue_jancode_" + JanCount + "'" +
+					"</div>" +
+					"<div class='col-md-2 mb-2'>" +
+					"<label for='validationDefault01'>% Thuế*</label>" +
+						"<select type='text' class='form-control' id='thue_jancode_" + JanCount + "'" +
                             "required>" +
                             "   <option value='10'>10%</option>" +
                             "<option value='8'>8%</option>" +
-                            "</select>" +
-                            "</div>" +
-                            "<div class='col-md-1'>" +
-                            "<button name='add-hd' id='InsertJan_" + JanCount +
-                            "' class='btn btn-warning px-3' onclick='Insert_JancodeToInvoice()'>追加</button>" +
-                            "</div>" +
-                            "<div class='col-md-1' id='Add_Jancode_" + JanCount + "'>" +
-                            "</div>" +
-                            "</div>" +
-                            "</fieldset>"
+                            "<option value='5'>5%</option>" +
+						"</select>" +
+					"</div>" +
+					"<div class='col-md-1 paddbtm20'>"+
+
+                        "<label>Thêm<span class='require'>*</span></label>" +
+                                "<div>" +
+                                    "<button name='add-hd' id='InsertJan_"+JanCount+"' class='btn btn-danger fh-btn' onclick='Insert_JancodeToInvoice()'>Add</button>"+
+                            "</div>"+
+				"</div>" +
+
+                "<div class='col-md-1 paddbtm20' id='Add_Jancode_"+JanCount+"'>"+
+                            "</div>"+
+			"</fieldset>"
                         );
                     }
-                    if (response == 2) {
-                        alert("このファイル番号は入力しました。!");
-                    }
-                    //location.reload();
                 }
             });
         } else
@@ -467,12 +470,10 @@
         var uTotalPrice = $("#uTotalPrice").val();
         var CodeorderItem = $("#codeorder_" + JanCount).val();
         var Jancode = $("#Jancode_" + JanCount).val();
-        var NameProduct = $("#name_product_" + JanCount).val();
         var Quantity = $("#so_luong_" + JanCount).val().replace(",", "");
         var Price = $("#don_gia_" + JanCount).val().replace(",", "");
         var PriceTax = $("#thue_jancode_" + JanCount).val();
         var Invoice = $("#uinvoice").val();
-
 
         console.log(uTotalPrice, (Quantity * Price) + TotalPrice)
 
@@ -489,7 +490,6 @@
                     data: {
                         CodeorderItem: CodeorderItem,
                         Jancode: Jancode,
-                        NameProduct: NameProduct,
                         Quantity: Quantity,
                         Price: Price,
                         Invoice: Invoice,
@@ -522,13 +522,18 @@
                     success: function (response) {
                         if (response == 1) {
                             $("#Add_Jancode_" + JanCount).html(
-                                "<label>追加<span class='require'>*</span></label>" +
+                                "<label>Nữa<span class='require'>*</span></label>" +
                                 "<div>" +
-                                "<a onclick='AddJancode()' href='javascript:;'<i class='fa fa-plus btn btn-primary' style='background:#fca901;padding:12px;" +
-                                "color: white;cursor: pointer;'></i></a>" +
+                                    "<button name='add-hd' id='MoreJan_"+JanCount+"' class='btn btn-primary fh-btn' onclick='AddJancode()'>More</button>"+
                                 "</div>"
                             );
                             document.getElementById("InsertJan_" + JanCount).disabled = true;
+
+        document.getElementById("codeorder_"+JanCount).disabled = true;
+        document.getElementById("Jancode_"+JanCount).disabled = true;
+        document.getElementById("so_luong_"+JanCount).disabled = true;
+        document.getElementById("don_gia_"+JanCount).disabled = true;
+        document.getElementById("thue_jancode_"+JanCount).disabled = true;
 
                             TotalPrice = TotalPrice + (Quantity * Price)
                         }
@@ -541,49 +546,55 @@
     }
 
     function AddJancode() {
+        document.getElementById("MoreJan_" + JanCount).disabled = true;
         JanCount = JanCount + 1;
         var ItemJancode =
-            "<fieldset>" +
-            "<div class='form-row' style='margin-left: 2%; margin-top: 1%; margin-right: 1%; margin-bottom: unset;'>" +
-            "<div class='col-md-2 mb-2' >" +
-                            "<label>Weborder<span class='require'>*</span></label>" +
-                            "<input class='form-control' type='text' id='codeorder_" + JanCount + "'" +
-                            "list='listcodeorder" + JanCount + "'" +
+        "<fieldset >" +
+				"<div class='form-row' style='margin-left: 2%;margin-right: 1%;'>" +
+					"<div class='col-md-2 mb-2' >" +
+						"<label for='validationDefault01'>Codeorde*</label>" +
+						"<input type='text' class='form-control' id='codeorder_" + JanCount + "'" +
+                            "list='listcodeorder"+ JanCount + "'" +
                             " onkeyup='search_ordercode(this)' required>" +
                             "<datalist id='listcodeorder" + JanCount + "'" + "></datalist>" +
-                            "</div>" +
-                            "<div class='col-md-2'>" +
-                            "<label>Jancode<span class='require'>*</span></label>" +
-                            "<input class='form-control' type='text' id='Jancode_" + JanCount + "'" +
-                            "class='inputs'  onkeyup='search_jancode()' list='ujan_wh" + JanCount + "'" +
+					"</div>" +
+					"<div class='col-md-2 mb-2'>" +
+						"<label for='validationDefault01'>Jancode*</label>" +
+						"<input type='text' class='form-control' id='Jancode_" + JanCount + "'" +
+                            "class='input'  onkeyup='search_jancode()' list='ujan_wh" + JanCount + "'" +
                             " required>" +
                             "<datalist id='ujan_wh" + JanCount + "'" + "></datalist>" +
-                            "</div>" +
-                            "<div class='col-md-1'>" +
-                            "<label>Quantity<span class='require'>*</span></label>" +
-                            "<input class='form-control' type='text' data-type='currency' id='so_luong_" +
+					"</div>" +
+					"<div class='col-md-1 mb-1'>" +
+						"<label for='validationDefault01'>Số lượng*</label>" +
+						"<input type='text' class='form-control' id='so_luong_" +
                             JanCount + "'" + "required>" +
-                            "</div>" +
-                            "<div class='col-md-1'>" +
-                            "<label>Price<span class='require'>*</span></label>" +
-                            "<input class='form-control' type='text' data-type='currency' id='don_gia_" +
+					"</div>" +
+					"<div class='col-md-1 mb-1'>" +
+						"<label for='validationDefault01'>Đơn giá*</label>" +
+						"<input type='text' class='form-control' id='don_gia_" +
                             JanCount + "'" + "required>" +
-                            "</div>" +
-                            "<div class='col-md-1'>" +
-                            "<label>Tax<span class='require'>*</span></label>" +
-                            "<select class='form-control' id='thue_jancode_" + JanCount + "'" +
+					"</div>" +
+					"<div class='col-md-2 mb-2'>" +
+					"<label for='validationDefault01'>% Thuế*</label>" +
+						"<select type='text' class='form-control' id='thue_jancode_" + JanCount + "'" +
                             "required>" +
                             "   <option value='10'>10%</option>" +
                             "<option value='8'>8%</option>" +
-                            "</select>" +
-                            "</div>" +
-            "<button name='add-hd' id='InsertJan_" + JanCount +
-            "' class='btn btn-warning px-3' onclick='Insert_JancodeToInvoice()'>追加</button>" +
-            "</div>" +
-            "<div class='col-md-2' id='Add_Jancode_" + JanCount + "'>" +
-            "</div>" +
-            "</div>" +
-            "</fieldset>";
+                            "<option value='5'>5%</option>" +
+						"</select>" +
+					"</div>" +
+					"<div class='col-md-1 paddbtm20'>"+
+
+                        "<label>Thêm<span class='require'>*</span></label>" +
+                                "<div>" +
+                                    "<button name='add-hd' id='InsertJan_"+JanCount+"' class='btn btn-danger fh-btn' onclick='Insert_JancodeToInvoice()'>Add</button>"+
+                            "</div>"+
+				"</div>" +
+
+                "<div class='col-md-1 paddbtm20' id='Add_Jancode_"+JanCount+"'>"+
+                            "</div>"+
+			"</fieldset>";
         HTML = ItemJancode;
 
         document.getElementById("ItemInvoiceAdd" + JanCount).innerHTML = HTML;
@@ -600,11 +611,13 @@
                 },
                 success: function (response) {
                     var len = response.length;
-                    $("#listcodeorder" + JanCount).empty();
+                    $("#listcodeorder"+JanCount).empty();
                     for (var i = 0; i < len; i++) {
                         var name = response[i]['codeorder'];
+                        var name1 = response[i]['quantity'];
+                        var name2 = response[i]['total'];
 
-                        $("#listcodeorder" + JanCount).append("<option value='" + name + "'>" + name +
+                        $("#listcodeorder"+JanCount).append("<option value='" + name + "'>" + "Quantity: " + name1 + " Total: " + name2 +
                             "</option>");
 
                     }
@@ -627,8 +640,9 @@
                     $("#ujan_wh"+JanCount).empty();
                 for( var i = 0; i<len; i++){
                     var name = response[i]['jan_code'];
+                    var name2 = response[i]['name'];
 
-                    $("#ujan_wh"+JanCount).append("<option value='"+name+"'>"+name+"</option>");
+                    $("#ujan_wh"+JanCount).append("<option value='"+name+"'>"+name2+"</option>");
 
                 }
 				}

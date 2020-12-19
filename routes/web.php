@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Orders\LedgerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Suppliers\InvoiceController;
+use App\Http\Controllers\Suppliers\SupplierController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,7 +17,7 @@ use App\Http\Controllers\Suppliers\InvoiceController;
 */
 
 Route::get('/', function () {
-    return view('commons.test');
+    return view('commons.index');
 })->name('index');
 
 Route::prefix('suppliers')->namespace('suppliers')->name('supplier.')->group(function () {
@@ -36,9 +39,10 @@ Route::prefix('suppliers')->namespace('suppliers')->name('supplier.')->group(fun
         return view('suppliers.payments');
     })->name('payments');
 
-    Route::get('/management', function () {
-        return view('suppliers.management');
-    })->name('management');
+    Route::get('/management', [SupplierController::class, 'list'])->name('management');
+    Route::post('/management', [SupplierController::class, 'create'])->name('create-management');
+    Route::get('/management/{code_name}', [SupplierController::class, 'show'])->name('show-management');
+    Route::put('/management/{code_name}', [SupplierController::class, 'update'])->name('update-management');
 
     Route::get('/payback', function () {
         return view('suppliers.payback');
@@ -49,7 +53,7 @@ Route::prefix('suppliers')->namespace('suppliers')->name('supplier.')->group(fun
     })->name('debt');
 });
 
-Route::prefix('orders')->namespace('orders')->name('order.')->group(function () {
+Route::prefix('orders')->namespace('orders')->name('orders.')->group(function () {
     Route::get('/bill', function () {
         return view('orders.bill');
     })->name('bill');
@@ -62,9 +66,14 @@ Route::prefix('orders')->namespace('orders')->name('order.')->group(function () 
         return view('orders.order_detail');
     })->name('order-detail');
 
-    Route::get('/ledger', function () {
-        return view('orders.ledger');
-    })->name('ledger');
+
+    Route::prefix('ledgers')->name('ledgers.')->group(function () {
+        Route::get('/', [LedgerController::class, 'index'])->name('index');
+        Route::post('/', [LedgerController::class, 'create'])->name('create');
+        Route::get('/{Id}', [LedgerController::class, 'get'])->name('get');
+        Route::put('/{Id}', [LedgerController::class, 'update'])->name('update');
+        Route::get('/delete/{Id}', [LedgerController::class, 'delete'])->name('delete');
+    });
 
     Route::get('/web-order', function () {
         return view('orders.web_order');
@@ -91,4 +100,8 @@ Route::prefix('warehouses')->namespace('warehouses')->name('warehouses.')->group
     Route::get('/inventory', function () {
         return view('warehouses.inventory');
     })->name('inventory');
+});
+
+Route::prefix('commons')->name('commons.')->group(function () {
+    Route::get('/search-user', [LedgerController::class, 'searchUser'])->name('search-user');
 });
