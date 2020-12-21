@@ -4,7 +4,7 @@ namespace App\Http\Requests\Orders;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateLedgerRequest extends FormRequest
+class CreateBillRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,9 @@ class UpdateLedgerRequest extends FormRequest
     public function rules()
     {
         return [
-            'eUname' => 'required|unique:accountant_socai,Uname,'.$this->Id,
-            'ePriceIn' => 'required|numeric',
-            'ePriceOut' => 'required|numeric',
-            'ePricedelb' => 'required|numeric',
+            'So_Hoadon' => 'required    ',
+            'Codeorder' => 'required',
+            'note' => 'required'
         ];
     }
 }

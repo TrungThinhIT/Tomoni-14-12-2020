@@ -6,7 +6,7 @@
 <!-- Modal body -->
 <div class="modal-body">
     <div class="form-row">
-        <div class="col-md-2 mb-2">
+        <div class="col-md-1 mb-2">
             <label for="validationDefault01">Số Id</label>
             <input class="form-control" value="{{$ledger->Id}}" disabled type="text" name="eId" id="eId">
         </div>
@@ -26,7 +26,7 @@
             <label for="validationDefault01">Price delb</label>
             <input type="text" class="form-control" value="{{$ledger->Pricedelb}}" name="ePricedelb" id="ePricedelb" placeholder="Price delb">
         </div>
-        <div class="col-md-2 mb-2" style="margin-top: 1%;">
+        <div class="col-md-2 mb-2" style="margin-top: 1.5%;">
             <button type="button" class="btn btn-primary" onclick="UpdateDetail()" >Update</button>
         </div>
 

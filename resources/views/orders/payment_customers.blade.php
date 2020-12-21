@@ -13,147 +13,135 @@
                     <div>
                         <div style="margin: 1% 1% 1% 1%;">
                             <form>
-                                <fieldset >
+                                <fieldset>
                                     <div class="form-row" style=" margin-top: 1%;">
-                                        <div >
-                                            <input class="form-control" type="date"  id="DateInput" >
+                                        <div>
+                                            <input class="form-control" type="text" id="Uname" placeholder="">
                                         </div>
                                         <div>
-                                            <button type="submit" class="btn btn-primary" style="margin-left: 2%;" onclick="UpdateInfoModalDate()">View</button>
+                                            <input class="form-control" type="date" id="date_inprice">
+                                        </div>
+                                        <div>
+                                            <input class="form-control" type="date" id="date_insert">
+                                        </div>
+                                        <div>
+                                            <input class="form-control" type="text" id="Sohoadon">
+                                        </div>
+                                        <div>
+                                            <button type="submit" class="btn btn-primary" style="margin-left: 2%;"
+                                                onclick="UpdateInfoModalDate()">View</button>
                                         </div>
                                     </div>
                                 </fieldset>
                             </form>
+                            <div style="float: right" class="mt-3">
+                                {!! $data['PCustomers']->withQueryString()->links('commons.paginate') !!}</div>
                             <table class="table table-bordered table-striped" style="margin-top: 1%;">
-                              <thead>
-                                <tr>
-                                  <th>DepositID</th>
-                                  <th>Date</th>
-                                  <th>Card</th>
-                                  <th>Uname</th>
-                                  <th>Price In</th>
+                                <thead>
+                                    <tr>
+                                        <th>DepositID</th>
+                                        <th style="min-width: 200px;">Uname</th>
+                                        <th>date_inprice</th>
+                                        <th>date_insert</th>
+                                        {{-- <th>Price In</th>
                                   <th>Prince Out</th>
-                                  <th>Type</th>
-                                  <th>Note</th>
-                                  <th>Del</th>
+                                  <th>type_price</th>
+                                  <th>cardID</th>
+                                  <th>note</th>
+                                  <th>useradmin</th> --}}
+                                        <th>Sohoadon</th>
+                                        <th>Function</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="myTable">
+                                    @foreach ($data['PCustomers'] as $item)
+                                    <tr>
+                                        <td>{{$item->depositID}}</td>
+                                        <td>
+                                            <div>
+                                                <input type="text" class="form-control" id="us{{$item->Id}}"
+                                                    value="{{$item->uname}}" onchange="update{{$item->Id}}()"
+                                                    placeholder="User name" list="litsusername" onkeyup='searchUser(this)'> <datalist id='litsusername'></datalist>
+                                            </div>
+                                        </td>
+                                        <td>{{$item->date_inprice}}</td>
+                                        <td>{{$item->date_insert}}</td>
+                                        {{-- <td>{{$item->price_in}}</td>
+                                        <td>
+                                            {{$item->price_out}}
+                                        </td>
+                                        <td>{{$item->type_price}}</td>
+                                        <td>{{$item->cardID}}</td>
+                                        <td>{{$item->note}}</td>
+                                        <td>{{$item->useradmin}}</td> --}}
+                                        <td>
+                                            <div>
+                                                <input type="text" class="form-control" id="shd{{$item->Id}}"
+                                                    value="{{$item->Sohoadon}}" onchange="update{{$item->Id}}()"
+                                                    placeholder="So hoa don">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-danger px-3"><i class="fa fa-times"
+                                                    aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+                                    <script>
+                                        function update{{$item->Id}}() {
+                                            var id = {{$item->Id}};
+                                            var us = $("#us{{$item->Id}}").val();
+                                            var shd = $("#shd{{$item->Id}}").val();
+                                            $.ajax({
+                                                headers: {
+                                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                },
+                                                type: 'PUT',
+                                                url: "payment-customers/" + id,
+                                                data: {
+                                                    uname: us,
+                                                    sohoadon: shd
+                                                },
+                                                // success: function (response) {
+                                                //     if (response == 1) {
+                                                //         alert()
+                                                //     }
+                                                //     if (response == 2) {
+                                                //         location.reload();
+                                                //     }
+                                                // }
+                                            });
+                                        }
 
-                                </tr>
-                              </thead>
-                              <tbody id="myTable">
-                                <tr>
-                                  <td>20-11-2020</td>
-                                  <td>123</td>
-                                  <td>paid</td>
-                                  <td>
-                                    <div  >
-                                        <input type="text" class="form-control" id="uName" placeholder="First name" value="Saiko"  required onchange="UpdateInfoModalUserName()">
-                                    </div>
-                                  </td>
-                                  <td>Doe</td>
-                                  <td>ABC</td>
-                                  <td>
-                                    <div class="form-group">
-                                        <select class="form-control" id="typeSelected" onchange="UpdateInfoModalSelected()">
-                                          <option>1</option>
-                                          <option>2</option>
-                                          <option>3</option>
-                                          <option>4</option>
-                                          <option>5</option>
-                                        </select>
-                                      </div>
-                                     </td>
-                                  <td>10000</td>
-                                  <td>
-                                    <button type="button" class="btn btn-danger px-3"><i class="fa fa-times" aria-hidden="true"></i></button>
-                                  </td>
-                                </tr>
-                                <tr>
-                                    <td>20-11-2020</td>
-                                    <td>123</td>
-                                    <td>paid</td>
-                                    <td>
-                                        <div  >
-                                            <input type="text" class="form-control" id="uName" placeholder="First name" value="Saiko"  required onchange="UpdateInfoModalUserName()">
-                                        </div>
-                                      </td>
-                                    <td>Doe</td>
-                                    <td>ABC</td>
-                                    <td>
-                                        <div class="form-group">
-                                            <select class="form-control" id="exampleFormControlSelect1">
-                                              <option>1</option>
-                                              <option>2</option>
-                                              <option>3</option>
-                                              <option>4</option>
-                                              <option>5</option>
-                                            </select>
-                                          </div>
-                                     </td>
-                                    <td>10000</td>
-                                    <td>
-                                        <button type="button" class="btn btn-danger px-3"><i class="fa fa-times" aria-hidden="true"></i></button>
-                                    </td>
+                                        function searchUser(obj) {
+        var text = $(obj).val();
+            if(text.length > 1){
+                $.ajax({
+                type: 'GET',
+                url: "{{route('commons.search-user')}}",
+                data: {
+                    uname: text
+                },
+                success: function (response) {
+                    var len = response.length;
+                    $("#litsusername").empty();
+                    for (var i = 0; i < len; i++) {
+                        var name = response[i]['uname'];
+                        var name1 = response[i]['fname'];
 
-                                  </tr>
-                                  <tr>
-                                    <td>20-11-2020</td>
-                                    <td>123</td>
-                                    <td>paid</td>
-                                    <td>
-                                        <div  >
-                                            <input type="text" class="form-control" id="uName" placeholder="First name" value="DT3" required onchange="UpdateInfoModalUserName()"	>
-                                     </div>
-                                      </td>
-                                    <td>Doe</td>
-                                    <td>ABC</td>
-                                    <td>
-                                        <div class="form-group">
-                                            <select class="form-control" id="exampleFormControlSelect1">
-                                              <option>1</option>
-                                              <option>2</option>
-                                              <option>3</option>
-                                              <option>4</option>
-                                              <option>5</option>
-                                            </select>
-                                          </div>
-                                     </td>
-                                    <td>10000</td>
-                                    <td>
-                                        <button type="button" class="btn btn-danger px-3"><i class="fa fa-times" aria-hidden="true"></i></button>
-                                    </td>
+                        $("#litsusername").append("<option value='" + name + "'>" + name1 +
+                            "</option>");
 
-                                  </tr>
-                                  <tr>
-                                    <td>20-11-2020</td>
-                                    <td>123</td>
-                                    <td>paid</td>
-                                    <td>
-                                        <div  >
-                                            <input type="text" class="form-control" id="uName" placeholder="First name" value="DT3" required onchange="UpdateInfoModalUserName()"	>
-                                     </div>
-                                      </td>
-                                    <td>Doe</td>
-                                    <td>ABC</td>
-                                    <td>
-                                        <div class="form-group">
-                                            <select class="form-control" id="exampleFormControlSelect1">
-                                              <option>1</option>
-                                              <option>2</option>
-                                              <option>3</option>
-                                              <option>4</option>
-                                              <option>5</option>
-                                            </select>
-                                          </div>
-                                     </td>
-                                    <td>10000</td>
-                                    <td>
-                                        <button type="button" class="btn btn-danger px-3"><i class="fa fa-times" aria-hidden="true"></i></button>
-                                    </td>
+                    }
+                }
+            });
+            };
+    }
 
-                                  </tr>
-                              </tbody>
+                                    </script>
+                                    @endforeach
+                                </tbody>
                             </table>
-                          </div>
+                        </div>
                     </div>
                 </div>
             </div>

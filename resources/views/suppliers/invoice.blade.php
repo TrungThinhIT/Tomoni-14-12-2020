@@ -605,7 +605,7 @@
             if(text.length >3){
                 $.ajax({
                 type: 'GET',
-                url: "list-code-order",
+                url: "{{route('commons.searchCodeOrder')}}",
                 data: {
                     search_ordercode: text
                 },
@@ -631,7 +631,7 @@
                 if(text.length >3){
                     $.ajax({
 				type: 'GET',
-				url: "list-code-jan",
+				url: "{{route('commons.searchCodeJan')}}",
 				data: {
                     search_jancode: text
 				},

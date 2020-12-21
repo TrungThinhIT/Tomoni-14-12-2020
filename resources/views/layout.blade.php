@@ -23,12 +23,15 @@ rel="stylesheet">
 <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
-	<link rel="stylesheet" href="{{asset('/assets/css/bootstrap.min.css')}}">
+<link src="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"  type='text/css'>
+<link rel="stylesheet" href="{{asset('/assets/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('/assets/css/atlantis.min.css')}}">
 	<link href="{{asset('/assets/styles.css')}}" rel="stylesheet" />
     <link href="{{asset('/assets/prism.css')}}" rel="stylesheet" />
     <link href="{{asset('/assets/css/iconResource.css')}}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{asset('/assets/css/validate.css')}}">
+    <link rel="stylesheet" href="{{asset('/assets/css/progress.css')}}">
     @toastr_css
 </head>
 <body>
