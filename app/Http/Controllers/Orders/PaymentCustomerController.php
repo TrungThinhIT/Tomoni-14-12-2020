@@ -15,8 +15,8 @@ class PaymentCustomerController extends Controller
         $this->paymentCustomer = $paymentCustomer;
     }
 
-    public function index(){
-        $data = $this->paymentCustomer->indexAll();
+    public function index(Request $request){
+        $data = $this->paymentCustomer->indexAll($request);
         return view('orders.payment_customers', compact('data'));
     }
 

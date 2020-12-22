@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Orders;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Validation\Rule;
 class CreateBillRequest extends FormRequest
 {
     /**
@@ -24,8 +24,8 @@ class CreateBillRequest extends FormRequest
     public function rules()
     {
         return [
-            'So_Hoadon' => 'required    ',
-            'Codeorder' => 'required',
+            'So_Hoadon' => 'required',
+            'Codeorder' => 'required|unique:table,column,except,id',
             'note' => 'required'
         ];
     }

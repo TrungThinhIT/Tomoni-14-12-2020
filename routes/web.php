@@ -56,6 +56,7 @@ Route::prefix('orders')->namespace('orders')->name('orders.')->group(function ()
     Route::prefix('bills')->name('bills.')->group(function () {
         Route::get('/', [BillController::class, 'indexAll'])->name('indexALl');
         Route::get('/{billcode}', [BillController::class, 'getBillById'])->name('getBillById');
+        Route::get('/detail/{codeorder}', [BillController::class, 'getBilLDetailById'])->name('getBillDetailById');
         Route::post('/', [BillController::class, 'create'])->name('create');
     });
 

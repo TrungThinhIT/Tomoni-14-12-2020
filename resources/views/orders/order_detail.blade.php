@@ -39,24 +39,13 @@
                                 <tr>
                                     <td colspan="2" rowspan="4" >
                                         <div style="height:250px; overflow-y: scroll">
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
-                                            <div>XA_Anh 2019-10-18 14:28:46 : Đã cập nhật số lượng ( 4 ): 300</div>
+                                            @foreach ($billDetail['log'] as $item)
+                                            @if ($item->uname == 'admin')
+                                            <div> <b style="color: red"> {{$item->uname}} </b> - <b style="color: yellowgreen"> {{$item->date}}</b>:  {{$item->note}}</div>
+                                            @else
+                                            <div><b>{{$item->uname}}</b> - <b style="color: yellowgreen">{{$item->date}}</b>:  {{$item->note}}</div>
+                                            @endif
+                                            @endforeach
                                             </div>
                                         <div class=" row" style="margin: 1%;">
                                             <input style="width: 70%; margin-right:1%" type="text" class="form-control" name="note" id="note" placeholder="Nhập ghi chú"  required onchange="UpdateInfoModalNote()">

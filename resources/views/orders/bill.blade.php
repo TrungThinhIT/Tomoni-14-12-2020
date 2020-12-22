@@ -89,6 +89,7 @@
                                             <th>Price In</th>
                                             <th>Price Out</th>
                                             <th>Total</th>
+                                            <th>PriceBelb</th>
                                             <th>Date Create</th>
                                         </tr>
                                     </thead>
@@ -99,10 +100,11 @@
                                             <td>
                                                 <a href="{{route('orders.bills.getBillById', $item->So_Hoadon)}}">{{$item->So_Hoadon}}</a>
                                             </td>
-                                            <td>{{$item->PriceIn}}</td>
+                                            <td>{{number_format($item->PriceIn, 0)}}</td>
                                             <td>
-                                                {{$item->totalPriceOut}}
+                                                {{number_format($item->totalPriceOut, 0)}}
                                             </td>
+                                            <td>{{$item->total}}</td>
                                             <td>{{$item->total}}</td>
                                             <td>{{Carbon\Carbon::parse($item->Date_Create)->format('d/m/Y')}}</td>
                                         </tr>

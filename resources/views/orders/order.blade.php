@@ -20,26 +20,19 @@
                             <div class="card-header">
 
                                 <div style="float: right; display:flex">
-                                    <div >
-                                        <button type="submit" class="btn btn-warning" id="search_type" onclick="SearchDonHang()">Tìm kiếm</button>
+                                    <div>
+                                        <button type="submit" class="btn btn-warning" id="search_type"
+                                            onclick="SearchDonHang()">Tìm kiếm</button>
                                     </div>
                                     <div class="col-md-2 mb-3" style="padding: unset;">
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            name="uinvoice"
-                                            id="title_2"
-                                            placeholder="Nhập mã hàng"
-                                            required="required">
+                                        <input type="text" class="form-control" name="uinvoice" id="title_2"
+                                            placeholder="Nhập mã hàng" required="required">
                                     </div>
                                     <div class="col-md-4 mb-3" style="padding: unset;">
 
-                                        <select
-                                            type="text"
-                                            class="form-control"
-                                            id="search_type2"
-                                            required="required">
-                                            <option value="" selected="selected" disabled="disabled">Please select</option>
+                                        <select type="text" class="form-control" id="search_type2" required="required">
+                                            <option value="" selected="selected" disabled="disabled">Please select
+                                            </option>
                                             <option value="Code order">Code order</option>
                                             <option value="JanCode">JanCode</option>
                                             <option value="Uname">Uname</option>
@@ -50,12 +43,9 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4 mb-3" style="padding: unset;">
-                                        <select
-                                            type="text"
-                                            class="form-control"
-                                            id="fil_type"
-                                            required="required">
-                                            <option value="" selected="selected" disabled="disabled">Please select</option>
+                                        <select type="text" class="form-control" id="fil_type" required="required">
+                                            <option value="" selected="selected" disabled="disabled">Please select
+                                            </option>
                                             <option value="Đã xác định hàng">Đã xác định hàng</option>
                                             <option value="Đã gửi mail báo giá">Đã gửi mail báo giá</option>
                                             <option value="Đã cập nhập">Đã cập nhập</option>
@@ -78,12 +68,11 @@
 
                                 @foreach ($bill as $item)
                                 <div class="card " style="width:100%">
-                                    <div class="row d-flex justify-content-between px-3 top" style="margin: 1% 3% 0% 3% ">
+                                    <div class="row d-flex justify-content-between px-3 top"
+                                        style="margin: 1% 3% 0% 3% ">
                                         <div class="d-flex">
                                             <div class="avatar avatar-xxl">
-                                                <img
-                                                    src="https://tshop.r10s.jp/adidas/cabinet/201905w/f34978-1.jpg?downsize=300:*"
-                                                    alt="..."
+                                                <img src="{{$item['Product']->urlimg}}" alt="..."
                                                     class="avatar-img rounded">
                                             </div>
                                             <h5>ORDER
@@ -92,39 +81,103 @@
                                                     </a>
                                                 </span>
                                                 <div class="">
-                                                    <p class="mb-0"><strong>Đơn giá:</strong> 3,045</p>
-                                                    <p class="mb-0"><strong>Số lượng:</strong> 450</p>
+                                                    <p class="mb-0"><strong>Đơn giá:</strong>
+                                                        {{number_format($item['Product']->price, 0)}} </p>
+                                                    <p class="mb-0"><strong>Số lượng:</strong>
+                                                        {{$item['Product']->quantity}}</p>
                                                 </div>
                                             </h5>
                                         </div>
                                         <div class="d-flex flex-column text-sm-right">
-                                            <p class="mb-0"><strong>Phương thức vận chuyển:</strong> Đường biển</p>
-                                            <p class="mb-0"><strong>Trạng thái:</strong> Đã kiểm hàng</p>
-                                            <p class="mb-0"><strong>Jancode:</strong>49506950656</p>
-                                            <p><strong>Name:</strong> Giày nike</p>
+                                            <p class="mb-0"><strong>Phương thức vận chuyển:</strong> @foreach ($item['Order']->Transport as $value)
+                                                  {{$value->ship_method == 0 ? 'Đường biển':'Đường hàng không'}}
+                                            @endforeach </p>
+                                            <p class="mb-0"><strong>Trạng thái:</strong>
+                                                @if ($item['Order']->state == 0 )
+                                                Xác định hàng
+                                                @elseif($item['Order']->state == 1)
+                                                Gửi mail báo giá
+                                                @elseif($item['Order']->state == 2)
+                                                Đã cập nhập
+                                                @elseif($item['Order']->state == 3)
+                                                Đã báo giá
+                                                @elseif($item['Order']->state == 4)
+                                                Đã chấp nhận
+                                                @elseif($item['Order']->state == 5)
+                                                Đã thanh toán
+                                                @elseif($item['Order']->state == 6)
+                                                Đã gửi mail
+                                                @elseif($item['Order']->state == 7)
+                                                Đã mua hàng
+                                                @elseif($item['Order']->state == 8)
+                                                Đã kiểm tra
+                                                @elseif($item['Order']->state == 9)
+                                                Đang giao hàng
+                                                @elseif($item['Order']->state == 10)
+                                                Cập cảng Nhật
+                                                @elseif($item['Order']->state == 11)
+                                                Cập cảng Việt
+                                                @elseif($item['Order']->state == 12)
+                                                Đang phát hàng
+                                                @elseif($item['Order']->state == 13)
+                                                Đang nhận hàng
+                                                @endif
+                                            </p>
+                                            <p class="mb-0"><strong>Jancode:</strong> {{$item['Product']->jan_code}}</p>
+                                            <p><strong>Name:</strong> {{$item['Product']->name}}</p>
                                         </div>
                                     </div>
                                     <!-- Add class 'active' to progress -->
                                     <div class="row d-flex justify-content-center" style="margin-left:5%">
                                         <div class="col-12">
-                                            <ul id="progressbar" class="text-center" >
-                                                <li class="active step0" style="width:7%" ></li>
+                                            <ul id="progressbar" class="text-center">
+                                                @if ($item['Order']->state >= 0)
                                                 <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 1)
                                                 <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 2)
                                                 <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 3)
                                                 <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 4)
                                                 <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 5)
                                                 <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 6)
                                                 <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 7)
                                                 <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 8)
                                                 <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 9)
                                                 <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 10)
                                                 <li class="active step0" style="width:7%"></li>
-                                                <li class="step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 11)
+                                                <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 12)
+                                        <li class="active step0" style="width:7%"></li>
+                                                @endif
+                                        @if ($item['Order']->state >= 13)
+                                        <li class="step0" style="width:7%"></li>
+                                        @endif
                                             </ul>
                                         </div>
                                     </div>
                                     <div class="row justify-content-between top" style="margin-left:-2%; margin-top:1%">
+                                        @if ($item['Order']->state >= 0)
                                         <div class="row d-flex icon-content">
                                             <img class="icon" src="https://i.imgur.com/9nnc9Et.png">
                                             <div class="d-flex flex-column">
@@ -133,6 +186,8 @@
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 1)
                                         <div class="row d-flex icon-content">
                                             <img class="icon" src="https://i.imgur.com/u1AzR7w.png">
                                             <div class="d-flex flex-column">
@@ -141,102 +196,139 @@
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 2)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/1689/1689164.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/1689/1689164.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Đã cập nhập
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 3)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/482/482527.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/482/482527.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Đã báo giá
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 4)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/784/784719.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/784/784719.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Đã chấp nhận
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 5)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/669/669844.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/669/669844.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Đã thanh toán
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 6)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/91/91848.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/91/91848.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Đã gửi mail
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 7)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/3770/3770695.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/3770/3770695.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Đã mua hàng
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 8)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/753/753445.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/753/753445.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Đã kiểm tra
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 9)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/709/709790.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/709/709790.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Đang giao hàng
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 10)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/274/274073.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/274/274073.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Cập cảng Nhật
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 11)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/2510/2510359.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/2510/2510359.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Cập cảng Việt
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 12)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/2830/2830175.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/2830/2830175.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Đang phát hàng
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
+                                        @if ($item['Order']->state >= 13)
                                         <div class="row d-flex icon-content">
-                                            <img class="icon" src="https://www.flaticon.com/svg/static/icons/svg/814/814987.svg">
+                                            <img class="icon"
+                                                src="https://www.flaticon.com/svg/static/icons/svg/814/814987.svg">
                                             <div class="d-flex flex-column">
                                                 <p class="font-weight-bold">Order
                                                     <br>Đang nhận hàng
                                                 </p>
                                             </div>
                                         </div>
+                                        @endif
                                     </div>
 
                                 </div>

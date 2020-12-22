@@ -11,10 +11,15 @@ class Bill extends Model
 
     protected $table = 'accoutant_order';
     public $timestamps = false;
+    protected $primaryKey = "Id";
 
-    protected $guarded = [];
+    protected $fillable = ['Id', 'So_Hoadon', 'PriceIn', 'PriceOut', 'Codeorder', 'note', 'Date_Create'];
 
     public function Order(){
-        return $this->belongsTo(Order::class, 'So_Hoadon', 'Sohoadon');
+        return $this->belongsTo(Order::class, 'Codeorder', 'codeorder');
+    }
+
+    public function Product(){
+        return $this->belongsTo(Product::class, 'Codeorder', 'codeorder');
     }
 }

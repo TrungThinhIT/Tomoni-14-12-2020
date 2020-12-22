@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Orders;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Orders\CreateBillRequest;
+use App\Models\Bill;
 use App\Services\Orders\BillService;
 use Illuminate\Http\Request;
 
@@ -30,8 +31,12 @@ class BillController extends Controller
         return view('orders.order', compact('bill'));
     }
 
-    public function create(CreateBillRequest $request){
+    public function getBillDetailById($codeorder){
+        $billDetail = $this->billService->getBillDetailById($codeorder);
+        return view('orders.order_detail', compact('billDetail'));
+    }
 
+    public function create(CreateBillRequest $request){
         return $this->billService->createNew($request);
     }
 }

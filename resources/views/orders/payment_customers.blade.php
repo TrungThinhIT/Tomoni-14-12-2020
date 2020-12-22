@@ -12,24 +12,35 @@
                 <div class="card-body">
                     <div>
                         <div style="margin: 1% 1% 1% 1%;">
-                            <form>
+                            <form action="{{route('orders.payment-customers.index')}}">
                                 <fieldset>
                                     <div class="form-row" style=" margin-top: 1%;">
                                         <div>
-                                            <input class="form-control" type="text" id="Uname" placeholder="">
+                                            <input class="form-control" value="{{$data['Uname']}}" type="text" name="Uname" id="Uname" placeholder="User name">
                                         </div>
                                         <div>
-                                            <input class="form-control" type="date" id="date_inprice">
+                                            <input class="form-control" value="{{$data['date_inprice']}}" type="date" name="date_inprice" id="date_inprice">
                                         </div>
                                         <div>
-                                            <input class="form-control" type="date" id="date_insert">
+                                            <input class="form-control" value="{{$data['date_insert']}}" type="date" name="date_insert" id="date_insert">
                                         </div>
                                         <div>
-                                            <input class="form-control" type="text" id="Sohoadon">
+                                            <input class="form-control" value="{{$data['Sohoadon']}}" type="text" name="Sohoadon" id="Sohoadon" placeholder="Số hóa đơn">
                                         </div>
                                         <div>
-                                            <button type="submit" class="btn btn-primary" style="margin-left: 2%;"
-                                                onclick="UpdateInfoModalDate()">View</button>
+                                            <button type="submit" class="btn btn-primary" style="margin-left: 2%;">Search</button>
+                                        </div>
+                                        <div>
+                                            <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2" style="margin-left: 2%;">Reset</button>
+                                            <script>
+                                                function resetFormSearch() {
+                                                    document.getElementById("Uname").value = "";
+                                                    document.getElementById("date_inprice").value = "";
+                                                    document.getElementById("date_insert").value = "";
+                                                    document.getElementById("Sohoadon").value = "";
+                                                }
+
+                                            </script>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -78,7 +89,7 @@
                                             <div>
                                                 <input type="text" class="form-control" id="shd{{$item->Id}}"
                                                     value="{{$item->Sohoadon}}" onchange="update{{$item->Id}}()"
-                                                    placeholder="So hoa don">
+                                                    placeholder="So hoa don" list="listbillcode" onkeyup='searchMaHoaDon(this)'> <datalist id='listbillcode'></datalist>
                                             </div>
                                         </td>
                                         <td>
@@ -111,8 +122,21 @@
                                                 // }
                                             });
                                         }
+                                    </script>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                        function searchUser(obj) {
+</div>
+<script>
+
+function searchUser(obj) {
         var text = $(obj).val();
             if(text.length > 1){
                 $.ajax({
@@ -137,16 +161,30 @@
             };
     }
 
-                                    </script>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    function searchMaHoaDon(obj) {
+        var text = $(obj).val();
+            if(text.length > 3){
+                $.ajax({
+                type: 'GET',
+                url: "{{route('commons.searchBillCode')}}",
+                data: {
+                    BillCode: text
+                },
+                success: function (response) {
+                    var len = response.length;
+                    $("#listbillcode").empty();
+                    for (var i = 0; i < len; i++) {
+                        var name = response[i]['So_Hoadon'];
+                        var name1 = response[i]['Codeorder'];
 
-</div>
+                        $("#listbillcode").append("<option value='" + name + "'>" + name1 +
+                            "</option>");
+
+                    }
+                }
+            });
+            };
+    }
+
+</script>
 @endsection
