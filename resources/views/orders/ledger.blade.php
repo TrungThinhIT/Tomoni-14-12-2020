@@ -93,7 +93,7 @@
                                 @endforeach
                               </tbody>
                             </table>
-                            <div class="modal" id="modalDetail">
+                            <div class="modal" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-lg" style="min-width: 80%;" >
                                   <div class="modal-content">
 

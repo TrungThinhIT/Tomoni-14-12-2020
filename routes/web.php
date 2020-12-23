@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Orders\BillController;
 use App\Http\Controllers\Orders\LedgerController;
+use App\Http\Controllers\Orders\PaymentCustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Suppliers\InvoiceController;
 use App\Http\Controllers\Suppliers\SupplierController;
@@ -29,9 +31,6 @@ Route::prefix('suppliers')->namespace('suppliers')->name('supplier.')->group(fun
 
     Route::post('/invoice-detail', [InvoiceController::class, 'createDetail'])->name('postInvoiceDetail');
 
-    Route::get('/list-code-order', [InvoiceController::class, 'searchCodeOrder'])->name('listCodeOrder');
-
-    Route::get('/list-code-jan', [InvoiceController::class, 'searchCodeJan'])->name('listCodeJan');
 
     Route::post('/invoice/{Invoice}', [InvoiceController::class, 'updateInvoice'])->name('updateInvoice');
 
@@ -54,9 +53,17 @@ Route::prefix('suppliers')->namespace('suppliers')->name('supplier.')->group(fun
 });
 
 Route::prefix('orders')->namespace('orders')->name('orders.')->group(function () {
-    Route::get('/bill', function () {
-        return view('orders.bill');
-    })->name('bill');
+    Route::prefix('bills')->name('bills.')->group(function () {
+        Route::get('/', [BillController::class, 'indexAll'])->name('indexALl');
+        Route::get('/log/{codeorder}', [BillController::class, 'loadLog'])->name('loadLog');
+        Route::get('/{billcode}', [BillController::class, 'getBillById'])->name('getBillById');
+        Route::get('/detail/{codeorder}', [BillController::class, 'getBilLDetailById'])->name('getBillDetailById');
+        Route::put('/detail/{codeorder}', [BillController::class, 'UpdateBillDetailById'])->name('UpdateBillDetailById');
+        Route::post('/', [BillController::class, 'create'])->name('create');
+        Route::put('/update-fee/{codeorder}', [BillController::class, 'updateFee'])->name('updateFee');
+        Route::put('/update-tracking/{codeorder}', [BillController::class, 'updateShipId'])->name('updateShipId');
+        Route::post('/comment/{codeorder}', [BillController::class, 'comment'])->name('comment');
+    });
 
     Route::get('/order', function () {
         return view('orders.order');
@@ -77,11 +84,12 @@ Route::prefix('orders')->namespace('orders')->name('orders.')->group(function ()
 
     Route::get('/web-order', function () {
         return view('orders.web_order');
-    })->name('web-order');
+    })->name('indexAll');
 
-    Route::get('/payment-customers', function () {
-        return view('orders.payment_customers');
-    })->name('payment-customers');
+    Route::prefix('payment-customers')->name('payment-customers.')->group(function () {
+        Route::get('/', [PaymentCustomerController::class, 'index'])->name('index');
+        Route::put('/{Id}', [PaymentCustomerController::class, 'update'])->name('update');
+    });
 
     Route::get('/customer-debt', function () {
         return view('orders.customer_debt');
@@ -104,4 +112,10 @@ Route::prefix('warehouses')->namespace('warehouses')->name('warehouses.')->group
 
 Route::prefix('commons')->name('commons.')->group(function () {
     Route::get('/search-user', [LedgerController::class, 'searchUser'])->name('search-user');
+
+    Route::get('/search-code-order', [InvoiceController::class, 'searchCodeOrder'])->name('searchCodeOrder');
+
+    Route::get('/search-code-jan', [InvoiceController::class, 'searchCodeJan'])->name('searchCodeJan');
+
+    Route::get('/search-ma-hoa-don', [BillController::class, 'searchBillCode'])->name('searchBillCode');
 });

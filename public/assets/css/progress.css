@@ -19,7 +19,7 @@ body {
     padding-left: 11% !important;
     padding-right: 10% !important;
     pointer-events: auto;
-    
+
 }
 
 #progressbar {
@@ -137,7 +137,7 @@ body {
 
 .icon-content {
     padding-bottom: 20px
-    
+
 }
 
 @media screen and (max-width: 992px) {

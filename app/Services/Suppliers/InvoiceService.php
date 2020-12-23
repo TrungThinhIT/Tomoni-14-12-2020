@@ -35,6 +35,7 @@ class InvoiceService
         if (isset($productName)) {
             $invoices = InvoiceSupplier::whereHas('detail.product', function ($query) use ($productName) {
                 return $query->where('name', 'like', $productName . '%');
+                
             });
         }
         if (isset($webOrder)) {

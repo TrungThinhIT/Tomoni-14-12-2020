@@ -7,59 +7,44 @@
             <div class="card card-documentation">
                 <div class="card-header bg-info-gradient text-white bubble-shadow">
                     <h4>Hoá đơn</h4>
-                    <!-- <p class="mb-0 op-8">Documentation and examples for Bootstrap’s powerful,
-                    responsive navigation header, the navbar. Includes support for branding,
-                    navigation, and more, including support for our collapse plugin.</p> -->
                 </div>
                 <div class="card-body row">
-                    <div class="card" style=" width:10%; padding: 1%; margin-left:1%">
-                        <div >
+                    <div class="card" style=" width:11%; padding: 1%; margin-left:1%">
+                        <form action="{{route('orders.bills.create')}}" method="post">
+                                @csrf
                             <div >
-                                <input
-                                    class="form-control"
-                                    type="dateSearch"
-                                    placeholder="Nhập"
-                                    id="dateSearch"
-                                    onchange="UpdateInfoModalDateIP()">
+                            <div  >
+                                <input class="form-control" value="{{ old('So_Hoadon')}}" type="text" name="So_Hoadon" placeholder="So_Hoadon" >
+                                <span class="alert-danger-custom">{{$errors->first('So_Hoadon')}}</span>
+                            </div>
+{{--
+                            <div  style="  margin-top: 3%;">
+                                <input class="form-control" value="{{ old('PriceIn')}}" type="text" name="PriceIn" placeholder="Price In"  id="example-date-input">
+                                <span class="alert-danger-custom">{{$errors->first('PriceIn')}}</span>
                             </div>
 
-                            <div style="  margin-top: 3%;">
-                                <input
-                                    class="form-control"
-                                    type="dateSearch2"
-                                   placeholder="Nhập"
-                                    id="dateSearch2"
-                                    onchange="UpdateInfoModalDateIP2()">
+                            <div  style="  margin-top: 3%;">
+                                <input class="form-control" value="{{ old('PriceOut')}}" type="text" name="PriceOut" placeholder="Price Out"  id="example-date-input">
+                                <span class="alert-danger-custom">{{$errors->first('PriceOut')}}</span>
+                            </div> --}}
+
+                            <div  style="  margin-top: 3%;">
+                                <input class="form-control" value="{{ old('Codeorder')}}" type="text" name="Codeorder" placeholder="Codeorder"  list='listcodeorder' onkeyup='searchCodeOrder(this)'> <datalist id='listcodeorder'></datalist>
+                                <span class="alert-danger-custom">{{$errors->first('Codeorder')}}</span>
                             </div>
-                        </div>
 
-                        <div style="  margin-top: 3%;">
-                            <select
-                                type="text"
-                                class="form-control"
-                                id="selectedSearch"
-                                placeholder="Nhập số hoá đơn"
-                                required="required"
-                                style=""
-                                onchange="UpdateInfoModalSelected()">
-                                <option>Type</option>
-                                <option>Ketchup</option>
-                                <option>Relish</option>
-                            </select>
-                        </div>
+                            <div  style="  margin-top: 3%;">
+                                <input class="form-control" value="{{ old('note')}}" type="text" name="note" placeholder="Note"  id="example-date-input">
+                                <span class="alert-danger-custom">{{$errors->first('note')}}</span>
+                            </div>
 
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="inputSearch"
-                            placeholder="Nhập User Name"
-                            required="required"
-                            style="margin-top: 3%;"
-                            onchange="UpdateInfoModalIPSearch()"/>
+                            <button type="submit" class="btn btn-primary">Thêm</button>
+                            </div>
+                        </form>
                     </div>
                     <div class="card" style=" margin-left:1%; width:87%; padding:1%">
                         <div >
-                            <form>
+                            <form action="{{route('orders.bills.indexALl')}}">
                                 <fieldset >
                                     <div class="form-row" style=" margin-top: 1%;">
                                         <div >
@@ -67,189 +52,63 @@
                                                 type="submit"
                                                 class="btn btn-primary"
                                                 style="margin-left: 2%;"
-                                                onclick="SearchSoCai()">Tìm kiếm</button>
-                                        </div>
-                                        <div
-                                            type="text"
-                                            class="form-control"
-                                            id="validationDefault01"
-                                            placeholder="Nhập số hoá đơn"
-                                            required="required"
-                                            style="width: 7%;">
-                                            <option>User name</option>
-                                            <!-- <option>Ketchup</option> <option>Relish</option> -->
+                                                >Tìm kiếm</button>
                                         </div>
                                         <input
                                             type="text"
-                                            class="form-control"
-                                            id="userName"
-                                            placeholder="Nhập User Name"
-                                            required="required"
-                                            style="width: 10%;"/>
+                                            class="form-control ml-2"
+                                            value="{{$data['So_Hoadon']}}"
+                                            name="So_Hoadon"
+                                            placeholder="Nhập So hoa don"
+                                            style="width: 11%;"/>
                                         <div >
-                                            <input class="form-control" type="date" value="2020-04-12" id="dateInput">
-                                        </div>
-                                        <div
-                                            type="text"
-                                            class="form-control"
-                                            id="validationDefault01"
-                                            placeholder="Nhập số hoá đơn"
-                                            required="required"
-                                            style="width: 7%;">
-                                            <option>Price In</option>
-                                            <!-- <option>Ketchup</option> <option>Relish</option> -->
+                                            <input class="form-control" type="date" value="{{$data['Date_Create']}}" name="Date_Create">
                                         </div>
                                         <input
                                             type="text"
-                                            class="form-control"
+                                            class="form-control ml-2"
                                             id="priceIn"
                                             placeholder="Nhập price in"
-                                            required="required"
-                                            style="width: 10%;"/>
-                                        <div
-                                            type="text"
-                                            class="form-control"
-                                            id="validationDefault01"
-                                            placeholder="First name"
-                                            required="required"
-                                            style="width: 7%;">
-                                            <option>Price Out</option>
-                                            <!-- <option>Ketchup</option> <option>Relish</option> -->
-                                        </div>
+                                            style="width: 11%;"/>
                                         <input
                                             type="text"
-                                            class="form-control"
+                                            class="form-control ml-2"
                                             id="priceOut"
                                             placeholder="Nhập price out"
-                                            required="required"
-                                            style="width: 10%;"/>
-                                        <div
-                                            type="text"
-                                            class="form-control"
-                                            id="validationDefault01"
-                                            placeholder="Nhập số hoá đơn"
-                                            required="required"
-                                            style="width: 7%;">
-                                            <option>Công nợ</option>
-                                            <!-- <option>Ketchup</option> <option>Relish</option> -->
-                                        </div>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="congNo"
-                                            placeholder="Nhập Card"
-                                            required="required"
-                                            style="width: 10%;"/>
-                                        <!-- <div type="text" class="form-control" id="validationDefault01"
-                                        placeholder="Nhập số hoá đơn" required style="width: 5%;" > <option>Prince
-                                        Out</option> <option>Ketchup</option> <option>Relish</option> </div> <input
-                                        type="text" class="form-control" id="validationDefault01" placeholder="Nhập
-                                        Card" required style="width: 10%;" /> <select type="text" class="form-control"
-                                        id="validationDefault01" placeholder="Nhập số hoá đơn" required style="width:
-                                        10%;" > <option><Table>Type</Table></option> <option>Ketchup</option>
-                                        <option>Relish</option> </select> -->
-                                        <!-- <input type="text" class="form-control" id="validationDefault01"
-                                        placeholder="Nhập số DepositID" required style="width: 10%;" /> -->
+                                            style="width: 11%;"/>
                                     </fieldset>
                                 </form>
+
+                                <div style="float: right" class="mt-3">
+                                    {!! $data['bills']->withQueryString()->links('commons.paginate') !!}</div>
                                 <table class="table table-bordered table-striped" style="margin-top: 1%;">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>Username</th>
-                                            <th>Date</th>
+                                            <th>So hoa don</th>
                                             <th>Price In</th>
                                             <th>Price Out</th>
-                                            <th>Công Nợ</th>
-
+                                            <th>Total</th>
+                                            <th>PriceBelb</th>
+                                            <th>Date Create</th>
                                         </tr>
                                     </thead>
                                     <tbody id="myTable">
+                                        @foreach ($data['bills']->unique('So_Hoadon') as $item)
                                         <tr>
-                                            <td >20-11-2020</td>
+                                            <td>{{$item->Id}}</td>
                                             <td>
-                                                <a id="uName" href="{{route('order.order')}}">123</a>
+                                                <a href="{{route('orders.bills.getBillById', $item->So_Hoadon)}}">{{$item->So_Hoadon}}</a>
                                             </td>
-                                            <td id="date">paid</td>
+                                            <td>{{number_format($item->PriceIn, 0)}}</td>
                                             <td>
-                                                <div >
-                                                    <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="PriceIn"
-                                                        placeholder="First name"
-                                                        value="Saiko"
-                                                        required="required"
-                                                        onchange = "UpdateInfoModalPriceIn()">
-
-                                                </div>
+                                                {{number_format($item->totalPriceOut, 0)}}
                                             </td>
-                                            <td id ="priceOut">Doe</td>
-                                            <td id="congNo">ABC</td>
+                                            <td>{{$item->total}}</td>
+                                            <td>{{$item->total}}</td>
+                                            <td>{{Carbon\Carbon::parse($item->Date_Create)->format('d/m/Y')}}</td>
                                         </tr>
-                                        <tr>
-                                            <td>20-11-2020</td>
-                                            <td>
-                                                <a href="../components/donHang.php">123</a>
-                                            </td>
-                                            <td>paid</td>
-                                            <td>
-                                                <div >
-                                                    <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="PriceIn"
-                                                        placeholder="First name"
-                                                        value="Saiko"
-                                                        required="required"
-                                                        onchange = "UpdateInfoModalPriceIn()">
-                                                </div>
-                                            </td>
-                                            <td>Doe</td>
-                                            <td>ABC</td>
-                                        </tr>
-                                        <tr>
-                                            <td>20-11-2020</td>
-                                            <td>
-                                                <a href="../components/donHang.php">123</a>
-                                            </td>
-                                            <td>paid</td>
-                                            <td>
-                                                <div >
-                                                    <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="PriceIn"
-                                                        placeholder="First name"
-                                                        value="DT3"
-                                                        required="required"
-                                                        onchange = "UpdateInfoModalPriceIn()">
-                                                </div>
-                                            </td>
-                                            <td>Doe</td>
-                                            <td>ABC</td>
-                                        </tr>
-                                        <tr>
-                                            <td>20-11-2020</td>
-                                            <td>
-                                                <a href="../components/donHang.php">123</a>
-                                            </td>
-                                            <td>paid</td>
-                                            <td>
-                                                <div >
-                                                    <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="PriceIn"
-                                                        placeholder="First name"
-                                                        value="DT3"
-                                                        required="required"
-                                                        onchange = "UpdateInfoModalPriceIn()">
-                                                </div>
-                                            </td>
-                                            <td>Doe</td>
-                                            <td>ABC</td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -262,4 +121,58 @@
 
     </div>
 </div>
+<script>
+    function searchCodeOrder(obj) {
+        var text = $(obj).val();
+            if(text.length >3){
+                $.ajax({
+                type: 'GET',
+                url: "{{route('commons.searchCodeOrder')}}",
+                data: {
+                    search_ordercode: text
+                },
+                success: function (response) {
+                    var len = response.length;
+                    $("#listcodeorder").empty();
+                    for (var i = 0; i < len; i++) {
+                        var name = response[i]['codeorder'];
+                        var name1 = response[i]['quantity'];
+                        var name2 = response[i]['total'];
+
+                        $("#listcodeorder").append("<option value='" + name + "'>" + "Quantity: " + name1 + " Total: " + name2 +
+                            "</option>");
+
+                    }
+                }
+            });
+            };
+        }
+
+        function searchBillCode(obj) {
+            // debugger;
+            var text = $(obj).val();
+                if(text.length >3){
+                    $.ajax({
+				type: 'GET',
+				url: "{{route('commons.searchBillCode')}}",
+				data: {
+                    BillCode: text
+				},
+				success: function(response) {
+                    var len = response.length;
+                    $("#listbillcode").empty();
+                for( var i = 0; i<len; i++){
+                    var name = response[i]['depositID'];
+                    var name1 = response[i]['uname'];
+                    var name2 = response[i]['date_inprice'];
+                    var name3 = response[i]['date_insert'];
+
+                    $("#listbillcode").append("<option value='"+name+"'>"+'Uname: '+ name1 + ' Ngày vào: '+ name2 + ' Ngày vô tiền: '+ name3 +"</option>");
+
+                }
+				}
+			    });
+                }
+        }
+</script>
 @endsection
