@@ -125,7 +125,11 @@
                                                 @endif
                                             </p>
                                             <p class="mb-0"><strong>Jancode:</strong> {{$item['Product']->jan_code}}</p>
+<<<<<<< HEAD
                                             <p><strong>Name:</strong> {{$item['Product']->ProductStandard['name']}}</p>
+=======
+                                            <p><strong>Name:</strong> {{$item['Product']->name}}</p>
+>>>>>>> aec08b6419cb2c2e8df4dfd38eebc92e40d860d6
                                         </div>
                                     </div>
                                     <!-- Add class 'active' to progress -->

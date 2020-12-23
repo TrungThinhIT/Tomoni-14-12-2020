@@ -29,6 +29,7 @@
     <link href="{{asset('/assets/prism.css')}}" rel="stylesheet" />
     <link href="{{asset('/assets/css/iconResource.css')}}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{asset('/assets/css/validate.css')}}">
+    <link rel="stylesheet" href="{{asset('/assets/css/progress.css')}}">
     @toastr_css
 </head>
 <body>
