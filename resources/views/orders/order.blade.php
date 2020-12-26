@@ -8,63 +8,12 @@
             <div class="card card-documentation">
                 <div class="card-header bg-info-gradient text-white bubble-shadow">
                     <h4>Đơn hàng đang xữ lý</h4>
-                    <!-- <p class="mb-0 op-8">Documentation and examples for Bootstrap’s powerful,
-                    responsive navigation header, the navbar. Includes support for branding,
-                    navigation, and more, including support for our collapse plugin.</p> -->
                 </div>
                 <div class=" row">
 
                     <div class="row" style="width: 100%">
 
                         <div class="card" style=" margin-left:1%; width:100%; ">
-
-                            <div class="card-header">
-
-                                <div style="float: right; display:flex">
-                                    <div>
-                                        <button type="submit" class="btn btn-warning" id="search_type"
-                                            onclick="SearchDonHang()">Tìm kiếm</button>
-                                    </div>
-                                    <div class="col-md-2 mb-3" style="padding: unset;">
-                                        <input type="text" class="form-control" name="uinvoice" id="title_2"
-                                            placeholder="Nhập mã hàng" required="required">
-                                    </div>
-                                    <div class="col-md-4 mb-3" style="padding: unset;">
-
-                                        <select type="text" class="form-control" id="search_type2" required="required">
-                                            <option value="" selected="selected" disabled="disabled">Please select
-                                            </option>
-                                            <option value="Code order">Code order</option>
-                                            <option value="JanCode">JanCode</option>
-                                            <option value="Uname">Uname</option>
-                                            <option value="Product name">Product name</option>
-                                            <option value="Invoice">Invoice</option>
-                                            <option value="None">None</option>
-                                            <option value="Pone">Pone</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4 mb-3" style="padding: unset;">
-                                        <select type="text" class="form-control" id="fil_type" required="required">
-                                            <option value="" selected="selected" disabled="disabled">Please select
-                                            </option>
-                                            <option value="Đã xác định hàng">Đã xác định hàng</option>
-                                            <option value="Đã gửi mail báo giá">Đã gửi mail báo giá</option>
-                                            <option value="Đã cập nhập">Đã cập nhập</option>
-                                            <option value="Đã báo giá">Đã báo giá</option>
-                                            <option value="Đã chấp nhận">Đã chấp nhận</option>
-                                            <option value="Đã thanh toán">Đã thanh toán</option>
-                                            <option value="Đã gửi mail mua hàng">Đã gửi mail mua hàng</option>
-                                            <option value="Đã mua hàng">Đã mua hàng</option>
-                                            <option value="Đã kiểm hàng">Đã kiểm hàng</option>
-                                            <option value="Đang giao hàng">Đang giao hàng</option>
-                                            <option value="Cập cảng Nhật">Cập cảng Nhật</option>
-                                            <option value="Cập cảng Việt">Cập cảng Việt</option>
-                                            <option value="Đang phát hàng">Đang phát hàng</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                            </div>
                             <ul class="list-group list-group-flush">
 
                                 @foreach ($bill as $item)
@@ -73,7 +22,12 @@
                                         style="margin: 1% 3% 0% 3% ">
                                         <div class="d-flex">
                                             <div class="avatar avatar-xxl">
-                                                <img src="{{$item['Product']->urlimg}}" alt="..."
+                                                <img src="
+                                                @if (strpos($item['Product']->urlimg, 'http') === 0)
+                                                {{$item['Product']->urlimg}}
+                                                @else
+                                                https://tomoniglobal.com/{{$item['Product']->urlimg}}
+                                                @endif" alt="..."
                                                     class="avatar-img rounded">
                                             </div>
                                             <h5>ORDER
@@ -125,11 +79,7 @@
                                                 @endif
                                             </p>
                                             <p class="mb-0"><strong>Jancode:</strong> {{$item['Product']->jan_code}}</p>
-<<<<<<< HEAD
                                             <p><strong>Name:</strong> {{$item['Product']->ProductStandard['name']}}</p>
-=======
-                                            <p><strong>Name:</strong> {{$item['Product']->name}}</p>
->>>>>>> aec08b6419cb2c2e8df4dfd38eebc92e40d860d6
                                         </div>
                                     </div>
                                     <!-- Add class 'active' to progress -->

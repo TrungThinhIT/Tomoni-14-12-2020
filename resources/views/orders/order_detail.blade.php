@@ -26,7 +26,13 @@
                                     <td>1</td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <img style="float: left; max-width: 150px; max-height: 200px" src="{{$billDetail['detail']->Product->urlimg}}"
+                                            <img style="float: left; max-width: 150px; max-height: 200px"
+                                            src="
+                                                @if (strpos($billDetail['detail']->Product->urlimg, 'http') === 0)
+                                                {{$billDetail['detail']->Product->urlimg}}
+                                                @else
+                                                https://tomoniglobal.com/{{$billDetail['detail']->Product->urlimg}}
+                                                @endif"
                                                 alt="">
                                             <div class="text-left">
                                                 <strong>Name:
@@ -119,6 +125,9 @@
                     fee_box: fee_box,
                     fee_service: fee_service
                 },
+                success: function (response){
+                    toastr.success('Cập nhập thông tin phẩm thành công.', 'Notifycation', {timeOut: 1000})
+                },
                 error: function (response) {
                     $.each(response.responseJSON.errors, function (field_name, error) {
                         alert(error)
@@ -184,6 +193,9 @@
                     price: price,
                     quantity: quantity,
                     total: totalAfter
+                },
+                success: function (response) {
+                    toastr.success('Cập nhập giá sản phẩm thành công.', 'Notifycation', {timeOut: 1000})
                 }
             })
         }

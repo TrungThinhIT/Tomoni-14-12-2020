@@ -36,8 +36,54 @@ class BillService
 
         $So_Hoadon = $request->So_Hoadon;
         $Date_Create = $request->Date_Create;
+        $Uname = $request->Uname;
 
-        $bills = DB::table('accoutant_order');
+        $bills = $bills = Bill::with('Order');
+
+        if (!empty($So_Hoadon)) {
+            $bills = $bills->where('So_Hoadon', 'like', '%' . $So_Hoadon);
+        }
+
+        if (!empty($Date_Create)) {
+            $bills = $bills->orWhereDate('Date_Create', $Date_Create);
+        }
+
+        if (!empty($Uname)) {
+            $bills = $bills->whereHas('Order', function ($query) use ($Uname){
+                return $query->where('uname', $Uname);
+            });
+        }
+
+        $bills = $bills
+        ->select()->selectRaw('count(Id) as total')
+        ->selectRaw('sum(PriceOut) as totalPriceOut')
+        ->groupBy('So_Hoadon')
+        ->paginate(5);
+        return ['bills' => $bills, 'So_Hoadon'=> $So_Hoadon, 'Uname'=> $Uname, 'Date_Create'=> $Date_Create];
+    }
+
+    public function getALlBillByUname(Request $request, $uname){
+        $codeOrderByBill = Bill::select('Codeorder')->get()->toArray();
+        $billcodes = DB::table('quanlythe')->where('Sohoadon', '!=', null)->select('Sohoadon')->distinct()->get()->toArray();
+        foreach ($codeOrderByBill as  $value) {
+            $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
+            Bill::where('Codeorder', $value)->update([
+                'PriceOut' => $priceOrder->total
+            ]);
+        }
+
+        foreach($billcodes as $value){
+            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->selectRaw('sum(price_in) as totalPriceIn')->first();
+            Bill::where('So_Hoadon', $value->Sohoadon)->update([
+                'PriceIn' => $sumPriceIn->totalPriceIn
+            ]);
+        }
+        $So_Hoadon = $request->So_Hoadon;
+        $Date_Create = $request->Date_Create;
+
+        $bills = Bill::with('Order')->whereHas('Order', function ($query) use ($uname){
+            return $query->where('uname', $uname);
+        });
 
         if (!empty($So_Hoadon)) {
             $bills = $bills->where('So_Hoadon', 'like', '%' . $So_Hoadon);
@@ -52,7 +98,7 @@ class BillService
         ->selectRaw('sum(PriceOut) as totalPriceOut')
         ->groupBy('So_Hoadon')
         ->paginate(5);
-        return ['bills' => $bills, 'So_Hoadon'=> $So_Hoadon, 'Date_Create'=> $Date_Create];
+        return ['bills' => $bills, 'So_Hoadon'=> $So_Hoadon, 'Uname'=> $uname, 'Date_Create'=> $Date_Create];
     }
 
     public function getBillById($billcode){

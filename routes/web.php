@@ -55,6 +55,7 @@ Route::prefix('suppliers')->namespace('suppliers')->name('supplier.')->group(fun
 Route::prefix('orders')->namespace('orders')->name('orders.')->group(function () {
     Route::prefix('bills')->name('bills.')->group(function () {
         Route::get('/', [BillController::class, 'indexAll'])->name('indexALl');
+        Route::get('/by-uname/{uname}', [BillController::class, 'indexAllByUname'])->name('indexAllByUname');
         Route::get('/log/{codeorder}', [BillController::class, 'loadLog'])->name('loadLog');
         Route::get('/{billcode}', [BillController::class, 'getBillById'])->name('getBillById');
         Route::get('/detail/{codeorder}', [BillController::class, 'getBilLDetailById'])->name('getBillDetailById');

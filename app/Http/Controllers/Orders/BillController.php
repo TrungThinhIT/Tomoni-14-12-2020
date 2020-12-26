@@ -26,6 +26,11 @@ class BillController extends Controller
         return view('orders.bill', compact('data'));
     }
 
+    public function indexAllByUname(Request $request, $uname){
+        $data =  $this->billService->getALlBillByUname($request, $uname);
+        return view('orders.billByUname', compact('data'));
+    }
+
     public function getBillById($billcode){
         $bill = $this->billService->getBillById($billcode);
         return view('orders.order', compact('bill'));

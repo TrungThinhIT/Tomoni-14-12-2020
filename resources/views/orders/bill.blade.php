@@ -61,6 +61,13 @@
                                             name="So_Hoadon"
                                             placeholder="Nhập So hoa don"
                                             style="width: 11%;"/>
+                                            <input
+                                            type="text"
+                                            class="form-control ml-2"
+                                            value="{{$data['Uname']}}"
+                                            name="Uname"
+                                            placeholder="Nhập Uname"
+                                            style="width: 11%;"/>
                                         <div >
                                             <input class="form-control" type="date" value="{{$data['Date_Create']}}" name="Date_Create">
                                         </div>
@@ -86,6 +93,7 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>So hoa don</th>
+                                            <th>Uname</th>
                                             <th>Price In</th>
                                             <th>Price Out</th>
                                             <th>Total</th>
@@ -100,6 +108,7 @@
                                             <td>
                                                 <a href="{{route('orders.bills.getBillById', $item->So_Hoadon)}}">{{$item->So_Hoadon}}</a>
                                             </td>
+                                            <td>{{$item['Order']->uname}}</td>
                                             <td>{{number_format($item->PriceIn, 0)}}</td>
                                             <td>
                                                 {{number_format($item->totalPriceOut, 0)}}

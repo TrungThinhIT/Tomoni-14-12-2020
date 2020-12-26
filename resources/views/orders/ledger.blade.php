@@ -71,7 +71,7 @@
                                 @foreach ($data['ledgers'] as $item)
                                 <tr>
                                     <td>{{$item->Id}}</td>
-                                    <td ><a href="{{route('orders.order')}}">{{$item->Uname}}</a></td>
+                                    <td ><a href="{{route('orders.bills.indexAllByUname', $item->Uname)}}">{{$item->Uname}}</a></td>
                                     <td>{{$item->PriceIn}}</td>
                                     <td>{{$item->PriceOut}}</td>
                                     <td>{{$item->Pricedelb}}</td>
