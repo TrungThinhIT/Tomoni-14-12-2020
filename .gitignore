@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /vendor
+Tomoni-Project.zip
 .env
 .env.backup
 .phpunit.result.cache
