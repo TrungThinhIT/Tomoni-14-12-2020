@@ -16,9 +16,11 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $primaryKey = "Id";
+    protected $primaryKey = "uname";
 
     public $timestamps = false;
+
+    protected $table = 'users';
 
     protected $guarded = [];
 
