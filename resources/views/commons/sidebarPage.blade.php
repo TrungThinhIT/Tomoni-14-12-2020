@@ -35,7 +35,7 @@
                     <option>Relish</option>
                 </select> -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="../components/componentOrder.php" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
                         <span class="letter-icon">O</span>
                         <p>Order</p>
