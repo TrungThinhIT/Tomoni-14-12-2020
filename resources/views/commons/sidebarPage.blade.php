@@ -64,7 +64,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                        <span class="letter-icon">W</span>
+                        <span class="letter-icon">Hello: </span>
                         <p>{{Auth::user()->fname}}</p>
                     </a>
                     <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">

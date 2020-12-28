@@ -77,11 +77,10 @@ class PasswordResetService
 
         if ($checkToken) {
             $findEmail = PasswordReset::where('token', $token)->get()->first();
-            $updatePassword = User::where('email', $findEmail->email)->get()->first();
-            $updatePassword->password = Hash::make($rePassword);
-            $updatePassword->save();
-            $user = User::find($updatePassword->uname);
-            if ($updatePassword) {
+            $user = User::where('email', $findEmail->email)->get()->first();
+            $user->password = Hash::make($rePassword);
+            $user->save();
+            if ($user) {
                 Auth::login($user);
                 PasswordReset::where('token', $token)->delete();
                 return redirect('/');

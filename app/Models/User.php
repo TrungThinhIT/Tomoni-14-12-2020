@@ -16,7 +16,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $primaryKey = "uname";
+    protected $primaryKey = "Id";
 
     public $timestamps = false;
 
