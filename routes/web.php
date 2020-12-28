@@ -24,16 +24,17 @@ use Illuminate\Support\Facades\Auth;
 Route::prefix('auth')->namespace('auth')->name('auth.')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('loginIndex');
     Route::post('/login', [LoginController::class, 'login'])->name('doLogin');
+
+    Route::get('/logout', function () {
+        Auth::logout();
+        return redirect()->route('auth.loginIndex');
+    })->name('logout');
+
     Route::get('/password-reset', [PasswordResetController::class, 'index'])->name('passwordResetIndex');
     Route::post('/password-reset', [PasswordResetController::class, 'sendToken'])->name('doPasswordReset');
     Route::get('/change-password/token={token}', [PasswordResetController::class, 'indexChangePassword'])->name('getChangePassword');
     Route::put('/change-password', [PasswordResetController::class, 'doChangePasswordReset'])->name('doChangePasswordReset');
 });
-
-Route::get('/logout', function () {
-    Auth::logout();
-    return redirect()->route('auth.loginIndex');
-})->name('index');
 
 Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/', function () {

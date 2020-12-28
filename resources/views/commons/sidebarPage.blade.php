@@ -61,6 +61,19 @@
 
                     </ul>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                        <span class="letter-icon">W</span>
+                        <p>{{Auth::user()->fname}}</p>
+                    </a>
+                    <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{{route('warehouses.imported')}}">Hàng Nhập </a></li>
+                        <li><a class="dropdown-item" href="{{route('warehouses.exported')}}">Hàng xuất</a></li>
+                        <li><a class="dropdown-item" href="{{route('auth.logout')}}">Đăng xuất</a></li>
+
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>
