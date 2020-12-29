@@ -74,6 +74,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::prefix('orders')->namespace('orders')->name('orders.')->group(function () {
         Route::prefix('bills')->name('bills.')->group(function () {
             Route::get('/', [BillController::class, 'indexAll'])->name('indexALl');
+            Route::get('/delete/{codeorder}', [BillController::class, 'deleteCodeorderInBill'])->name('deleteCodeorderInBill');
             Route::get('/by-uname/{uname}', [BillController::class, 'indexAllByUname'])->name('indexAllByUname');
             Route::get('/log/{codeorder}', [BillController::class, 'loadLog'])->name('loadLog');
             Route::get('/{billcode}', [BillController::class, 'getBillById'])->name('getBillById');

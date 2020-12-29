@@ -16,7 +16,15 @@ class LoginService
     {
         $remember = ($request->remember_me) ? true : false;
         if (Auth::attempt((['uname' => $request->uname, 'password' => $request->password]), $remember)) {
-            return redirect()->intended(route('index'));
+            $user = Auth::user();
+            if ($user->type != 2) {
+                Auth::logout();
+                $request->flash('request', $request->all());
+                Session()->flash('message_error', 'Tài khoản không có quyền truy cập!');
+                return back();
+            } else {
+                return redirect()->intended(route('index'));
+            }
         } else {
             $request->flash('request', $request->all());
             Session()->flash('message_error', 'Sai tên đăng nhập hoặc mật khẩu!');

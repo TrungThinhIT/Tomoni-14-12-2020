@@ -62,9 +62,9 @@
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                        <span class="letter-icon">Hello: </span>
+                        <span class="letter-icon">Hi: </span>
                         <p>{{Auth::user()->fname}}</p>
                     </a>
                     <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">

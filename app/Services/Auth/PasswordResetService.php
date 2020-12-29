@@ -30,7 +30,11 @@ class PasswordResetService
         if (empty($resultEmail)) {
             Session()->flash('message_error', 'Email không đúng, vui lòng thử lại');
             return back();
-        } else {
+        } else if($resultEmail->type != 2){
+            Session()->flash('message_error', 'Tài khoản không có quyền truy cập!');
+            return back();
+        }
+        else {
             $checkEmail = PasswordReset::where('email', $email)->orderBy('expiration_date', 'DESC')->get()->first();
             if ($checkEmail != null && now() <= $checkEmail->expiration_date) {
                 Session()->flash('message_error', 'Thư đổi mật khẩu đã tồn tại, vui lòng kiểm tra hoặc đợi sau 5 phút!');

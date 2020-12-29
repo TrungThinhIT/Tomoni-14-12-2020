@@ -68,9 +68,10 @@
                                 </tr>
                               </thead>
                               <tbody id="myTable">
+                                @php $count = 1; @endphp
                                 @foreach ($data['ledgers'] as $item)
                                 <tr>
-                                    <td>{{$item->Id}}</td>
+                                    <td>{{$data['ledgers']->perPage()*($data['ledgers']->currentPage()-1)+$count}}</td>
                                     <td ><a href="{{route('orders.bills.indexAllByUname', $item->Uname)}}">{{$item->Uname}}</a></td>
                                     <td>{{$item->PriceIn}}</td>
                                     <td>{{$item->PriceOut}}</td>
@@ -90,6 +91,7 @@
                                       }
                                     }
                                     </script>
+                                   @php $count ++; @endphp
                                 @endforeach
                               </tbody>
                             </table>

@@ -54,8 +54,8 @@
                                         <th style="min-width: 200px;">Uname</th>
                                         <th>date_inprice</th>
                                         <th>date_insert</th>
-                                        {{-- <th>Price In</th>
-                                  <th>Prince Out</th>
+                                        <th>Price In</th>
+                                  {{-- <th>Prince Out</th>
                                   <th>type_price</th>
                                   <th>cardID</th>
                                   <th>note</th>
@@ -77,8 +77,8 @@
                                         </td>
                                         <td>{{$item->date_inprice}}</td>
                                         <td>{{$item->date_insert}}</td>
-                                        {{-- <td>{{$item->price_in}}</td>
-                                        <td>
+                                        <td>{{number_format($item->price_in, 0)}}</td>
+                                        {{-- <td>
                                             {{$item->price_out}}
                                         </td>
                                         <td>{{$item->type_price}}</td>
@@ -112,14 +112,9 @@
                                                     uname: us,
                                                     sohoadon: shd
                                                 },
-                                                // success: function (response) {
-                                                //     if (response == 1) {
-                                                //         alert()
-                                                //     }
-                                                //     if (response == 2) {
-                                                //         location.reload();
-                                                //     }
-                                                // }
+                                                success: function (response) {
+                                                    toastr.success('Cập nhập thành công.', 'Notifycation', {timeOut: 1000})
+                                                }
                                             });
                                         }
                                     </script>

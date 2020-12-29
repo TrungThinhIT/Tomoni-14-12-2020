@@ -102,9 +102,10 @@
                                         </tr>
                                     </thead>
                                     <tbody id="myTable">
+                                        @php $count = 1; @endphp
                                         @foreach ($data['bills']->unique('So_Hoadon') as $item)
                                         <tr>
-                                            <td>{{$item->Id}}</td>
+                                            <td>{{$data['bills']->perPage()*($data['bills']->currentPage()-1)+$count}}</td>
                                             <td>
                                                 <a href="{{route('orders.bills.getBillById', $item->So_Hoadon)}}">{{$item->So_Hoadon}}</a>
                                             </td>
@@ -114,9 +115,10 @@
                                                 {{number_format($item->totalPriceOut, 0)}}
                                             </td>
                                             <td>{{$item->total}}</td>
-                                            <td>{{$item->total}}</td>
+                                            <td>{{number_format($item->PriceIn - $item->totalPriceOut, 0)}}</td>
                                             <td>{{Carbon\Carbon::parse($item->Date_Create)->format('d/m/Y')}}</td>
                                         </tr>
+                                        @php $count++; @endphp
                                         @endforeach
                                     </tbody>
                                 </table>
