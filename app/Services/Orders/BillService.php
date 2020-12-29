@@ -41,7 +41,7 @@ class BillService
         $Date_Create = $request->Date_Create;
         $Uname = $request->Uname;
 
-        $bills = $bills = Bill::with('Order');
+        $bills = $bills = Bill::with('Order')->where('deleted_at',  null);
 
         if (!empty($So_Hoadon)) {
             $bills = $bills->where('So_Hoadon', 'like', '%' . $So_Hoadon);
@@ -97,7 +97,7 @@ class BillService
             $bills = $bills->orWhereDate('Date_Create', $Date_Create);
         }
 
-        $bills = $bills
+        $bills = $bills->where('deleted_at', null)
             ->select()->selectRaw('count(Id) as total')
             ->selectRaw('sum(PriceOut) as totalPriceOut')
             ->groupBy('So_Hoadon')
@@ -107,7 +107,7 @@ class BillService
 
     public function getBillById($billcode)
     {
-        return Bill::where('So_Hoadon', $billcode)->with('Order.Transport', 'Product.ProductStandard')->get();
+        return Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->get();
     }
 
     public function getBillDetailById($codeorder)
@@ -176,6 +176,7 @@ class BillService
     public function deleteCoceorderInBill($codeorder)
     {
         $codeorder = Bill::where('codeorder', $codeorder)->with('Order.Product')->first();
+        $billcode = $codeorder->So_Hoadon;
         $log = LogAccountant::create([
             'jan_code' => $codeorder->Order->Product->jan_code,
             'codeorder' => $codeorder->Codeorder,
@@ -183,10 +184,18 @@ class BillService
             'Sohoadon' => $codeorder->So_Hoadon,
             'DateAct' => now()
         ]);
-        $codeorder->delete();
+        Bill::where('Id', $codeorder->Id)->update([
+            'deleted_at' => now()
+        ]);
         if ($log) {
-            toastr()->success('Delete successfully!', 'Notifycation');
+            $status = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->first();
+            if($status !== null){
+                toastr()->success('Delete successfully!', 'Notifycation');
             return back();
+            }else{
+                toastr()->success('Delete successfully!', 'Notifycation');
+                return redirect()->intended(route('orders.bills.indexALl'));
+            }
         } else {
             toastr()->error('Delete failed!', 'Notifycation');
             return back();

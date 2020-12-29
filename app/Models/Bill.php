@@ -13,7 +13,7 @@ class Bill extends Model
     public $timestamps = false;
     protected $primaryKey = "Id";
 
-    protected $fillable = ['Id', 'So_Hoadon', 'PriceIn', 'PriceOut', 'Codeorder', 'note', 'Date_Create'];
+    protected $fillable = ['Id', 'So_Hoadon', 'PriceIn', 'PriceOut', 'Codeorder', 'note', 'Date_Create', 'delete_at'];
 
     public function Order(){
         return $this->belongsTo(Order::class, 'Codeorder', 'codeorder');

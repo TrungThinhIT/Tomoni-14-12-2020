@@ -117,7 +117,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
         })->name('customer-debt');
     });
 
-    Route::prefix('warehouses')->namespace('warehouses')->name('warehouses.')->group(function () {
+    Route::prefix('warehouses')->middleware('role')->namespace('warehouses')->name('warehouses.')->group(function () {
         Route::get('/imported', function () {
             return view('warehouses.imported');
         })->name('imported');
