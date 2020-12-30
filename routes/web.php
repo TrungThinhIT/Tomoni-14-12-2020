@@ -41,9 +41,9 @@ Route::prefix('auth')->namespace('auth')->name('auth.')->group(function () {
 Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('commons.index');
-    })->name('index');
+    })->middleware('role')->name('index');
 
-    Route::prefix('suppliers')->namespace('suppliers')->name('supplier.')->group(function () {
+    Route::prefix('suppliers')->middleware('role')->namespace('suppliers')->name('supplier.')->group(function () {
         Route::get('/invoice', [InvoiceController::class, 'list'])->name('invoice');
 
         Route::get('/invoice/{Invoice}', [InvoiceController::class, 'show'])->name('showInvoice');
@@ -73,7 +73,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
         })->name('debt');
     });
 
-    Route::prefix('orders')->namespace('orders')->name('orders.')->group(function () {
+    Route::prefix('orders')->middleware('role')->namespace('orders')->name('orders.')->group(function () {
         Route::prefix('bills')->name('bills.')->group(function () {
             Route::get('/', [BillController::class, 'indexAll'])->name('indexALl');
             Route::get('/delete/{codeorder}', [BillController::class, 'deleteCodeorderInBill'])->name('deleteCodeorderInBill');
@@ -131,7 +131,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
         })->name('inventory');
     });
 
-    Route::prefix('commons')->name('commons.')->group(function () {
+    Route::prefix('commons')->middleware('role')->name('commons.')->group(function () {
         Route::get('/search-user', [LedgerController::class, 'searchUser'])->name('search-user');
 
         Route::get('/search-code-order', [InvoiceController::class, 'searchCodeOrder'])->name('searchCodeOrder');
@@ -139,5 +139,11 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::get('/search-code-jan', [InvoiceController::class, 'searchCodeJan'])->name('searchCodeJan');
 
         Route::get('/search-ma-hoa-don', [BillController::class, 'searchBillCode'])->name('searchBillCode');
+    });
+
+    Route::prefix('customer')->name('customer.')->group(function () {
+        Route::get('/', function() {
+            return view('customers.index');
+        })->name('index');
     });
 });

@@ -127,11 +127,6 @@
                 },
                 success: function (response){
                     toastr.success('Cập nhập thông tin phẩm thành công.', 'Notifycation', {timeOut: 1000})
-                },
-                error: function (response) {
-                    $.each(response.responseJSON.errors, function (field_name, error) {
-                        alert(error)
-                    })
                 }
             })
         }
@@ -150,10 +145,8 @@
                 data: {
                     shipid: shipid
                 },
-                error: function (response) {
-                    $.each(response.responseJSON.errors, function (field_name, error) {
-                        alert(error)
-                    })
+                success: function (response) {
+                    toastr.success('Cập nhập giá sản phẩm thành công.', 'Notifycation', {timeOut: 1000})
                 }
             })
         }
@@ -220,6 +213,7 @@
                             type: 'get',
                             url: '/orders/bills/log/' + codeorder,
                             success: function (response) {
+                                toastr.success('Cập nhập giá sản phẩm thành công.', 'Notifycation', {timeOut: 1000});
                                 $("#remove").remove();
                                 $('#log').append(response);
                                 $('#log').scrollTop(1000000);

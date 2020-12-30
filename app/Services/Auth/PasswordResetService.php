@@ -30,9 +30,6 @@ class PasswordResetService
         if (empty($resultEmail)) {
             Session()->flash('message_error', 'Email không đúng, vui lòng thử lại');
             return back();
-        } else if($resultEmail->type != 2){
-            Session()->flash('message_error', 'Tài khoản không có quyền truy cập!');
-            return back();
         }
         else {
             $checkEmail = PasswordReset::where('email', $email)->orderBy('expiration_date', 'DESC')->get()->first();
@@ -87,7 +84,11 @@ class PasswordResetService
             if ($user) {
                 Auth::login($user);
                 PasswordReset::where('token', $token)->delete();
-                return redirect('/');
+                if($user->type != 2){
+                    return redirect()->intended(route('customer.index'));
+                }else{
+                    return redirect()->intended(route('index'));
+                }
             } else {
                 Session()->flash('message_error', 'Đã có lỗi xảy ra, vui lòng liên hệ quản trị viên!');
                 return back();
