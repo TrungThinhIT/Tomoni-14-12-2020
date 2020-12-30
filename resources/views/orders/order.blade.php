@@ -81,7 +81,7 @@
                                             <p class="mb-0"><strong>Jancode:</strong> {{$item['Product']->jan_code}}</p>
                                             <p><strong>Name:</strong> {{$item['Product']->ProductStandard['name']}}</p>
                                             <div>
-                                                <a href="delete/{{$item->Codeorder}}" onclick="return confirm('Are you sure you want to delete this item?');" type="button">Remove Codeorder</a>
+                                                <a class="btn btn-danger" href="delete/{{$item->Codeorder}}" onclick="return confirm('Are you sure you want to delete this item?');" type="button">Remove Codeorder</a>
                                             </div>
                                         </div>
                                     </div>

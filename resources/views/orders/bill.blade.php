@@ -30,7 +30,7 @@
 
                             <div  style="  margin-top: 3%;">
                                 <input class="form-control" value="{{ old('Codeorder')}}" type="text" name="Codeorder" placeholder="Codeorder"  list='listcodeorder' onkeyup='searchCodeOrder(this)'> <datalist id='listcodeorder'></datalist>
-                                <span class="alert-danger-custom">{{$errors->first('Codeorder')}}</span>
+                                <span class="alert-danger-custom">{{$errors->first('Codeorder')}} {{Session::get('Codeorder')}}</span>
                             </div>
 
                             <div  style="  margin-top: 3%;">

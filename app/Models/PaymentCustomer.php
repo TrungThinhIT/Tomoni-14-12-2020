@@ -11,6 +11,10 @@ class PaymentCustomer extends Model
 
     protected $table = 'quanlythe';
     public $timestamps = false;
-
+    public $primaryKey = 'Id';
     protected $guarded = [];
+
+    public function Customer(){
+        return $this->hasMany(Order::class, 'uname', 'uname');
+    }
 }

@@ -128,6 +128,12 @@ class BillService
 
     public function createNew(CreateBillRequest $request)
     {
+        $check = Order::where('codeorder', $request->Codeorder)->first();
+        if($check === null){
+            $request->flash('request', $request->all());
+            Session()->flash('Codeorder', 'Codeorder wrong!');
+        }else{
+
         Bill::create([
             'So_Hoadon' => $request->So_Hoadon,
             'Codeorder' => $request->Codeorder,
@@ -137,6 +143,7 @@ class BillService
             'Sohoadon' => $request->So_Hoadon
         ]);
         toastr()->success('Create successfully!', 'Notifycation');
+        }
         return back();
     }
 

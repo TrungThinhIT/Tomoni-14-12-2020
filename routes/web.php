@@ -3,11 +3,13 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Orders\BillController;
+use App\Http\Controllers\Orders\CustomerController;
 use App\Http\Controllers\Orders\LedgerController;
 use App\Http\Controllers\Orders\PaymentCustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Suppliers\InvoiceController;
 use App\Http\Controllers\Suppliers\SupplierController;
+use App\Services\Orders\CustomerService;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -112,9 +114,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::put('/{Id}', [PaymentCustomerController::class, 'update'])->name('update');
         });
 
-        Route::get('/customer-debt', function () {
-            return view('orders.customer_debt');
-        })->name('customer-debt');
+        Route::get('/customer-debt', [CustomerController::class, 'index'])->name('customer-debt');
     });
 
     Route::prefix('warehouses')->middleware('role')->namespace('warehouses')->name('warehouses.')->group(function () {
