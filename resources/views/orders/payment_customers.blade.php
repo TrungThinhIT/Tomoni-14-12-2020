@@ -75,7 +75,7 @@
                                                     placeholder="User name" list="litsusername" onkeyup='searchUser(this)'> <datalist id='litsusername'></datalist>
                                             </div>
                                         </td>
-                                        <td>{{$item->date_inprice}}</td>
+                                        <td>{{$item->dateget}}</td>
                                         <td>{{$item->date_insert}}</td>
                                         <td>{{number_format($item->price_in, 0)}}</td>
                                         {{-- <td>

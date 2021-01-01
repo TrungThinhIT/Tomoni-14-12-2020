@@ -19,6 +19,19 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
+                        <span class="letter-icon">B: </span>
+                        <p>Tool</p>
+                    </a>
+                    <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="{{route('customer.bill.index')}}">Bill</a></li>
+                        <li><a class="dropdown-item" href="{{route('customer.payment.index')}}">Payment</a></li>
+                        <li><a class="dropdown-item" href="{{route('customer.debt.index')}}">Debt</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
                         <span class="letter-icon">Hi: </span>
                         <p>{{Auth::user()->fname}}</p>
                     </a>

@@ -173,9 +173,10 @@ class BillService
 
     public function createComment(Request $request, $codeorder)
     {
+        $uname = Auth::user()->uname;
         LogAdmin::create([
             'codeorder' => $codeorder,
-            'uname' => 'admin',
+            'uname' => $uname,
             'note' => $request->note
         ]);
     }

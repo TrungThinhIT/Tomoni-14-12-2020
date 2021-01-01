@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Customers\BillController as CustomersBillController;
+use App\Http\Controllers\Customers\DebtController;
+use App\Http\Controllers\Customers\PaymentController;
 use App\Http\Controllers\Orders\BillController;
 use App\Http\Controllers\Orders\CustomerController;
 use App\Http\Controllers\Orders\LedgerController;
@@ -9,7 +12,7 @@ use App\Http\Controllers\Orders\PaymentCustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Suppliers\InvoiceController;
 use App\Http\Controllers\Suppliers\SupplierController;
-use App\Services\Orders\CustomerService;
+use App\Services\Customers\BillService;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -40,8 +43,12 @@ Route::prefix('auth')->namespace('auth')->name('auth.')->group(function () {
 
 Route::prefix('/')->middleware('auth')->group(function () {
     Route::get('/', function () {
-        return view('commons.index');
-    })->middleware('role')->name('index');
+        if (Auth::user()->type != 2) {
+            return redirect(route('customer.index'));
+        } else {
+            return view('commons.index');
+        }
+    })->name('index');
 
     Route::prefix('suppliers')->middleware('role')->namespace('suppliers')->name('supplier.')->group(function () {
         Route::get('/invoice', [InvoiceController::class, 'list'])->name('invoice');
@@ -142,8 +149,23 @@ Route::prefix('/')->middleware('auth')->group(function () {
     });
 
     Route::prefix('customer')->name('customer.')->group(function () {
-        Route::get('/', function() {
+        Route::get('/', function () {
             return view('customers.index');
         })->name('index');
+        Route::prefix('bill')->name('bill.')->group(function () {
+            Route::get('/', [CustomersBillController::class, 'index'])->name('index');
+            Route::get('/{billcode}', [CustomersBillController::class, 'order'])->name('order');
+            Route::get('/detail/{codeorder}', [CustomersBillController::class, 'orderDetail'])->name('orderDetail');
+            Route::get('/detail/load-log/{codeorder}', [BillService::class, 'loadLog'])->name('loadLog');
+            Route::post('/detail/add-log/{codeorder}', [BillService::class, 'addLog'])->name('addLog');
+        });
+
+        Route::prefix('payment')->name('payment.')->group(function () {
+            Route::get('/', [PaymentController::class, 'index'])->name('index');
+        });
+
+        Route::prefix('debt')->name('debt.')->group(function () {
+            Route::get('/', [DebtController::class, 'index'])->name('index');
+        });
     });
 });
