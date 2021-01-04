@@ -14,7 +14,6 @@ class   SupplierService
     }
 
     public function createNew(SupplierRequest $request){
-        dd($request->all());
         $supplier = Supplier::create([
             'code_name' => $request->ucode,
             'name' => $request->uname,

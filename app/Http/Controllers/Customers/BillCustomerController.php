@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Customers\BillService;
 use Illuminate\Http\Request;
 
-class BillController extends Controller
+class BillCustomerController extends Controller
 {
     protected $billService;
 

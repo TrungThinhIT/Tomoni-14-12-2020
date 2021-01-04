@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
-use App\Http\Controllers\Customers\BillCustomerController;
 use App\Http\Controllers\Customers\DebtController;
+use App\Http\Controllers\Customers\BillCustomerController;
 use App\Http\Controllers\Customers\PaymentController;
 use App\Http\Controllers\Orders\BillController;
 use App\Http\Controllers\Orders\CustomerController;

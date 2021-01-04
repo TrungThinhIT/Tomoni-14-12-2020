@@ -144,7 +144,6 @@ class BillService
         $order = Order::where('codeorder', $request->Codeorder)->update([
             'Sohoadon' => $request->So_Hoadon
         ]);
-        dd($order);
         toastr()->success('Create successfully!', 'Notifycation');
         }
         return back();
