@@ -136,14 +136,15 @@ class BillService
             Session()->flash('Codeorder', 'Codeorder wrong!');
         }else{
 
-        Bill::create([
+        $bill = Bill::create([
             'So_Hoadon' => $request->So_Hoadon,
             'Codeorder' => $request->Codeorder,
             'note' => $request->note
         ]);
-        Order::where('codeorder', $request->Codeorder)->update([
+        $order = Order::where('codeorder', $request->Codeorder)->update([
             'Sohoadon' => $request->So_Hoadon
         ]);
+        dd($order);
         toastr()->success('Create successfully!', 'Notifycation');
         }
         return back();
@@ -183,9 +184,9 @@ class BillService
         ]);
     }
 
-    public function deleteCoceorderInBill($codeorder)
+    public function deleteCoceorderInBill($id)
     {
-        $codeorder = Bill::where('codeorder', $codeorder)->with('Order.Product')->first();
+        $codeorder = Bill::where('Id', $id)->with('Order.Product')->first();
         $billcode = $codeorder->So_Hoadon;
         $log = LogAccountant::create([
             'jan_code' => $codeorder->Order->Product->jan_code,

@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
-use App\Http\Controllers\Customers\BillController as CustomersBillController;
+use App\Http\Controllers\Customers\BillCustomerController;
 use App\Http\Controllers\Customers\DebtController;
 use App\Http\Controllers\Customers\PaymentController;
 use App\Http\Controllers\Orders\BillController;
@@ -91,7 +91,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::prefix('orders')->middleware('role')->namespace('orders')->name('orders.')->group(function () {
         Route::prefix('bills')->name('bills.')->group(function () {
             Route::get('/', [BillController::class, 'indexAll'])->name('indexALl');
-            Route::get('/delete/{codeorder}', [BillController::class, 'deleteCodeorderInBill'])->name('deleteCodeorderInBill');
+            Route::get('/delete/{Id}', [BillController::class, 'deleteBillCode'])->name('deleteBillCode');
             Route::get('/by-uname/{uname}', [BillController::class, 'indexAllByUname'])->name('indexAllByUname');
             Route::get('/log/{codeorder}', [BillController::class, 'loadLog'])->name('loadLog');
             Route::get('/{billcode}', [BillController::class, 'getBillById'])->name('getBillById');
@@ -161,11 +161,11 @@ Route::prefix('/')->middleware('auth')->group(function () {
             return view('customers.index');
         })->name('index');
         Route::prefix('bill')->name('bill.')->group(function () {
-            Route::get('/', [CustomersBillController::class, 'index'])->name('index');
-            Route::get('/{billcode}', [CustomersBillController::class, 'order'])->name('order');
-            Route::get('/detail/{codeorder}', [CustomersBillController::class, 'orderDetail'])->name('orderDetail');
-            Route::get('/detail/load-log/{codeorder}', [BillService::class, 'loadLog'])->name('loadLog');
-            Route::post('/detail/add-log/{codeorder}', [BillService::class, 'addLog'])->name('addLog');
+            Route::get('/', [BillCustomerController::class, 'index'])->name('index');
+            Route::get('/{billcode}', [BillCustomerController::class, 'order'])->name('order');
+            Route::get('/detail/{codeorder}', [BillCustomerController::class, 'orderDetail'])->name('orderDetail');
+            Route::get('/detail/load-log/{codeorder}', [BillCustomerController::class, 'loadLog'])->name('loadLog');
+            Route::post('/detail/add-log/{codeorder}', [BillCustomerController::class, 'addLog'])->name('addLog');
         });
 
         Route::prefix('payment')->name('payment.')->group(function () {

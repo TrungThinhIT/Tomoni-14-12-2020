@@ -65,8 +65,7 @@ class BillController extends Controller
         return $this->billService->createComment($request, $codeorder);
     }
 
-    public function deleteCodeorderInBill($codeorder){
-        return $this->billService->deleteCoceorderInBill($codeorder);
-
+    public function deleteBillCode($id){
+        return $this->billService->deleteCoceorderInBill($id);
     }
 }
