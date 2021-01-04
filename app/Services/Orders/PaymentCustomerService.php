@@ -40,7 +40,6 @@ class PaymentCustomerService
     {
         $paymentCustomer = PaymentCustomer::where("Id", $Id)->update([
             'uname' => $request->uname,
-            'note' => $request->note,
             'Sohoadon' => $request->sohoadon
         ]);
 

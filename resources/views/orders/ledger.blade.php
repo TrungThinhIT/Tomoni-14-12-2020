@@ -19,21 +19,6 @@
                                 <span class="alert-danger-custom">{{$errors->first('Uname')}}</span>
                             </div>
 
-                            <div  style="  margin-top: 3%;">
-                                <input class="form-control" value="{{ old('PriceIn')}}" type="text" name="PriceIn" placeholder="Price In"  id="example-date-input">
-                                <span class="alert-danger-custom">{{$errors->first('PriceIn')}}</span>
-                            </div>
-
-                            <div  style="  margin-top: 3%;">
-                                <input class="form-control" value="{{ old('PriceOut')}}" type="text" name="PriceOut" placeholder="Price Out"  id="example-date-input">
-                                <span class="alert-danger-custom">{{$errors->first('PriceOut')}}</span>
-                            </div>
-
-                            <div  style="  margin-top: 3%;">
-                                <input class="form-control" value="{{ old('Pricedelb')}}" type="text" name="Pricedelb" placeholder="Price delb"  id="example-date-input">
-                                <span class="alert-danger-custom">{{$errors->first('Pricedelb')}}</span>
-                            </div>
-
                             <button type="submit" class="btn btn-primary">Thêm</button>
                             </div>
                         </form>
@@ -64,7 +49,7 @@
                                   <th>Price In</th>
                                   <th>Price Out</th>
                                   <th>Công Nợ</th>
-                                  <th>Chức năng</th>
+                                  {{-- <th>Chức năng</th> --}}
                                 </tr>
                               </thead>
                               <tbody id="myTable">
@@ -73,16 +58,16 @@
                                 <tr>
                                     <td>{{$data['ledgers']->perPage()*($data['ledgers']->currentPage()-1)+$count}}</td>
                                     <td ><a href="{{route('orders.bills.indexAllByUname', $item->Uname)}}">{{$item->Uname}}</a></td>
-                                    <td>{{$item->PriceIn}}</td>
-                                    <td>{{$item->PriceOut}}</td>
-                                    <td>{{$item->Pricedelb}}</td>
-                                    <td>
+                                    <td>{{number_format($item->PriceIn, 0)}}</td>
+                                    <td>{{number_format($item->PriceOut, 0)}}</td>
+                                    <td>{{number_format($item->Pricedelb, 0)}}</td>
+                                    {{-- <td>
                                         <a href="#" data-id="{{$item->Id}}" class="view_transaction" type="button"><i class="fas fa-pen-alt fa-2x"></i></a>
                                         |
                                         <a href="#" onclick="functionDelete{{$item->Id}}()" type="button"><i class="far fa-trash-alt fa-2x" style="color: red"></i></a>
-                                    </td>
+                                    </td> --}}
                                   </tr>
-                                  <script>
+                                  {{-- <script>
                                       var Id = {{$item->Id}};
                                     function functionDelete{{$item->Id}}() {
                                       var txt;
@@ -90,7 +75,7 @@
                                         window.location.href= 'ledgers/delete' +'/' + {{$item->Id}};
                                       }
                                     }
-                                    </script>
+                                    </script> --}}
                                    @php $count ++; @endphp
                                 @endforeach
                               </tbody>

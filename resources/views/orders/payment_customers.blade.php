@@ -71,13 +71,7 @@
                                                     placeholder="User name" list="litsusername" onkeyup='searchUser(this)'> <datalist id='litsusername'></datalist>
                                             </div>
                                         </td>
-                                        <td>
-                                            <div>
-                                                <input type="text" class="form-control" id="note{{$item->Id}}"
-                                                    value="{{$item->note}}" onchange="update{{$item->Id}}()"
-                                                    placeholder="Note">
-                                            </div>
-                                        </td>
+                                        <td>{{$item->note}}</td>
                                         <td>{{$item->dateget}}</td>
                                         <td>{{$item->date_insert}}</td>
                                         <td>{{number_format($item->price_in, 0)}}</td>
@@ -97,7 +91,6 @@
                                         function update{{$item->Id}}() {
                                             var id = {{$item->Id}};
                                             var us = $("#us{{$item->Id}}").val();
-                                            var note = $("#note{{$item->Id}}").val();
                                             var shd = $("#shd{{$item->Id}}").val();
                                             $.ajax({
                                                 headers: {
@@ -107,7 +100,6 @@
                                                 url: "payment-customers/" + id,
                                                 data: {
                                                     uname: us,
-                                                    note: note,
                                                     sohoadon: shd
                                                 },
                                                 success: function (response) {

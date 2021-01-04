@@ -25,7 +25,10 @@ class CreateBillRequest extends FormRequest
     {
         return [
             'So_Hoadon' => 'required',
-            'Codeorder' => 'required|unique:accoutant_order,Codeorder',
+            'Codeorder' => 'required',
+            'Codeorder' => Rule::unique('accoutant_order')->where(function ($query) {
+                return $query->where('deleted_at', null);
+            }),
             'note' => 'required'
         ];
     }

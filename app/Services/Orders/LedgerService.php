@@ -7,6 +7,8 @@ use App\Http\Requests\Orders\UpdateLedgerRequest;
 use App\Models\Ledger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Bill;
+use Illuminate\Validation\Rules\Unique;
 
 class LedgerService
 {
@@ -24,6 +26,23 @@ class LedgerService
         $PriceIn = $request->PriceIn;
         $PriceOut = $request->PriceOut;
         $Pricedelb = $request->Pricedelb;
+
+        $users = Ledger::get()->toArray();
+
+        foreach($users as $item){
+            $RawPriceIn = Bill::where('uname', $item['Uname'])->where('deleted_at', null)->select('PriceIn')->distinct()->get();
+            $priceIn = 0;
+            foreach ($RawPriceIn as $value) {
+                $priceIn += $value->PriceIn;
+            }
+            $priceOut = Bill::where('uname', $item['Uname'])->where('deleted_at', null)->selectRaw('sum(PriceOut) as priceOuts')->first();
+            $pricedelb = $priceIn - $priceOut->priceOuts;
+            Ledger::where('Uname', $item['Uname'])->update([
+                'PriceIn' => $priceIn,
+                'PriceOut' => $priceOut->priceOuts,
+                'Pricedelb' => $pricedelb
+            ]);
+        }
 
         $ledgers = Ledger::query();
 

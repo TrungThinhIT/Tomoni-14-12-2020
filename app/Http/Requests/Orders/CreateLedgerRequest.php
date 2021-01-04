@@ -24,10 +24,7 @@ class CreateLedgerRequest extends FormRequest
     public function rules()
     {
         return [
-            'Uname' => 'required|unique:accountant_socai,Uname',
-            'PriceIn' => 'required|numeric',
-            'PriceOut' => 'required|numeric',
-            'Pricedelb' => 'required|numeric',
-        ];
+            'Uname' => 'required|unique:accountant_socai,Uname'
+               ];
     }
 }

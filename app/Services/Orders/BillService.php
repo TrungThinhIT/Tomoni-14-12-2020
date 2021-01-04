@@ -26,7 +26,8 @@ class BillService
         foreach ($codeOrderByBill as  $value) {
             $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
             Bill::where('Codeorder', $value)->update([
-                'PriceOut' => $priceOrder->total
+                'PriceOut' => $priceOrder->total,
+                'uname' => $priceOrder->uname
             ]);
         }
 
@@ -72,7 +73,8 @@ class BillService
         foreach ($codeOrderByBill as  $value) {
             $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
             Bill::where('Codeorder', $value)->update([
-                'PriceOut' => $priceOrder->total
+                'PriceOut' => $priceOrder->total,
+                'uname' => $priceOrder->uname
             ]);
         }
 
