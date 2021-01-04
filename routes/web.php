@@ -12,6 +12,7 @@ use App\Http\Controllers\Orders\PaymentCustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Suppliers\InvoiceController;
 use App\Http\Controllers\Suppliers\SupplierController;
+use App\Http\Controllers\Warehouse\ExportedController;
 use App\Services\Customers\BillService;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -137,9 +138,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             return view('warehouses.imported');
         })->name('imported');
 
-        Route::get('/exported', function () {
-            return view('warehouses.exported');
-        })->name('exported');
+        Route::get('/exported', [ExportedController::class, 'index'])->name('exported');
 
         Route::get('/inventory', function () {
             return view('warehouses.inventory');

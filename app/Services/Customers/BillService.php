@@ -47,11 +47,18 @@ class BillService
             $bills = $bills->orWhereDate('Date_Create', $Date_Create);
         }
 
+
+
         $bills = $bills->where('deleted_at', null)
             ->select()->selectRaw('count(Id) as total')
             ->selectRaw('sum(PriceOut) as totalPriceOut')
-            ->groupBy('So_Hoadon')
-            ->paginate(5);
+            ->groupBy('So_Hoadon')->orderBy('Date_Create', 'ASC')->get();
+        $priceDebt = 0;
+        foreach ($bills as $value) {
+            $priceDebt += ($value->PriceIn - $value->totalPriceOut);
+            $value->setAttribute('totalPriceDebt', $priceDebt);            # code...
+        }
+        $bills = $bills->sortByDESC('Date_Create')->paginate(10);
         return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $uname, 'Date_Create' => $Date_Create];
     }
 

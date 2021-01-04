@@ -58,6 +58,7 @@
                                             <th>Price Out</th>
                                             <th>Total</th>
                                             <th>PriceBelb</th>
+                                            <th>Total PriceDebt</th>
                                             <th>Date Create</th>
                                         </tr>
                                     </thead>
@@ -75,9 +76,11 @@
                                                 {{number_format($item->totalPriceOut, 0)}}
                                             </td>
                                             <td>{{$item->total}}</td>
-                                            <td>{{number_format($item->PriceIn - $item->totalPriceOut, 0)}}</td>
+                                            <td>{{number_format($item->PriceIn - $item->totalPriceOut, 0)}}</td>                                            
+                                            <td>{{number_format($item->totalPriceDebt, 0)}}</td>
                                             <td>{{Carbon\Carbon::parse($item->Date_Create)->format('d/m/Y')}}</td>
                                         </tr>
+                                        @php $count ++; @endphp
                                         @endforeach
                                     </tbody>
                                 </table>

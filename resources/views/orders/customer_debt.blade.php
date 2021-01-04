@@ -91,7 +91,7 @@
                                         <td>@if ($item->depositID)
                                             {{$item->depositID}}
                                         @else
-                                            {{$item->codeorder}}
+                                            <a href="{{route('orders.bills.getBillDetailById', $item->codeorder)}}">{{$item->codeorder}}</a>
                                         @endif</td>
                                         <td>@if ($item->depositID)
                                             {{number_format($item->price_in)}}

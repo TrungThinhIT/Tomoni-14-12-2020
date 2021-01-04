@@ -61,7 +61,7 @@ class BillService
         $bills = $bills
             ->select()->selectRaw('count(Id) as total')
             ->selectRaw('sum(PriceOut) as totalPriceOut')
-            ->groupBy('So_Hoadon')
+            ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')
             ->paginate(5);
         return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $Uname, 'Date_Create' => $Date_Create];
     }
@@ -102,7 +102,7 @@ class BillService
         $bills = $bills->where('deleted_at', null)
             ->select()->selectRaw('count(Id) as total')
             ->selectRaw('sum(PriceOut) as totalPriceOut')
-            ->groupBy('So_Hoadon')
+            ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')
             ->paginate(5);
         return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $uname, 'Date_Create' => $Date_Create];
     }
@@ -144,6 +144,18 @@ class BillService
         $order = Order::where('codeorder', $request->Codeorder)->update([
             'Sohoadon' => $request->So_Hoadon
         ]);
+
+        $order = Bill::where('Codeorder', $request->Codeorder)->has('Product')->first();
+        
+        LogAccountant::create([
+            'jan_code' => $order['Product']->jan_code,
+            'codeorder' => $bill->Codeorder,
+            'uname' => Auth::user()->uname,
+            'Sohoadon' => $bill->So_Hoadon,
+            'note' => 'Tạo hoá đơn',
+            'DateAct' => now()
+        ]);
+
         toastr()->success('Create successfully!', 'Notifycation');
         }
         return back();
@@ -192,6 +204,7 @@ class BillService
             'codeorder' => $codeorder->Codeorder,
             'uname' => Auth::user()->uname,
             'Sohoadon' => $codeorder->So_Hoadon,
+            'note' => 'Xoá hoá đơn',
             'DateAct' => now()
         ]);
         Bill::where('Id', $codeorder->Id)->update([
