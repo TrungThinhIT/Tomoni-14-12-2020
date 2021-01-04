@@ -15,21 +15,31 @@
                             <form action="{{route('orders.customer-debt')}}">
                                 <fieldset>
                                     <div class="form-row" style=" margin-top: 1%;">
+                                        @if($data['uname'])
+                                        <div>
+                                            <input class="form-control" type="date" value="{{$data['dateStart']}}" name="dateStart" id="dateStart" placeholder="Date Start">
+                                        </div>
+                                        <div>
+                                            <input class="form-control" type="date" value="{{$data['dateEnd']}}" name="dateEnd" id="dateEnd" placeholder="Date End">
+                                        </div>
+                                        @endif
                                         <div>
                                             <input class="form-control" type="text" value="{{$data['uname']}}" name="uname" id="Uname" placeholder="User name" list='litsusername' onkeyup='searchUser(this)' required> <datalist id='litsusername'></datalist>
                                         </div>
                                         <div>
                                             <button type="submit" class="btn btn-primary" style="margin-left: 2%;">Search</button>
                                         </div>
+                                        @if($data['uname'])
                                         <div>
                                             <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2" style="margin-left: 2%;">Reset</button>
                                             <script>
                                                 function resetFormSearch() {
-                                                    document.getElementById("Uname").value = "";
+                                                    document.getElementById("dateStart").value = "";
+                                                    document.getElementById("dateEnd").value = "";
                                                 }
-
                                             </script>
                                         </div>
+                                        @endif
                                     </div>
                                 </fieldset>
                                 <br>

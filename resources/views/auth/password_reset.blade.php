@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>Admin | Reset Password</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{asset('assets/css/customCss/loginResetPassWord.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/css/customcss/loginResetPassWord.css')}}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="{{asset('assets/js/jquery.validate.js')}}"></script>
     <script src="{{asset('assets/js/customjs/login.js')}}"></script>

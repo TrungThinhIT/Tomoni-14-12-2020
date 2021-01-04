@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 
 class PaymentCustomerService
 {
-    public function indexAll(Request $request){
+    public function indexAll(Request $request)
+    {
         $Uname = $request->Uname;
         $date_inprice = $request->date_inprice;
         $date_insert = $request->date_insert;
@@ -16,7 +17,7 @@ class PaymentCustomerService
         $PCustomers = PaymentCustomer::query();
 
         if (!empty($Uname)) {
-            $PCustomers = $PCustomers->where('uname', 'like', '%'.$Uname.'%');
+            $PCustomers = $PCustomers->where('uname', 'like', '%' . $Uname . '%');
         }
 
         if (!empty($date_inprice)) {
@@ -28,24 +29,25 @@ class PaymentCustomerService
         }
 
         if (!empty($Sohoadon)) {
-            $PCustomers = $PCustomers->where('Sohoadon', 'like', '%'.$Sohoadon.'%');
+            $PCustomers = $PCustomers->where('Sohoadon', 'like', '%' . $Sohoadon . '%');
         }
 
         $PCustomers = $PCustomers->paginate(10);
-        return ['PCustomers'=> $PCustomers, 'Uname'=> $Uname, 'date_inprice' => $date_inprice, 'date_insert' => $date_insert, 'Sohoadon' => $Sohoadon];
+        return ['PCustomers' => $PCustomers, 'Uname' => $Uname, 'date_inprice' => $date_inprice, 'date_insert' => $date_insert, 'Sohoadon' => $Sohoadon];
     }
 
-    public function updateById(Request $request, $Id){
+    public function updateById(Request $request, $Id)
+    {
         $paymentCustomer = PaymentCustomer::where("Id", $Id)->update([
-'uname' => $request->uname,
-'Sohoadon' => $request->sohoadon
+            'uname' => $request->uname,
+            'note' => $request->note,
+            'Sohoadon' => $request->sohoadon
         ]);
 
-        if($paymentCustomer){
+        if ($paymentCustomer) {
             return 1;
-        }else{
+        } else {
             return 2;
         }
     }
-
 }

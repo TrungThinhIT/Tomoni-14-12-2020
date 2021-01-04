@@ -52,14 +52,10 @@
                                     <tr>
                                         <th>DepositID</th>
                                         <th style="min-width: 200px;">Uname</th>
+                                        <th style="min-width: 200px;">Note</th>
                                         <th>date_inprice</th>
                                         <th>date_insert</th>
                                         <th>Price In</th>
-                                  {{-- <th>Prince Out</th>
-                                  <th>type_price</th>
-                                  <th>cardID</th>
-                                  <th>note</th>
-                                  <th>useradmin</th> --}}
                                         <th>Sohoadon</th>
                                         <th>Function</th>
                                     </tr>
@@ -75,16 +71,16 @@
                                                     placeholder="User name" list="litsusername" onkeyup='searchUser(this)'> <datalist id='litsusername'></datalist>
                                             </div>
                                         </td>
+                                        <td>
+                                            <div>
+                                                <input type="text" class="form-control" id="note{{$item->Id}}"
+                                                    value="{{$item->note}}" onchange="update{{$item->Id}}()"
+                                                    placeholder="Note">
+                                            </div>
+                                        </td>
                                         <td>{{$item->dateget}}</td>
                                         <td>{{$item->date_insert}}</td>
                                         <td>{{number_format($item->price_in, 0)}}</td>
-                                        {{-- <td>
-                                            {{$item->price_out}}
-                                        </td>
-                                        <td>{{$item->type_price}}</td>
-                                        <td>{{$item->cardID}}</td>
-                                        <td>{{$item->note}}</td>
-                                        <td>{{$item->useradmin}}</td> --}}
                                         <td>
                                             <div>
                                                 <input type="text" class="form-control" id="shd{{$item->Id}}"
@@ -101,6 +97,7 @@
                                         function update{{$item->Id}}() {
                                             var id = {{$item->Id}};
                                             var us = $("#us{{$item->Id}}").val();
+                                            var note = $("#note{{$item->Id}}").val();
                                             var shd = $("#shd{{$item->Id}}").val();
                                             $.ajax({
                                                 headers: {
@@ -110,6 +107,7 @@
                                                 url: "payment-customers/" + id,
                                                 data: {
                                                     uname: us,
+                                                    note: note,
                                                     sohoadon: shd
                                                 },
                                                 success: function (response) {

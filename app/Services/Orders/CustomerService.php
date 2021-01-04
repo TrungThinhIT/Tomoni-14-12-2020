@@ -11,9 +11,9 @@ class CustomerService
 
     public function getIndex(Request $request)
     {
-        if($request->record){
+        if ($request->record) {
             $record = $request->record;
-        }else{
+        } else {
             $record = 25;
         }
 
@@ -21,8 +21,17 @@ class CustomerService
 
         $deDebt = 0;
 
-        $nap = PaymentCustomer::query()->where('uname', $uname)->get();
-        $mua = Order::query()->where('uname', $uname)->get();
+        $date_start = $request->dateStart;
+        $date_end = $request->dateEnd;
+        if ($date_start && $date_end) {
+            $nap = PaymentCustomer::query()->where('uname', $uname)->whereDate('dateget', '>=', $date_start)
+                ->whereDate('dateget', '<=', $date_end)->get();
+            $mua = Order::query()->where('uname', $uname)->whereDate('dateget', '>=', $date_start)
+                ->whereDate('dateget', '<=', $date_end)->get();
+        } else {
+            $nap = PaymentCustomer::query()->where('uname', $uname)->get();
+            $mua = Order::query()->where('uname', $uname)->get();
+        }
 
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
         foreach ($customer as $value) {
@@ -34,6 +43,6 @@ class CustomerService
             $value->setAttribute('deDebt', $deDebt);
         }
         $customer = $customer->sortByDesc('dateget')->paginate($record);
-        return ['customer' => $customer, 'record' => $record, 'uname' => $uname];
+        return ['customer' => $customer, 'record' => $record, 'uname' => $uname, 'dateStart' => $date_start, 'dateEnd' => $date_end];
     }
 }
