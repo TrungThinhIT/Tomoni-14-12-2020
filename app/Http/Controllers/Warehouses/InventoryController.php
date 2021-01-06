@@ -23,4 +23,12 @@ class InventoryController extends Controller
     public function detail(Request $request, $jancode){
         return $this->inventoryService->detailInventory($request, $jancode);
     }
+
+    public function noteImport(Request $request, $Id){
+        return $this->inventoryService->doNoteImport($request, $Id);
+    }
+
+    public function noteExport(Request $request, $id){
+        return $this->inventoryService->doNoteExport($request, $id);
+    }
 }

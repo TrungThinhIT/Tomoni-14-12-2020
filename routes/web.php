@@ -17,7 +17,6 @@ use App\Http\Controllers\Warehouses\InventoryController;
 use App\Http\Controllers\Warehouses\ImportedController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Services\Warehouses\ImportedService;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,16 +61,20 @@ Route::prefix('/')->middleware('auth')->group(function () {
     })->name('index');
 
     Route::prefix('suppliers')->middleware('role')->namespace('suppliers')->name('supplier.')->group(function () {
-        Route::get('/invoice', [InvoiceController::class, 'list'])->name('invoice');
 
-        Route::get('/invoice/{Invoice}', [InvoiceController::class, 'show'])->name('showInvoice');
+        Route::prefix('invoice')->name('invoice.')->group(function () {
+        Route::get('/', [InvoiceController::class, 'list'])->name('index');
 
-        Route::post('/invoice', [InvoiceController::class, 'create'])->name('postInvoice');
+        Route::get('/{Invoice}', [InvoiceController::class, 'show'])->name('showInvoice');
+
+        Route::post('/', [InvoiceController::class, 'create'])->name('postInvoice');
 
         Route::post('/invoice-detail', [InvoiceController::class, 'createDetail'])->name('postInvoiceDetail');
 
 
-        Route::post('/invoice/{Invoice}', [InvoiceController::class, 'updateInvoice'])->name('updateInvoice');
+        Route::put('/{Invoice}', [InvoiceController::class, 'updateInvoice'])->name('updateInvoice');
+        Route::put('/detail/{Id}', [InvoiceController::class, 'updateInvoiceDetail'])->name('updateInvoiceDetail');
+        });
 
         Route::get('/payments', function () {
             return view('suppliers.payments');
@@ -145,8 +148,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::get('/{jan_code}', [ExportedController::class, 'detail'])->name('detail');
         });
         Route::prefix('inventory')->name('inventory.')->group(function () {
-        Route::get('/', [InventoryController::class, 'index'])->name('index');
-        Route::get('/{jancode}', [InventoryController::class, 'detail'])->name('detail');
+            Route::get('/', [InventoryController::class, 'index'])->name('index');
+            Route::get('/{jancode}', [InventoryController::class, 'detail'])->name('detail');
+            Route::put('/note-import/{Id}', [InventoryController::class, 'noteImport'])->name('noteImport');
+            Route::put('/note-export/{id}', [InventoryController::class, 'noteExport'])->name('noteExport');
         });
     });
 

@@ -43,9 +43,9 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td><input type="number" onchange="updateInfoOrder()" id="price" class="form-control" value="{{$billDetail['detail']->total}}"></td>
+                                    <td><input type="number" onchange="updateInfoOrder()" id="price" class="form-control" value="{{$billDetail['detail']->Product->price}}"></td>
                                     <td><input type="number" onchange="updateInfoOrder()" id="quantity" class="form-control" value="{{$billDetail['detail']->quantity}}"></td>
-                                    <td><input type="number" id="total" value="{{$billDetail['detail']->total_all}}" readonly class="form-control"></td>
+                                    <td><input type="number" id="total" value="" readonly class="form-control"></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" rowspan="4">
@@ -184,8 +184,7 @@
                 url: "/orders/bills/detail/" + codeorder,
                 data: {
                     price: price,
-                    quantity: quantity,
-                    total: totalAfter
+                    quantity: quantity
                 },
                 success: function (response) {
                     toastr.success('Cập nhập giá sản phẩm thành công.', 'Notifycation', {timeOut: 1000})

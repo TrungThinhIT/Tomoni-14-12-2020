@@ -127,7 +127,7 @@
             </fieldset>
                 <div>
                     <div style="margin: 1% 1% 1% 1%;">
-                        <form action="{{route('supplier.invoice')}}" method="GET">
+                        <form action="{{route('supplier.invoice.index')}}" method="GET">
                             <fieldset>
                                 <div class="form-row" style=" margin-top: 1%;">
                                     {{-- <div type="text" class="form-control" placeholder="Nhập số hoá đơn"

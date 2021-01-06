@@ -64,13 +64,15 @@ class InvoiceService
 
     public function showInvoice($Invoice){
         $total = 0;
+        $ids = [];
         $suppliers = DB::table('supplier')->get();
         $object = InvoiceSupplier::where('Invoice', $Invoice)->with('detail.product')->first();
         foreach ($object['detail'] as $key => $value) {
             $total +=  $value->Quantity * $value->Price;
+            array_push($ids, $value->Id);
         }
         $data = ['object'=> $object, 'suppliers' => $suppliers, 'total'=> $total];
-        $html = view('suppliers.includes.modalInvoiceDetail',compact('data'));
+        $html = view('suppliers.includes.modalInvoiceDetail',compact('data', 'ids'));
         return $html;
     }
 
@@ -123,7 +125,30 @@ class InvoiceService
         }
     }
 
-    public function updateInvoice(Request $request, $Invoice){
-        return 1;
+    public function updateInvoice(Request $request, $Id){
+        InvoiceSupplier::where('Id', $Id)->update([
+            'Invoice' => $request->Invoice,
+            'TypeInvoice' => $request->TypeInvoice,
+            'TotalPrice' => $request->TotalPrice,
+            'PurchaseCosts' => $request->PurchaseCosts,
+            'TaxPurchaseCosts' => $request->TaxPurchaseCosts,
+            'InvoiceStatus' => $request->InvoiceStatus,
+            'Supplier' => $request->Supplier,
+            'PaymentDate' => $request->PaymentDate,
+            'StockDate' => $request->StockDate,
+            'DateInvoice' => $request->DateInvoice,
+            'Buyer' => $request->Buyer,
+            'TrackingNumber' => $request->TrackingNumber
+        ]);
+    }
+
+    public function updateInvoiceDetail(Request $request, $Id){
+        InvoiceDetailSupllier::where('Id', $Id)->update([
+            'Codeorder' => $request->codeorder,
+            'Jancode' => $request->jancode,
+            'Quantity' => $request->quantity,
+            'Price' => $request->price,
+            'PriceTax' => $request->tax
+        ]);
     }
 }

@@ -42,7 +42,11 @@ class InvoiceController extends Controller
         return $this->invoiceService->createInvoiceDetail($request);
     }
 
-    public function updateInvoice(Request $request, $Invoice){
-        return $this->invoiceService->updateInvoice($request, $Invoice);
+    public function updateInvoice(Request $request, $Id){
+        return $this->invoiceService->updateInvoice($request, $Id);
+    }
+
+    public function updateInvoiceDetail(Request $request, $Id){
+        return $this->invoiceService->updateInvoiceDetail($request, $Id);
     }
 }

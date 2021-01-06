@@ -7,6 +7,7 @@ use App\Models\Bill;
 use App\Models\LogAccountant;
 use App\Models\LogAdmin;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Transport;
 use Illuminate\Http\Request;
@@ -121,10 +122,9 @@ class BillService
 
     public function UpdateBillDetailById(Request $request, $codeorder)
     {
-        Order::where('codeorder', $codeorder)->update([
-            'total' => $request->price,
+        Product::where('codeorder', $codeorder)->update([
+            'price' => $request->price,
             'quantity' => $request->quantity,
-            'total_all' => $request->total
         ]);
     }
 

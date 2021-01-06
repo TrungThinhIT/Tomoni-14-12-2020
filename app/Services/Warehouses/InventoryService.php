@@ -5,6 +5,7 @@ namespace App\Services\Warehouses;
 use Illuminate\Http\Request;
 use App\Models\InvoiceDetailSupllier;
 use App\Models\Bill;
+use App\Models\Product;
 
 class InventoryService
 {
@@ -83,13 +84,25 @@ class InventoryService
                 $item->setAttribute('debtQuantity', $debtQuantity += $item->Quantity);
             }
         }
-        if($request->ajax() || 'NULL'){
+        if ($request->ajax() || 'NULL') {
             $inventory = $inventory->sortByDesc('Dateinsert')->paginate(10);
             return view('warehouses.includes.modalInventory', compact('inventory'));
-        }else{
+        } else {
 
             $inventory = $inventory->sortByDesc('Dateinsert')->paginate(10);
-        return view('warehouses.includes.modalInventory', compact('inventory'));
+            return view('warehouses.includes.modalInventory', compact('inventory'));
+        }
     }
+
+    public function doNoteImport(Request $request, $Id){
+        InvoiceDetailSupllier::where('Id', $Id)->update([
+            'note' => $request->note
+        ]);
+    }
+
+    public function doNoteExport(Request $request, $id){
+        Product::find($id)->update([
+            'note' => $request->note
+        ]);
     }
 }
