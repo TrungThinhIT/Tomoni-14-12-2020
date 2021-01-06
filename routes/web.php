@@ -12,10 +12,12 @@ use App\Http\Controllers\Orders\PaymentCustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Suppliers\InvoiceController;
 use App\Http\Controllers\Suppliers\SupplierController;
-use App\Http\Controllers\Warehouse\ExportedController;
-use App\Services\Customers\BillService;
+use App\Http\Controllers\Warehouses\ExportedController;
+use App\Http\Controllers\Warehouses\InventoryController;
+use App\Http\Controllers\Warehouses\ImportedController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Services\Warehouses\ImportedService;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,15 +136,18 @@ Route::prefix('/')->middleware('auth')->group(function () {
     });
 
     Route::prefix('warehouses')->middleware('role')->namespace('warehouses')->name('warehouses.')->group(function () {
-        Route::get('/imported', function () {
-            return view('warehouses.imported');
-        })->name('imported');
-
-        Route::get('/exported', [ExportedController::class, 'index'])->name('exported');
-
-        Route::get('/inventory', function () {
-            return view('warehouses.inventory');
-        })->name('inventory');
+        Route::prefix('imported')->name('imported.')->group(function () {
+            Route::get('/', [ImportedController::class, 'index'])->name('index');
+            Route::get('/{jan_code}', [ImportedController::class, 'detail'])->name('detail');
+        });
+        Route::prefix('exported')->name('exported.')->group(function () {
+            Route::get('/', [ExportedController::class, 'index'])->name('index');
+            Route::get('/{jan_code}', [ExportedController::class, 'detail'])->name('detail');
+        });
+        Route::prefix('inventory')->name('inventory.')->group(function () {
+        Route::get('/', [InventoryController::class, 'index'])->name('index');
+        Route::get('/{jancode}', [InventoryController::class, 'detail'])->name('detail');
+        });
     });
 
     Route::prefix('commons')->middleware('role')->name('commons.')->group(function () {

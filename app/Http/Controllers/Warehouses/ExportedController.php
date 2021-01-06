@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Warehouse;
+namespace App\Http\Controllers\Warehouses;
 
 use App\Http\Controllers\Controller;
 use App\Services\Warehouses\ExportedService;
@@ -14,8 +14,13 @@ class ExportedController extends Controller
     {
         $this->exportedService = $exportedService;
     }
-    public function index()
+    public function index(Request $request)
     {
-        return $this->exportedService->index();
+        $data = $this->exportedService->index($request);
+        return view('warehouses.exported', compact('data'));
+    }
+
+    public function detail($jan_code){
+        return $this->exportedService->detailByJanCode($jan_code);
     }
 }

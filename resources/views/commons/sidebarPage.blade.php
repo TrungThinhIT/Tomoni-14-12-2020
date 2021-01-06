@@ -55,9 +55,9 @@
                         <p>Warehouses</p>
                     </a>
                     <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{{route('warehouses.imported')}}">Hàng Nhập </a></li>
-                        <li><a class="dropdown-item" href="{{route('warehouses.exported')}}">Hàng xuất</a></li>
-                        <li><a class="dropdown-item" href="{{route('warehouses.inventory')}}">Tồn kho</a></li>
+                        <li><a class="dropdown-item" href="{{route('warehouses.imported.index')}}">Hàng Nhập </a></li>
+                        <li><a class="dropdown-item" href="{{route('warehouses.exported.index')}}">Hàng xuất</a></li>
+                        <li><a class="dropdown-item" href="{{route('warehouses.inventory.index')}}">Tồn kho</a></li>
 
                     </ul>
                 </li>
@@ -68,8 +68,6 @@
                         <p>{{Auth::user()->fname}}</p>
                     </a>
                     <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{{route('warehouses.imported')}}">Hàng Nhập </a></li>
-                        <li><a class="dropdown-item" href="{{route('warehouses.exported')}}">Hàng xuất</a></li>
                         <li><a class="dropdown-item" href="{{route('auth.logout')}}">Đăng xuất</a></li>
 
                     </ul>

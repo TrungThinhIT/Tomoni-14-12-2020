@@ -13,7 +13,8 @@ class InvoiceDetailSupllier extends Model
     public $timestamps = false;
 
     protected $guarded = [];
-    public function product(){
+    public function product()
+    {
         return $this->hasOne(ProductStandard::class, 'jan_code', 'Jancode');
     }
 }
