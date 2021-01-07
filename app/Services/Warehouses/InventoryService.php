@@ -15,6 +15,7 @@ class InventoryService
     public function index(Request $request)
     {
         $janCode = $request->jan_code;
+        $status = $request->status;
 
         $importeds = InvoiceDetailSupllier::query();
 
@@ -58,8 +59,24 @@ class InventoryService
             }
         }
 
+        $inventories = $inventories->flatten();
+
+        if($status && $status == 1){
+            $inventories = $inventories->where('TotalQuantity', '>', '0');
+        }
+        
+        if($status && $status == 2){
+            $inventories = $inventories->where('TotalQuantity', '=', '0');
+        }
+
+        if($status && $status == 3){
+            $inventories = $inventories->where('TotalQuantity', '<', 0);
+        }
+
+        $inventories = $inventories->groupBy('Jancode');
+
         $inventories = $inventories->sortBy('Dateinsert')->paginate(10);
-        return ['inventories' => $inventories, 'jan_code' => $janCode];
+        return ['inventories' => $inventories, 'jan_code' => $janCode, 'status' => $status];
     }
 
     public function detailInventory(Request $request, $jancode)

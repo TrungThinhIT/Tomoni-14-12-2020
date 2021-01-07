@@ -24,11 +24,19 @@
                                         name="jan_code" id="jan_code" placeholder="Nhập mã sản phẩm"
                                         style="width: 10%;" />
                                     <div>
+                                        <select type="text" class="form-control" name="status" id="status">
+                                            <option value="">Tình trạng</option>
+                                            <option value="1" {{$data['status'] == 1 ? 'selected':''}}>Tồn kho</option>
+                                            <option value="2" {{$data['status'] == 2 ? 'selected':''}}>Hết Hàng</option>
+                                            <option value="3" {{$data['status'] == 3 ? 'selected':''}}>Âm</option>
+                                        </select></div>    
+                                    <div>
                                         <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2"
                                             style="margin-left: 2%;">Reset</button>
                                         <script>
                                             function resetFormSearch() {
                                                 document.getElementById("jan_code").value = "";
+                                                document.getElementById("status").value = "";
                                             }
 
                                         </script>
