@@ -126,23 +126,43 @@ class InvoiceService
     }
 
     public function updateInvoice(Request $request, $Id){
-        InvoiceSupplier::where('Id', $Id)->update([
-            'Invoice' => $request->Invoice,
-            'TypeInvoice' => $request->TypeInvoice,
-            'TotalPrice' => $request->TotalPrice,
-            'PurchaseCosts' => $request->PurchaseCosts,
-            'TaxPurchaseCosts' => $request->TaxPurchaseCosts,
-            'InvoiceStatus' => $request->InvoiceStatus,
-            'Supplier' => $request->Supplier,
-            'PaymentDate' => $request->PaymentDate,
-            'StockDate' => $request->StockDate,
-            'DateInvoice' => $request->DateInvoice,
-            'Buyer' => $request->Buyer,
-            'TrackingNumber' => $request->TrackingNumber
-        ]);
+        $totalPriceCurrentInvoice = $request->TotalPrice;
+        $invoiceDetails = InvoiceDetailSupllier::where('Invoice', $request->Invoice)->get();
+        $totalPriceInvoiceDetails = 0;
+        foreach ($invoiceDetails as $value) {
+            $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
+        }
+        if($totalPriceCurrentInvoice >= $totalPriceInvoiceDetails){
+            InvoiceSupplier::where('Id', $Id)->update([
+                'Invoice' => $request->Invoice,
+                'TypeInvoice' => $request->TypeInvoice,
+                'TotalPrice' => $request->TotalPrice,
+                'PurchaseCosts' => $request->PurchaseCosts,
+                'TaxPurchaseCosts' => $request->TaxPurchaseCosts,
+                'InvoiceStatus' => $request->InvoiceStatus,
+                'Supplier' => $request->Supplier,
+                'PaymentDate' => $request->PaymentDate,
+                'StockDate' => $request->StockDate,
+                'DateInvoice' => $request->DateInvoice,
+                'Buyer' => $request->Buyer,
+                'TrackingNumber' => $request->TrackingNumber
+            ]);
+            return 1;
+        }else{
+            return 2;
+        }
     }
 
     public function updateInvoiceDetail(Request $request, $Id){
+        $currentInvoiceDetail = InvoiceDetailSupllier::where('Id', $Id)->first();
+        $invoiceDetails = InvoiceDetailSupllier::where('Invoice', $currentInvoiceDetail->Invoice)->where('Id', '!=', $currentInvoiceDetail->Id)->get();
+        $totalPriceInvoice = InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->TotalPrice;
+        $totalPriceInvoiceDetails = 0;
+        foreach ($invoiceDetails as $value) {
+            $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
+        }
+        $currentTotalPrice = $totalPriceInvoiceDetails + ($request->quantity * $request->price);
+        if($currentTotalPrice <= $totalPriceInvoice){
         InvoiceDetailSupllier::where('Id', $Id)->update([
             'Codeorder' => $request->codeorder,
             'Jancode' => $request->jancode,
@@ -150,5 +170,9 @@ class InvoiceService
             'Price' => $request->price,
             'PriceTax' => $request->tax
         ]);
+        return 1;
+        }else{
+            return 2;
+        }
     }
 }

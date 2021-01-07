@@ -191,9 +191,13 @@
                     TrackingNumber: trackingNumber
                 },
                 success: function (response) {
-                    toastr.success('Cập nhập thành công.', 'Notifycation', {
+                    if(response == 1){
+                        toastr.success('Cập nhập thành công.', 'Notifycation', {
                         timeOut: 500
                     })
+                    }else{
+                        alert('Tổng tiền bé hơn hoá đơn chi tiết, vui lòng xem lại!');
+                    }
                 }
             });
         }
@@ -220,9 +224,13 @@
                     tax: tax
                 },
                 success: function (response) {
-                    toastr.success('Cập nhập thành công.', 'Notifycation', {
+                    if(response == 1){
+                        toastr.success('Cập nhập thành công.', 'Notifycation', {
                         timeOut: 500
                     })
+                    }else{
+                        alert('Tổng tiền lớn hơn hoá đơn, vui lòng xem lại!');
+                    }
                 }
             });
         }
