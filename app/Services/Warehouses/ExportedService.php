@@ -24,10 +24,10 @@ class ExportedService {
             '=',
             'product.jan_code',
         );
-
-        $exporteds = $exporteds->select('product.quantity')->selectRaw('product_standard.name')->selectRaw('product.jan_code')->selectRaw('sum(quantity) as totalQuantity')
+        $exporteds = $exporteds->select('product.quantity')->select('product.item_in_box')->selectRaw('product_standard.name')
+        ->selectRaw('product.jan_code')->selectRaw('sum(quantity) as totalQuantity')
+        ->selectRaw('sum(product.item_in_box) as itemInBox')
         ->groupBy('product.jan_code');
-        
         if($name){
             $exporteds = $exporteds->where('name', 'like', '%' .$name. '%');
         }

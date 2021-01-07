@@ -14,6 +14,7 @@
             <th>Codeorder</th>
             <th>Price</th>
             <th>Quantity</th>
+            <th>Item in box</th>
         </tr>
     </thead>
     <tbody id="myTable">
@@ -25,6 +26,7 @@
             <td>{{$item->Codeorder}}</td>
             <td>{{number_format($item->price, 0)}}</td>
             <td>{{$item->quantity}}</td>
+            <td>{{$item->item_in_box}}</td>
         </tr>
         @php $count ++; @endphp
         @endforeach

@@ -15,6 +15,7 @@
             <th>Description</th>
             <th>Quantity</th>
             <th>Total Quantity</th>
+            <td>Item In Box</td>
         </tr>
     </thead>
     <tbody id="myTable">
@@ -39,6 +40,7 @@
                 {{number_format($item->Quantity, 0)}}
                 @endif</td>
             <td>{{number_format($item->debtQuantity, 0)}}</td>
+            <td>{{$item->item_in_box}}</td>
         </tr>
         @php $count ++; @endphp
         @endforeach
