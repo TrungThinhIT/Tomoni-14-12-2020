@@ -5,7 +5,9 @@ namespace App\Services\Warehouses;
 use Illuminate\Http\Request;
 use App\Models\InvoiceDetailSupllier;
 use App\Models\Bill;
+use App\Models\NoteWarehouse;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryService
 {
@@ -93,16 +95,19 @@ class InventoryService
             return view('warehouses.includes.modalInventory', compact('inventory'));
         }
     }
-
-    public function doNoteImport(Request $request, $Id){
-        InvoiceDetailSupllier::where('Id', $Id)->update([
-            'note' => $request->note
-        ]);
+    
+    public function loadNoteWarehouse($jancode){
+        $log = NoteWarehouse::where('Jancode', $jancode)->orderBy('created_at', 'ASC')->get();
+        $html = view('warehouses.includes.logWarehouse', compact('log'));
+        return $html;
     }
 
-    public function doNoteExport(Request $request, $id){
-        Product::find($id)->update([
-            'note' => $request->note
+    public function doNoteInventory(Request $request, $jancode){
+        NoteWarehouse::create([
+            'note' => $request->note,
+            'uname' => Auth::user()->uname,
+            'action' => 'inventory',
+            'Jancode' => $jancode
         ]);
     }
 }

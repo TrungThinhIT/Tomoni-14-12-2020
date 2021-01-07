@@ -3,7 +3,8 @@
 namespace App\Services\Warehouses;
 
 use App\Models\Bill;
-use App\Models\Product;
+use App\Models\NoteWarehouse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class ExportedService {
@@ -47,6 +48,21 @@ class ExportedService {
             'accoutant_order.Codeorder'
         )->where('jan_code', $jan_code)->get();
         return view('warehouses.includes.modalExported', compact('exported'));
+    }
+
+    public function loadNote($jancode){
+        $log = NoteWarehouse::where('Jancode', $jancode)->where('action', 'export')->orderBy('created_at', 'ASC')->get();
+        $html = view('warehouses.includes.logWarehouse', compact('log'));
+        return $html;
+    }
+
+    public function doNoteExport(Request $request, $jancode){
+        NoteWarehouse::create([
+            'note' => $request->note,
+            'uname' => Auth::user()->uname,
+            'action' => 'export',
+            'Jancode' => $jancode
+        ]);
     }
 }
 

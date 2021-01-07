@@ -44,8 +44,8 @@
                                         </div>
                                     </td>
                                     <td><input type="number" onchange="updateInfoOrder()" id="price" class="form-control" value="{{$billDetail['detail']->Product->price}}"></td>
-                                    <td><input type="number" onchange="updateInfoOrder()" id="quantity" class="form-control" value="{{$billDetail['detail']->quantity}}"></td>
-                                    <td><input type="number" id="total" value="" readonly class="form-control"></td>
+                                    <td><input type="number" onchange="updateInfoOrder()" id="quantity" class="form-control" value="{{$billDetail['detail']->Product->quantity}}"></td>
+                                    <td><input type="number" id="total" value="{{$billDetail['detail']->Product->total}}" readonly class="form-control"></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" rowspan="4">
@@ -173,9 +173,6 @@
     function updateInfoOrder(){
         var price = $("#price").val();
         var quantity = $("#quantity").val();
-        var totalAfter = price * quantity;
-        $("#total").val(totalAfter);
-        if (totalAfter != null) {
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -187,10 +184,10 @@
                     quantity: quantity
                 },
                 success: function (response) {
+                    $('#total').val(response.total);
                     toastr.success('Cập nhập giá sản phẩm thành công.', 'Notifycation', {timeOut: 1000})
                 }
             })
-        }
     }
 
     function addLog() {

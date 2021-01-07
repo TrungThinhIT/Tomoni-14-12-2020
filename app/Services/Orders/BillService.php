@@ -124,8 +124,10 @@ class BillService
     {
         Product::where('codeorder', $codeorder)->update([
             'price' => $request->price,
-            'quantity' => $request->quantity,
+            'quantity' => $request->quantity
         ]);
+        return response()->json(Product::where('codeorder', $codeorder)->first());
+
     }
 
     public function createNew(CreateBillRequest $request)

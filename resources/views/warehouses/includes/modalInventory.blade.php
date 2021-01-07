@@ -5,7 +5,9 @@
 </div>
 <div style="float: right" class="mt-3">
     {!! $inventory->withQueryString()->links('commons.paginate') !!}</div>
-<table id="example" class="table table-bordered table-striped" style="margin-top: 1%;">
+    
+<div class="row">
+<div class="col-8"><table id="example" class="table table-bordered table-striped" style="margin-top: 1%;">
     <thead>
         <tr>
             <th>No.</th>
@@ -13,7 +15,6 @@
             <th>Description</th>
             <th>Quantity</th>
             <th>Total Quantity</th>
-            <th>Note</th>
         </tr>
     </thead>
     <tbody id="myTable">
@@ -38,64 +39,26 @@
                 {{number_format($item->Quantity, 0)}}
                 @endif</td>
             <td>{{number_format($item->debtQuantity, 0)}}</td>
-            <td>
-                <div>
-                    @if ($item->jan_code)
-                    <div>
-                        <input type="text" class="form-control" id="note{{$item->id}}" value="{{$item->note}}" onchange="doNoteExport{{$item->id}}()">
-                    </div>
-                    @else
-                    <div>
-                        <input type="text" class="form-control" id="note{{$item->Id}}" value="{{$item->note}}" onchange="doNoteImport{{$item->Id}}()">
-                        <script>
-                            
-            function doNoteImport{{$item->Id}}() {
-                var id = {{$item->Id}};
-                var note = $("#note{{$item->Id}}").val();
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    type: 'PUT',
-                    url: "inventory/note-import/" + id,
-                    data: {
-                        note: note
-                    },
-                    success: function (response) {
-                        toastr.success('Cập nhập thành công.', 'Notifycation', {timeOut: 1000})
-                    }
-                });
-            }
-                        </script>
-                    </div>
-                    @endif
-                </div>
-            </td>
         </tr>
-        <script>
-            
-            function doNoteExport{{$item->id}}() {
-                var id = {{$item->id}};
-                var note = $("#note{{$item->id}}").val();
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    type: 'PUT',
-                    url: "inventory/note-export/" + id,
-                    data: {
-                        note: note
-                    },
-                    success: function (response) {
-                        toastr.success('Cập nhập thành công.', 'Notifycation', {timeOut: 1000})
-                    }
-                });
-            }
-        </script>
         @php $count ++; @endphp
         @endforeach
     </tbody>
-</table>
+</table></div>
+
+<div class="col-4">
+        <td colspan="1" rowspan="4">
+            <div style="height:250px; overflow-y: scroll" id="log">
+
+            </div>
+            <div class=" row" style="margin: 1%;">
+                <input style="width: 80%; margin-right:1%" type="text" class="form-control"
+                    name="note" id="note" placeholder="Nhập ghi chú">
+                <button type="button" onclick="addLog()"
+                    class="btn btn-primary">Gửi</button>
+            </div>
+        </td>
+</div>
+</div>
 
 <!-- Modal footer -->
 <div class="modal-footer">
@@ -106,6 +69,54 @@
     </div>
 </div>
 <script>
+    var jancode = {{$item->Jancode}};
+    $(document).ready(function () {
+        $.ajax({
+            type: 'get',
+            url: 'inventory/load-note/' + jancode,
+            success: function (response) {
+                $('#log').append(response);
+                $('#log').scrollTop(1000000);
+            }
+        })
+    });
+
+    $('#note').keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            addLog();
+        }
+    });
+
+    function addLog() {
+        var note = $("#note").val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: "inventory/note-inventory/" + jancode,
+                data: {
+                    note: note
+                },
+                success: function (response) {
+                    $("#note").val('');
+                    $(document).ready(function () {
+                        $.ajax({
+                            type: 'get',
+                            url: 'inventory/load-note/' + jancode,
+                            success: function (response) {
+                                toastr.success('Note thành công.', 'Notifycation', {timeOut: 1000});
+                                $("#remove").remove();
+                                $('#log').append(response);
+                                $('#log').scrollTop(1000000);
+                            }
+                        })
+                    });
+                }
+            })
+    }
+
     $('.pagination a').unbind('click').on('click', function (e) {
         e.preventDefault();
         var page = $(this).attr('href').split('page=')[1];
@@ -119,7 +130,7 @@
             success: function (data) {
                 $('.modal-content').html('').append(data);
             }
-        });
+        })
     }
 
 </script>

@@ -2,9 +2,10 @@
 
 namespace App\Services\Warehouses;
 
-use App\Models\Bill;
+use App\Models\NoteWarehouse;
 use App\Models\InvoiceDetailSupllier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ImportedService {
 
@@ -24,5 +25,20 @@ class ImportedService {
     public function detailByJanCode($jan_code){
         $imported = InvoiceDetailSupllier::where('Jancode', $jan_code)->orderBy('Dateinsert', 'DESC')->get();
         return view('warehouses.includes.modalImported', compact('imported'));
+    }
+
+    public function loadNote($jancode){
+        $log = NoteWarehouse::where('Jancode', $jancode)->where('action', 'import')->orderBy('created_at', 'ASC')->get();
+        $html = view('warehouses.includes.logWarehouse', compact('log'));
+        return $html;
+    }
+
+    public function doNoteImport(Request $request, $jancode){
+        NoteWarehouse::create([
+            'note' => $request->note,
+            'uname' => Auth::user()->uname,
+            'action' => 'import',
+            'Jancode' => $jancode
+        ]);
     }
 }

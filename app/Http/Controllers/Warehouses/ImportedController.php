@@ -24,4 +24,12 @@ class ImportedController extends Controller
     {
         return $this->importedService->detailByJanCode($jan_code);
     }
+
+    public function loadNote($jancode){
+        return $this->importedService->loadNote($jancode);
+    }
+
+    public function noteImport(Request $request, $jancode){
+        return $this->importedService->doNoteImport($request, $jancode);
+    }
 }

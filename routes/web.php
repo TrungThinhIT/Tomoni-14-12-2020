@@ -142,16 +142,22 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::prefix('imported')->name('imported.')->group(function () {
             Route::get('/', [ImportedController::class, 'index'])->name('index');
             Route::get('/{jan_code}', [ImportedController::class, 'detail'])->name('detail');
+            Route::get('/load-note/{jancode}', [ImportedController::class, 'loadNote'])->name('loadNote');
+            Route::post('/note-import/{jancode}', [ImportedController::class, 'noteImport'])->name('noteImport');
         });
         Route::prefix('exported')->name('exported.')->group(function () {
             Route::get('/', [ExportedController::class, 'index'])->name('index');
             Route::get('/{jan_code}', [ExportedController::class, 'detail'])->name('detail');
+            Route::get('/load-note/{jancode}', [ExportedController::class, 'loadNote'])->name('loadNote');
+            Route::post('/note-export/{jancode}', [ExportedController::class, 'noteExport'])->name('noteExport');
         });
         Route::prefix('inventory')->name('inventory.')->group(function () {
             Route::get('/', [InventoryController::class, 'index'])->name('index');
             Route::get('/{jancode}', [InventoryController::class, 'detail'])->name('detail');
             Route::put('/note-import/{Id}', [InventoryController::class, 'noteImport'])->name('noteImport');
             Route::put('/note-export/{id}', [InventoryController::class, 'noteExport'])->name('noteExport');
+            Route::get('/load-note/{jancode}', [InventoryController::class, 'loadNote'])->name('loadNote');
+            Route::post('/note-inventory/{jancode}', [InventoryController::class, 'noteInventory'])->name('noteInventory');
         });
     });
 

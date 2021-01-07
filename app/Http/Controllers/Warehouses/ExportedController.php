@@ -23,4 +23,12 @@ class ExportedController extends Controller
     public function detail($jan_code){
         return $this->exportedService->detailByJanCode($jan_code);
     }
+
+    public function loadNote($jancode){
+        return $this->exportedService->loadNote($jancode);
+    }
+
+    public function noteExport(Request $request, $jancode){
+        return $this->exportedService->doNoteExport($request, $jancode);
+    }
 }
