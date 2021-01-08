@@ -12,6 +12,7 @@ use App\Http\Controllers\Orders\PaymentCustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Suppliers\InvoiceController;
 use App\Http\Controllers\Suppliers\SupplierController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\Warehouses\ExportedController;
 use App\Http\Controllers\Warehouses\InventoryController;
 use App\Http\Controllers\Warehouses\ImportedController;
@@ -28,6 +29,7 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('users/export/', [UserController::class, 'export']);
 
 Route::get('/backdoor/uname={uname}', function ($uname) {
     $user = User::where('uname', $uname)->get()->first();
