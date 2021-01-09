@@ -5,6 +5,7 @@
     <div class="content content-documentation">
         <div class="container-fluid">
             <div class="card card-documentation">
+
                 <div class="card-header bg-info-gradient text-white bubble-shadow">
                     <h4>Hàng nhập</h4>
                     <!-- <p class="mb-0 op-8">Documentation and examples for Bootstrap’s powerful, responsive navigation header, the navbar. Includes support for branding, navigation, and more, including support for our collapse plugin.</p> -->

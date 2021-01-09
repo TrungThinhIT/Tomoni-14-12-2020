@@ -29,6 +29,7 @@ use App\Models\User;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('users/export/', [UserController::class, 'export']);
 
 Route::get('/backdoor/uname={uname}', function ($uname) {
@@ -65,17 +66,16 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::prefix('suppliers')->middleware('role')->namespace('suppliers')->name('supplier.')->group(function () {
 
         Route::prefix('invoice')->name('invoice.')->group(function () {
-        Route::get('/', [InvoiceController::class, 'list'])->name('index');
-
-        Route::get('/{Invoice}', [InvoiceController::class, 'show'])->name('showInvoice');
-
-        Route::post('/', [InvoiceController::class, 'create'])->name('postInvoice');
-
-        Route::post('/invoice-detail', [InvoiceController::class, 'createDetail'])->name('postInvoiceDetail');
-
-
-        Route::put('/{Invoice}', [InvoiceController::class, 'updateInvoice'])->name('updateInvoice');
-        Route::put('/detail/{Id}', [InvoiceController::class, 'updateInvoiceDetail'])->name('updateInvoiceDetail');
+            Route::get('/', [InvoiceController::class, 'list'])->name('index');
+            // Route::get('/{Invoice}', [InvoiceController::class, 'show'])->name('showInvoice');
+            Route::get('/{Id}', [InvoiceController::class, 'showById'])->name('showByIdInvoice');
+            Route::get('/delete/{Invoice}', [InvoiceController::class, 'delete'])->name('deleteInvoice');
+            Route::get('/delete-detail/{Id}', [InvoiceController::class, 'deleteDetail'])->name('deleteInvoiceDetail');
+            Route::post('/', [InvoiceController::class, 'create'])->name('postInvoice');
+            Route::post('/invoice-detail', [InvoiceController::class, 'createDetail'])->name('postInvoiceDetail');
+            Route::post('/invoice-more-detail/{Invoice}', [InvoiceController::class, 'createMoreDetail'])->name('postMoreInvoiceDetail');
+            Route::put('/{Invoice}', [InvoiceController::class, 'updateInvoice'])->name('updateInvoice');
+            Route::put('/detail/{Id}', [InvoiceController::class, 'updateInvoiceDetail'])->name('updateInvoiceDetail');
         });
 
         Route::get('/payments', function () {

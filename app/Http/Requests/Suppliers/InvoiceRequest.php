@@ -24,7 +24,7 @@ class InvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'uinvoice' => 'required|min:3|max:6',
+            'uinvoice' => 'required|unique:acountant_hddv,Invoice',
             // 'Dateinvoice' => 'required|date',
             // 'uTotalPrice' => 'required',
             // 'uPurchaseCosts' => 'required',
@@ -37,18 +37,6 @@ class InvoiceRequest extends FormRequest
             // 'PaidInvoice' => 'required',
             // 'Typehoadon' => 'required',
 
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'uinvoice.required' => 'Không được để trống',
-            'uinvoice.min' => 'Quá ngắn',
-            'uinvoice.max' => 'Quá dài',
-
-            'Dateinvoice.required' => 'Không được để trống',
-            'Dateinvoice.date' => 'Phải là dạng ngày',
         ];
     }
 }

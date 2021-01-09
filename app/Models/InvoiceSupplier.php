@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\InvoiceDetailSupplier;
 
 class InvoiceSupplier extends Model
 {
@@ -16,6 +17,6 @@ class InvoiceSupplier extends Model
     protected $guarded = [];
 
     public function detail(){
-        return $this->hasMany(InvoiceDetailSupllier::class, 'Invoice' , 'Invoice');
+        return $this->hasMany(InvoiceDetailSupplier::class, 'Invoice' , 'Invoice');
     }
 }

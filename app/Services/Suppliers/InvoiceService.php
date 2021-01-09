@@ -2,10 +2,14 @@
 
 namespace App\Services\Suppliers;
 
+use App\Http\Requests\Suppliers\AddInvoiceDetailRequest;
 use App\Http\Requests\Suppliers\InvoiceRequest;
-use App\Models\InvoiceDetailSupllier;
+use App\Models\InvoiceDetailSupplier;
 use App\Models\InvoiceSupplier;
+use App\Models\LogInvoiceDetailSupplier;
+use App\Models\LogInvoiceSupplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class InvoiceService
@@ -17,7 +21,7 @@ class InvoiceService
         $accounts = InvoiceSupplier::select('Account')->get();
 
         $request->record ? $record = $request->record : $record = 10;
-        $uinvoice = $request->uinvoice;
+        $sinvoice = $request->sinvoice;
         $supplier = $request->supplier;
         $productName = $request->productName;
         $webOrder = $request->webOrder;
@@ -26,8 +30,8 @@ class InvoiceService
         $stockDate = $request->stockDate;
 
         $invoices = InvoiceSupplier::query();
-        if (isset($uinvoice)) {
-            $invoices = InvoiceSupplier::where('Invoice', '=', $uinvoice);
+        if (isset($sinvoice)) {
+            $invoices = InvoiceSupplier::where('Invoice', '=', $sinvoice);
         }
         if (isset($supplier)) {
             $invoices = InvoiceSupplier::where('Supplier', '=', $supplier);
@@ -54,12 +58,26 @@ class InvoiceService
         if (isset($stockDate)) {
             $invoices = InvoiceSupplier::where('StockDate', $stockDate);
         }
-        $invoices = $invoices->orderBy('Dateinsert', 'DESC')->paginate($record);
+        $invoices = $invoices->orderBy('Id', 'DESC')->paginate($record);
 
         $data = ['invoices' => $invoices, 'accounts' => $accounts, 'suppliers' => $suppliers, 'record' => $record,
-         'productName' => $productName, 'uinvoice' => $uinvoice, 'supplier'=> $supplier,
+         'productName' => $productName, 'sinvoice' => $sinvoice, 'supplier'=> $supplier,
         'webOrder'=> $webOrder, 'janCode' => $janCode, 'paymentDate'=> $paymentDate, 'stockDate'=> $stockDate];
         return $data;
+    }
+
+    public function showInvoiceById($Id){
+        $priceInvoice = 0;
+        $suppliers = DB::table('supplier')->get();
+        $object = InvoiceSupplier::where('Id', $Id)->with('detail.product')->first();
+        $priceInvoice = ($object->TotalPrice + $object->PurchaseCosts);
+        $priceDetail = 0;
+
+        foreach ($object['detail'] as $key => $value) {
+            $priceDetail +=  $value->Quantity * $value->Price;
+        }
+
+        return ['object'=> $object, 'suppliers' => $suppliers, 'priceInvoice'=> $priceInvoice, 'priceDetail' => $priceDetail];
     }
 
     public function showInvoice($Invoice){
@@ -76,6 +94,49 @@ class InvoiceService
         return $html;
     }
 
+    public function deleteInvoice($Invoice){
+        LogInvoiceSupplier::create([
+            'Invoice' => $Invoice,
+            'action' => 'delete',
+            'uname' => Auth::user()->uname
+        ]);
+
+        $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $Invoice)->get();
+        
+        InvoiceSupplier::where('Invoice', $Invoice)->delete();
+        InvoiceDetailSupplier::where('Invoice', $Invoice)->delete();
+
+        foreach ($invoiceDetails as $value) {
+            LogInvoiceDetailSupplier::create([
+                'uname' => Auth::user()->uname,
+                'action' => 'delete',
+                'Invoice' => $Invoice,
+                'Jancode' => $value->Jancode,
+                'Codeorder' => $value->Codeorder
+            ]);
+        }
+
+        toastr()->success('Delete success fully!', 'Notifycation');
+        return back();
+    }
+
+    public function deleteInvoiceDetail($Id){
+        $invoiceDetails = InvoiceDetailSupplier::where('Id', $Id)->first();
+        
+        LogInvoiceDetailSupplier::create([
+            'Invoice' => $invoiceDetails->Invoice,
+            'action' => 'delete',
+            'Jancode' => $invoiceDetails->Jancode,
+            'Codeorder' => $invoiceDetails->Codeorder,
+            'uname' => Auth::user()->uname
+        ]);
+        
+        InvoiceDetailSupplier::where('Id', $Id)->delete();
+
+        toastr()->success('Delete success fully!', 'Notifycation');
+        return back();
+    }
+
     public function searchCodeOrder(Request $request){
         $codeOrders = DB::table('oder')->where('codeorder', 'like', '%'. $request->search_ordercode ."%")->orderBy('codeorder', 'DESC')->limit(20)->get();
 
@@ -90,7 +151,7 @@ class InvoiceService
     public function createInvoice(InvoiceRequest $request)
     {
            $invoice = InvoiceSupplier::create([
-                'Invoice' => $request->Insert_Invoice,
+                'Invoice' => $request->uinvoice,
                 'TotalPrice' => $request->TotalPrice,
                 'PurchaseCosts' => $request->PurchaseCosts,
                 'TaxPurchaseCosts' => $request->TaxPurchaseCosts,
@@ -104,6 +165,12 @@ class InvoiceService
                 'Trackingnumber' => $request->Trackingnumber
            ]);
 
+           LogInvoiceSupplier::create([
+               'Invoice' => $request->uinvoice,
+               'action' => 'insert',
+               'uname' => Auth::user()->uname
+           ]);
+
            if($invoice){
                return 1;
            }
@@ -111,7 +178,7 @@ class InvoiceService
 
     public function createInvoiceDetail(Request $request)
     {
-        $invoiceDetail = InvoiceDetailSupllier::create([
+        $invoiceDetail = InvoiceDetailSupplier::create([
            'Codeorder' => $request->CodeorderItem,
            'jancode' => $request->Jancode,
            'Quantity' => $request->Quantity,
@@ -120,14 +187,22 @@ class InvoiceService
            'Invoice' => $request->Invoice
         ]);
 
+        LogInvoiceDetailSupplier::create([
+            'uname' => Auth::user()->uname,
+            'action' => 'insert',
+            'Invoice' => $request->Invoice,
+            'Jancode' => $request->Jancode,
+            'Codeorder' => $request->CodeorderItem
+        ]);
+
         if($invoiceDetail){
         return 1;
         }
     }
 
     public function updateInvoice(Request $request, $Id){
-        $totalPriceCurrentInvoice = $request->TotalPrice;
-        $invoiceDetails = InvoiceDetailSupllier::where('Invoice', $request->Invoice)->get();
+        $totalPriceCurrentInvoice = $request->TotalPrice + $request->PurchaseCosts;
+        $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $request->Invoice)->get();
         $totalPriceInvoiceDetails = 0;
         foreach ($invoiceDetails as $value) {
             $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
@@ -147,32 +222,65 @@ class InvoiceService
                 'Buyer' => $request->Buyer,
                 'TrackingNumber' => $request->TrackingNumber
             ]);
-            return 1;
+
+            LogInvoiceSupplier::create([
+                'Invoice' => $request->Invoice,
+                'action' => 'update',
+                'uname' => Auth::user()->uname
+            ]);
+            return [1, $totalPriceCurrentInvoice];
         }else{
             return 2;
         }
     }
 
     public function updateInvoiceDetail(Request $request, $Id){
-        $currentInvoiceDetail = InvoiceDetailSupllier::where('Id', $Id)->first();
-        $invoiceDetails = InvoiceDetailSupllier::where('Invoice', $currentInvoiceDetail->Invoice)->where('Id', '!=', $currentInvoiceDetail->Id)->get();
-        $totalPriceInvoice = InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->TotalPrice;
+        $currentInvoiceDetail = InvoiceDetailSupplier::where('Id', $Id)->first();
+        $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->where('Id', '!=', $currentInvoiceDetail->Id)->get();
+        $totalPriceInvoice = InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->TotalPrice + InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->PurchaseCosts;
         $totalPriceInvoiceDetails = 0;
         foreach ($invoiceDetails as $value) {
             $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
         }
         $currentTotalPrice = $totalPriceInvoiceDetails + ($request->quantity * $request->price);
         if($currentTotalPrice <= $totalPriceInvoice){
-        InvoiceDetailSupllier::where('Id', $Id)->update([
+            InvoiceDetailSupplier::where('Id', $Id)->update([
             'Codeorder' => $request->codeorder,
             'Jancode' => $request->jancode,
             'Quantity' => $request->quantity,
             'Price' => $request->price,
             'PriceTax' => $request->tax
         ]);
-        return 1;
+        LogInvoiceDetailSupplier::create([
+            'uname' => Auth::user()->uname,
+            'action' => 'update',
+            'Invoice' => $currentInvoiceDetail->Invoice,
+            'Jancode' => $request->jancode,
+            'Codeorder' => $request->codeorder
+        ]);
+        return [1, $currentTotalPrice];
         }else{
             return 2;
         }
+    }
+
+    public function createMoreInvoiceDetail(AddInvoiceDetailRequest $request, $Invoice)
+    {
+        $invoiceDetail = InvoiceDetailSupplier::create([
+           'Codeorder' => $request->Codeorder,
+           'jancode' => $request->Jancode,
+           'Quantity' => $request->Quantity,
+           'Price' => $request->Price,
+           'PriceTax' => $request->PriceTax,
+           'Invoice' => $request->Invoice
+        ]);
+
+        LogInvoiceDetailSupplier::create([
+            'uname' => Auth::user()->uname,
+            'action' => 'insert',
+            'Invoice' => $request->Invoice,
+            'Jancode' => $request->Jancode,
+            'Codeorder' => $request->Codeorder
+        ]);
     }
 }

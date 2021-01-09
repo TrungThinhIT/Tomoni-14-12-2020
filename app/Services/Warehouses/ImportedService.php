@@ -3,7 +3,7 @@
 namespace App\Services\Warehouses;
 
 use App\Models\NoteWarehouse;
-use App\Models\InvoiceDetailSupllier;
+use App\Models\InvoiceDetailSupplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,7 +12,7 @@ class ImportedService {
     public function index(Request $request){
         $jan_code = $request->jan_code;
 
-        $importeds = InvoiceDetailSupllier::query();
+        $importeds = InvoiceDetailSupplier::query();
         
         if($jan_code){
             $importeds = $importeds->where('Jancode', $jan_code);
@@ -23,7 +23,7 @@ class ImportedService {
     }
 
     public function detailByJanCode($jan_code){
-        $imported = InvoiceDetailSupllier::where('Jancode', $jan_code)->orderBy('Dateinsert', 'DESC')->get();
+        $imported = InvoiceDetailSupplier::where('Jancode', $jan_code)->orderBy('Dateinsert', 'DESC')->get();
         return view('warehouses.includes.modalImported', compact('imported'));
     }
 

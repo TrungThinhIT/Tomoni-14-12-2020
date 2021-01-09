@@ -34,7 +34,7 @@
                             <div class="col-md-2 mb-2">
                                 <label for="validationDefault01">Chi phí mua hàng </label>
                                 <input type="text" class="form-control" name="uPurchaseCosts" id="uPurchaseCosts"
-                                    placeholder="Chi phí mua hàng" value=0>
+                                    placeholder="Chi phí mua hàng">
                                 <span class="alert-danger-custom">{{$errors->first('uinvoice')}}</span>
                             </div>
                             <div class="col-md-1 mb-2">
@@ -136,7 +136,7 @@
                                             <!-- <option>Ketchup</option>
                                         <option>Relish</option> -->
                                         </div> --}}
-                                    <input value="{{ $data['uinvoice'] }}" name="uinvoice" type="text"
+                                    <input value="{{ $data['sinvoice'] }}" name="sinvoice" type="text"
                                         class="form-control" id="uinvoiceSearch" placeholder="Nhập số hoá đơn"
                                         style="width: 10%;" />
                                     <select type="text" name="supplier" class="form-control" id="Supplier"
@@ -220,6 +220,7 @@
                                     <th>Tổng tiền hoá đơn</th>
                                     <th>Ngày giao hàng</th>
                                     <th>Hạn thanh toán</th>
+                                    <td>Chức năng</td>
                                 </tr>
                             </thead>
 
@@ -227,7 +228,7 @@
                                 @foreach ($data['invoices'] as $invoice => $value)
                                 <tr>
                                     <th>{{$value->DateInvoice}}</th>
-                                    <td data-id="{{$value->Invoice}}" class="view_transaction">{{$value->Invoice}}
+                                    <td><a href="{{route('supplier.invoice.showByIdInvoice', $value->Id)}}">{{$value->Invoice}}</a>
                                     </td>
                                     <td>{{$value->TypeInvoice}}</td>
                                     <td>{{$value->Supplier}}</td>
@@ -251,6 +252,7 @@
                                     <td>{{$value->TotalPrice}}</td>
                                     <td>{{$value->PaymentDate}}</td>
                                     <td>{{$value->StockDate}}</td>
+                                    <td><a href="{{route('supplier.invoice.deleteInvoice', $value->Invoice)}}" type="button" onclick="return confirm('are you sure?')" class="btn btn-danger">Xoá</a></td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -279,50 +281,6 @@
     var HTML = "";
     var JanCount = 1;
     var TotalPrice = 0;
-
-    // function DetailBillUpdate() {
-    //     var numberBillUpdate = $("#numBillUpdate").val();
-    //     var dateBillUpdate = $("#dateBillUpdate").val();
-    //     var sumBillUpdate = $("#sumBillUpdate").val().replace(",", "");
-    //     var totalPriceBillUpdate = $("#totalPriceBillUpdate").val().replace(",", "");
-    //     var taxBillUpdate = $("#taxBillUpdate").val();
-    //     var supplierBillUpdate = $("#supplierBillUpdate").val();
-    //     var PaymentDateBillUpdate = $("#PaymentDateBillUpdate").val();
-    //     var StockDateBillUpdate = $("#StockDateBillUpdate").val();
-    //     var TrackingNumberBillUpdate = $("#TrackingNumberBillUpdate").val();
-    //     var PaidInvoiceBillUpdate = $("#PaidInvoiceBillUpdate").val();
-    //     var TypehoadonBillUpdate = $("#TypehoadonBillUpdate").val();
-    //     var BuyerBillUpdate = $("#BuyerBillUpdate").val();
-    //         $.ajax({
-    //                 headers: {
-    //                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //                 },
-    //                 type: 'POST',
-    //                 url: "invoice/" + "/" + numberBillUpdate,
-    //                 data: {
-    //                     numberBillUpdate: numberBillUpdate,
-    //                     dateBillUpdate: dateBillUpdate,
-    //                     sumBillUpdate: sumBillUpdate,
-    //                     totalPriceBillUpdate: totalPriceBillUpdate,
-    //                     taxBillUpdate: taxBillUpdate,
-    //                     supplierBillUpdate: supplierBillUpdate,
-    //                     PaymentDateBillUpdate: PaymentDateBillUpdate,
-    //                     StockDateBillUpdate: StockDateBillUpdate,
-    //                     TrackingNumberBillUpdate: TrackingNumberBillUpdate,
-    //                     PaidInvoiceBillUpdate: PaidInvoiceBillUpdate,
-    //                     TypehoadonBillUpdate
-    //                 },
-    //                 success: function (response) {
-    //                     if (response == 1) {
-    //                         location.reload();
-    //                     }
-    //                     if (response == 2) {
-    //                         location.reload();
-    //                     }
-    //                 }
-    //             });
-    // }
-
     $(document).ready(function() {
                                 $('.view_transaction').click(function() {
                                     const id = $(this).data('id');
@@ -343,19 +301,10 @@
                             });
 
     function Insert_Invoice() {
-        document.getElementById("BtnSubmit").disabled = true;
-        document.getElementById("unamesupplier").disabled = true;
-        document.getElementById("uTotalPrice").disabled = true;
-        document.getElementById("uinvoice").disabled = true;
-        document.getElementById("uPurchaseCosts").disabled = true;
-        document.getElementById("TaxPurchaseCosts").disabled = true;
-        document.getElementById("PaymentDate").disabled = true;
-        document.getElementById("StockDate").disabled = true;
-        document.getElementById("PaidInvoice").disabled = true;
-        document.getElementById("Typehoadon").disabled = true;
-        document.getElementById("Buyer").disabled = true;
-        document.getElementById("Dateinvoice").disabled = true;
-        document.getElementById("uTracking").disabled = true;
+        var errors = ['uinvoice'];
+    errors.forEach(function(item, index){
+            $('span[id^="'+item+'"]').remove();
+        });
         var Invoice = $("#uinvoice").val();
         var TotalPrice = $("#uTotalPrice").val().replace(",", "").replace(",", "");
         var PurchaseCosts = $("#uPurchaseCosts").val().replace(",", "").replace(",", "");
@@ -380,7 +329,7 @@
                 type: 'POST',
                 url: "invoice",
                 data: {
-                    Insert_Invoice: Invoice,
+                    uinvoice: Invoice,
                     TotalPrice: TotalPrice,
                     PurchaseCosts: PurchaseCosts,
                     TaxPurchaseCosts: TaxPurchaseCosts,
@@ -392,6 +341,11 @@
                     Buyer: Buyer,
                     Dateinvoice: Dateinvoice,
                     Trackingnumber: Trackingnumber
+                },                    error:function (response){
+                    $.each(response.responseJSON.errors,function(field_name,error){
+                        $(document).find('[name='+field_name+']').after('<span class="alert-danger-custom" id="'+field_name+'">' +error+ '</span>');
+                        fields.push(field_name);
+                    })
                 },
                 success: function (response) {
                     console.log(response)
@@ -445,6 +399,20 @@
 			"</fieldset>"
                         );
                     }
+                    
+        document.getElementById("BtnSubmit").disabled = true;
+        document.getElementById("unamesupplier").disabled = true;
+        document.getElementById("uTotalPrice").disabled = true;
+        document.getElementById("uinvoice").disabled = true;
+        document.getElementById("uPurchaseCosts").disabled = true;
+        document.getElementById("TaxPurchaseCosts").disabled = true;
+        document.getElementById("PaymentDate").disabled = true;
+        document.getElementById("StockDate").disabled = true;
+        document.getElementById("PaidInvoice").disabled = true;
+        document.getElementById("Typehoadon").disabled = true;
+        document.getElementById("Buyer").disabled = true;
+        document.getElementById("Dateinvoice").disabled = true;
+        document.getElementById("uTracking").disabled = true;
                 }
             });
         } else
@@ -467,7 +435,11 @@
     }
 
     function Insert_JancodeToInvoice() {
-        var uTotalPrice = $("#uTotalPrice").val();
+        var uTotalPrice = $("#uTotalPrice").val().replace(",", "").replace(",", "");;
+        var PurchaseCosts = $('#uPurchaseCosts').val().replace(",", "").replace(",", "");;        
+        var uTotalPrice = parseInt(uTotalPrice);
+        var PurchaseCosts = parseInt(PurchaseCosts);
+        var allTotalPrice = (uTotalPrice + PurchaseCosts);
         var CodeorderItem = $("#codeorder_" + JanCount).val();
         var Jancode = $("#Jancode_" + JanCount).val();
         var Quantity = $("#so_luong_" + JanCount).val().replace(",", "");
@@ -475,18 +447,16 @@
         var PriceTax = $("#thue_jancode_" + JanCount).val();
         var Invoice = $("#uinvoice").val();
 
-        console.log(uTotalPrice, (Quantity * Price) + TotalPrice)
-
-        if (uTotalPrice < (Quantity * Price) + TotalPrice) {
+        if (allTotalPrice < (Quantity * Price) + TotalPrice) {
             alert('Tổng giá cao hơn tổng tiền hóa đơn')
-        } else if (uTotalPrice == (Quantity * Price) + TotalPrice) {
+        } else if (allTotalPrice == (Quantity * Price) + TotalPrice) {
             alert('Chúc mừng bạn nhập thành công')
             $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     type: 'POST',
-                    url: "invoice-detail",
+                    url: "invoice/invoice-detail",
                     data: {
                         CodeorderItem: CodeorderItem,
                         Jancode: Jancode,
@@ -510,7 +480,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     type: 'POST',
-                    url: "invoice-detail",
+                    url: "invoice/invoice-detail",
                     data: {
                         CodeorderItem: CodeorderItem,
                         Jancode: Jancode,

@@ -3,7 +3,7 @@
 namespace App\Services\Warehouses;
 
 use Illuminate\Http\Request;
-use App\Models\InvoiceDetailSupllier;
+use App\Models\InvoiceDetailSupplier;
 use App\Models\Bill;
 use App\Models\NoteWarehouse;
 use App\Models\Product;
@@ -17,7 +17,7 @@ class InventoryService
         $janCode = $request->jan_code;
         $status = $request->status;
 
-        $importeds = InvoiceDetailSupllier::query();
+        $importeds = InvoiceDetailSupplier::query();
 
         if ($janCode) {
             $importeds = $importeds->where('Jancode', $janCode);
@@ -81,7 +81,7 @@ class InventoryService
 
     public function detailInventory(Request $request, $jancode)
     {
-        $imported = InvoiceDetailSupllier::where('Jancode', $jancode)->orderBy('Dateinsert', 'DESC')->get();
+        $imported = InvoiceDetailSupplier::where('Jancode', $jancode)->orderBy('Dateinsert', 'DESC')->get();
         $exported = Bill::where('deleted_at', null)->select()->distinct()->join(
             'product',
             'product.codeorder',

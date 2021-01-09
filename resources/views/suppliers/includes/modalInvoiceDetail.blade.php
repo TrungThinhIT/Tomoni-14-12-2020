@@ -151,10 +151,12 @@
 <!-- Modal footer -->
 <div class="modal-footer">
     <div style="float: right;">
-        <!-- <button type="submit" class="btn btn-primary" >Load Item</button> -->
-        <button type="button" class="btn btn-danger" onclick="InsertRowBillUpdate()">Update</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
     </div>
+</div>
+
+
+
     <script>
         function update(){
             var id = $('#idBillUpdate').val();
@@ -319,4 +321,3 @@
         }
 
     </script>
-</div>
