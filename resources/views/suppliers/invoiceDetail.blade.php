@@ -109,8 +109,15 @@
 
                     </div>
 
-                    <div>
-                        <button class="btn btn-primary" id="btnAddMore" type="button" data-toggle="modal" data-target="#modalAddMore">Add More</button>
+                    <div class="row">
+                    <div class="col-md-2 mb-2">
+                        <label for="validationDefault01">Tổng tiền hoá đơn</label>
+                        <input type="text" class="form-control" id="totalPriceAll"  disabled readonly>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="validationDefault01">Tổng tiền chi tiết</label>
+                        <input type="text" class="form-control" id="totalPriceDetail" disabled readonly>
+                    </div>
                     </div>
 
                     <table id="TableDetaillBillUpdate" class="table table-bordered table-striped"
@@ -179,6 +186,10 @@
 
                         </tbody>
                     </table>
+                    
+                    <div class="col-md-2 mb-2">
+                        <button class="btn btn-primary" id="btnAddMore" type="button" data-toggle="modal" data-target="#modalAddMore">Add More</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -261,6 +272,9 @@
 <script>
     var priceInvoice  = {{$data['priceInvoice']}};
     var priceDetail = {{$data['priceDetail']}};
+
+    document.getElementById('totalPriceAll').value = priceInvoice;
+    document.getElementById('totalPriceDetail').value = priceDetail;
 
     function AddMore(){
         var errors = ['Jancode', 'Quantity', 'Price', 'Tax'];
@@ -352,6 +366,8 @@
     }else{
         document.getElementById("btnAddMore").disabled = true;
     }
+    document.getElementById('totalPriceAll').value = priceInvoice;
+    document.getElementById('totalPriceDetail').value = priceDetail;
                     toastr.success('Cập nhập thành công.', 'Notifycation', {
                         timeOut: 500
                     })
@@ -391,6 +407,8 @@
     }else{
         document.getElementById("btnAddMore").disabled = true;
     }
+    document.getElementById('totalPriceAll').value = priceInvoice;
+    document.getElementById('totalPriceDetail').value = priceDetail;
                     toastr.success('Cập nhập thành công.', 'Notifycation', {
                         timeOut: 500
                     })

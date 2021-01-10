@@ -14,6 +14,7 @@ class ImportedController extends Controller
     {
         $this->importedService = $importedService;
     }
+    
     public function index(Request $request)
     {
         $data = $this->importedService->index($request);

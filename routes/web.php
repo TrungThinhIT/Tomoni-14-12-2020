@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Customers\DebtController;
 use App\Http\Controllers\Customers\BillCustomerController;
+use App\Http\Controllers\Customers\ExportedCustomerController;
 use App\Http\Controllers\Customers\PaymentController;
 use App\Http\Controllers\Orders\BillController;
 use App\Http\Controllers\Orders\CustomerController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Orders\LedgerController;
 use App\Http\Controllers\Orders\PaymentCustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Suppliers\InvoiceController;
+use App\Http\Controllers\Suppliers\PaymentSupplierController;
 use App\Http\Controllers\Suppliers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Warehouses\ExportedController;
@@ -78,14 +80,19 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::put('/detail/{Id}', [InvoiceController::class, 'updateInvoiceDetail'])->name('updateInvoiceDetail');
         });
 
-        Route::get('/payments', function () {
-            return view('suppliers.payments');
-        })->name('payments');
+        Route::prefix('payment')->name('payment.')->group(function () {
+            Route::get('/', [PaymentSupplierController::class, 'index'])->name('index');
+            Route::post('/', [PaymentSupplierController::class, 'create'])->name('create');
+            Route::put('/{Id}', [PaymentSupplierController::class, 'update'])->name('update');
+            Route::get('/delete/{Id}', [PaymentSupplierController::class, 'delete'])->name('delete');
+        });
 
-        Route::get('/management', [SupplierController::class, 'list'])->name('management');
-        Route::post('/management', [SupplierController::class, 'create'])->name('create-management');
-        Route::get('/management/{code_name}', [SupplierController::class, 'show'])->name('show-management');
-        Route::put('/management/{code_name}', [SupplierController::class, 'update'])->name('update-management');
+        Route::prefix('management')->name('management.')->group(function () {
+            Route::get('/', [SupplierController::class, 'list'])->name('index');
+            Route::post('/', [SupplierController::class, 'create'])->name('create');
+            Route::get('/{code_name}', [SupplierController::class, 'show'])->name('show');
+            Route::put('/{code_name}', [SupplierController::class, 'update'])->name('update');
+        });
 
         Route::get('/payback', function () {
             return view('suppliers.payback');
@@ -171,6 +178,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::get('/search-code-jan', [InvoiceController::class, 'searchCodeJan'])->name('searchCodeJan');
 
         Route::get('/search-ma-hoa-don', [BillController::class, 'searchBillCode'])->name('searchBillCode');
+
+        Route::get('/search-supplier', [PaymentSupplierController::class, 'searchSupplier'])->name('searchSupplier');
+
+        Route::get('/search-invoice', [PaymentSupplierController::class, 'searchInvoice'])->name('searchInvoice');
     });
 
     Route::prefix('customer')->name('customer.')->group(function () {
@@ -191,6 +202,11 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
         Route::prefix('debt')->name('debt.')->group(function () {
             Route::get('/', [DebtController::class, 'index'])->name('index');
+        });
+
+        Route::prefix('exported')->name('exported.')->group(function () {
+            Route::get('/', [ExportedCustomerController::class, 'index'])->name('index');
+            Route::get('/{jancode}', [ExportedCustomerController::class, 'detail'])->name('detail');
         });
     });
 });

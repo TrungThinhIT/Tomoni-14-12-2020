@@ -10,7 +10,7 @@
                     <!-- <p class="mb-0 op-8">Documentation and examples for Bootstrap’s powerful, responsive navigation header, the navbar. Includes support for branding, navigation, and more, including support for our collapse plugin.</p> -->
                 </div>
                 <div class="card-body">
-                    <form action="{{route('supplier.create-management')}}" method="POST">
+                    <form action="{{route('supplier.management.create')}}" method="POST">
                         @csrf
                         <fieldset >
                             <div class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">

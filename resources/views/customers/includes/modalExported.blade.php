@@ -1,0 +1,95 @@
+<!-- Modal Header -->
+<div class="modal-header">
+    <h4 class="modal-title">Chi tiết hoá đơn </h4>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <table id="example" class="table table-bordered table-striped"
+    style="margin-top: 1%;">
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Codeorder</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Item in box</th>
+        </tr>
+    </thead>
+    <tbody id="myTable">
+        @php $count = 1; @endphp
+        @foreach ($exported as $item)
+        <tr>
+            <td>{{$count}}
+            </td>
+            <td>{{$item->Codeorder}}</td>
+            <td>{{number_format($item->price, 0)}}</td>
+            <td>{{$item->quantity}}</td>
+            <td>{{$item->item_in_box}}</td>
+        </tr>
+        @php $count ++; @endphp
+        @endforeach
+    </tbody>
+</table>
+    </div>
+</div>
+
+<!-- Modal footer -->
+<div class="modal-footer">
+    <div style="float: right;">
+        <!-- <button type="submit" class="btn btn-primary" >Load Item</button> -->
+        {{-- <button type="submit" class="btn btn-danger">View Note</button> --}}
+        <button type="button" class="btn btn-secondary"
+            data-dismiss="modal">Close</button>
+    </div>
+</div>
+<script>
+    var jancode = {{$item->jan_code}};
+    $(document).ready(function () {
+        $.ajax({
+            type: 'get',
+            url: 'exported/load-note/' + jancode,
+            success: function (response) {
+                $('#log').append(response);
+                $('#log').scrollTop(1000000);
+            }
+        })
+    });
+
+    $('#note').keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            addLog();
+        }
+    });
+
+    function addLog() {
+        var note = $("#note").val();
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: "exported/note-export/" + jancode,
+                data: {
+                    note: note
+                },
+                success: function (response) {
+                    $("#note").val('');
+                    $(document).ready(function () {
+                        $.ajax({
+                            type: 'get',
+                            url: 'exported/load-note/' + jancode,
+                            success: function (response) {
+                                toastr.success('Note thành công.', 'Notifycation', {timeOut: 1000});
+                                $("#remove").remove();
+                                $('#log').append(response);
+                                $('#log').scrollTop(1000000);
+                            }
+                        })
+                    });
+                }
+            })
+    }
+</script>

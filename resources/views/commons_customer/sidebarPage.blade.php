@@ -26,6 +26,7 @@
                         <li><a class="dropdown-item" href="{{route('customer.bill.index')}}">Bill</a></li>
                         <li><a class="dropdown-item" href="{{route('customer.payment.index')}}">Payment</a></li>
                         <li><a class="dropdown-item" href="{{route('customer.debt.index')}}">Debt</a></li>
+                        <li><a class="dropdown-item" href="{{route('customer.exported.index')}}">Hàng mua</a></li>
                     </ul>
                 </li>
 

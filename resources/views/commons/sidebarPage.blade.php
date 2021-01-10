@@ -23,8 +23,8 @@
                     </a>
                     <ul  class="dropdown-menu  departments"  style="color:#44a5f1" aria-labelledby="navbarDropdownMenuLink">
                         <li style="color:#44a5f1"><a class="dropdown-item" href="{{route('supplier.invoice.index')}}">Hoá đơn supplier</a></li>
-                        <li style="color:#44a5f1"><a class="dropdown-item" href="{{route('supplier.payments')}}">Tiền thanh toán supplier</a></li>
-                        <li style="color:#44a5f1"><a class="dropdown-item" href="{{route('supplier.management')}}">Quản lý supplier</a></li>
+                        <li style="color:#44a5f1"><a class="dropdown-item" href="{{route('supplier.payment.index')}}">Tiền thanh toán supplier</a></li>
+                        <li style="color:#44a5f1"><a class="dropdown-item" href="{{route('supplier.management.index')}}">Quản lý supplier</a></li>
                         <li style="color:#44a5f1"><a class="dropdown-item" href="{{route('supplier.payback')}}">Supplier trả lại tiền</a></li>
                         <li style="color:#44a5f1"><a class="dropdown-item" href="{{route('supplier.debt')}}">Công nợ  NCCC</a></li>
                     </ul>
