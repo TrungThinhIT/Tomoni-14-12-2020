@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('commons_customer.layout')
 @section('title', 'Hàng xuất')
 @section('content')
 <div class="main-panel">

@@ -34,7 +34,7 @@ class BillCustomerController extends Controller
         return $this->billService->loadLog($codeorder);
     }
 
-    public function addLog($codeorder){
-        return $this->billService->addLog($codeorder);
+    public function addLog(Request $request, $codeorder){
+        return $this->billService->addLog($request, $codeorder);
     }
 }

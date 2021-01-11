@@ -5,6 +5,7 @@ namespace App\Services\Orders;
 use App\Models\Order;
 use App\Models\PaymentCustomer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class CustomerService
 {
@@ -23,16 +24,12 @@ class CustomerService
 
         $date_start = $request->dateStart;
         $date_end = $request->dateEnd;
-        if ($date_start && $date_end) {
-            $nap = PaymentCustomer::query()->where('uname', $uname)->whereDate('dateget', '>=', $date_start)
-                ->whereDate('dateget', '<=', $date_end)->get();
-            $mua = Order::query()->where('uname', $uname)->whereDate('dateget', '>=', $date_start)
-                ->whereDate('dateget', '<=', $date_end)->get();
-        } else {
+
+        $date = Carbon::parse($date_end);
+        $date_end = $date->addDays(1);
+        
             $nap = PaymentCustomer::query()->where('uname', $uname)->get();
             $mua = Order::query()->where('uname', $uname)->get();
-        }
-
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
         foreach ($customer as $value) {
             if ($value->depositID) {
@@ -42,6 +39,12 @@ class CustomerService
             }
             $value->setAttribute('deDebt', $deDebt);
         }
+
+        if($date_start && $date_end){
+            $customer = $customer->whereBetween('dateget', [$date_start, $date_end]);
+        }
+        
+        // dd($customer->take(10));
         $customer = $customer->sortByDesc('dateget')->paginate($record);
         return ['customer' => $customer, 'record' => $record, 'uname' => $uname, 'dateStart' => $date_start, 'dateEnd' => $date_end];
     }
