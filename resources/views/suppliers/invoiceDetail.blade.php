@@ -147,7 +147,7 @@
                                 <td>
                                     <div>
                                         <input type="text" class="form-control" value="{{$value->Jancode}}"
-                                            id="janco_{{$value->Id}}" onchange="updateDetail(this);"
+                                        name="janco_{{$value->Id}}"  id="janco_{{$value->Id}}" onchange="updateDetail(this);"
                                             placeholder="First name" list='ujan_wh' onkeyup='search_jancode(this)'>
                                         <datalist id='ujan_wh'></datalist>
                                     </div>
@@ -374,7 +374,12 @@
                 } else {
                     alert('Tổng tiền bé hơn hoá đơn chi tiết, vui lòng xem lại!');
                 }
-            }
+            },error:function (response){
+                    console.log(response)
+                    $.each(response.responseJSON.errors,function(field_name,error){
+                        $(document).find('[name='+field_name+']').after('<span class="alert-danger-custom" id="'+field_name+'">' +error+ '</span>');
+                    })
+                }
         });
     }
 
@@ -386,6 +391,8 @@
         var quantity = $("#quant_" + id).val();
         var price = $("#price_" + id).val();
         var tax = $('#taxco_' + id).val();
+        var invoice = $('#numBillUpdate').val();
+        $('span[id^="janco_'+id+'"]').remove();
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -393,8 +400,10 @@
             type: 'PUT',
             url: "detail/" + id,
             data: {
+                Id: id,
+                Invoice: invoice,
                 codeorder: codeorder,
-                jancode: jancode,
+                Jancode: jancode,
                 quantity: quantity,
                 price: price,
                 tax: tax
@@ -403,19 +412,22 @@
                 if (response[0] == 1) {
                     priceDetail = response[1];
                     if(priceInvoice > priceDetail){
-        document.getElementById("btnAddMore").disabled = false;
-    }else{
-        document.getElementById("btnAddMore").disabled = true;
-    }
-    document.getElementById('totalPriceAll').value = priceInvoice;
-    document.getElementById('totalPriceDetail').value = priceDetail;
+                    document.getElementById("btnAddMore").disabled = false;
+                    }else{
+                        document.getElementById("btnAddMore").disabled = true;
+                    }
+                    document.getElementById('totalPriceAll').value = priceInvoice;
+                    document.getElementById('totalPriceDetail').value = priceDetail;
                     toastr.success('Cập nhập thành công.', 'Notifycation', {
                         timeOut: 500
                     })
-                } else {
+                } else if(response[0] == 2){
                     alert('Tổng tiền lớn hơn hoá đơn, vui lòng xem lại!');
                 }
-            }
+            },error:function (response){
+                var message = response.responseJSON.errors.Jancode;
+                        $(document).find('[name=janco_'+id+']').after('<span class="alert-danger-custom" id="janco_'+id+'">' +message+ '</span>');
+                }
         });
     }
     BillDetailCount = 0;

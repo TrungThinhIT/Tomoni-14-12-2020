@@ -3,7 +3,9 @@
 namespace App\Services\Suppliers;
 
 use App\Http\Requests\Suppliers\AddInvoiceDetailRequest;
+use App\Http\Requests\Suppliers\InvoiceDetailRequest;
 use App\Http\Requests\Suppliers\InvoiceRequest;
+use App\Http\Requests\Suppliers\UpdateInvoiceDetailRequest;
 use App\Models\InvoiceDetailSupplier;
 use App\Models\InvoiceSupplier;
 use App\Models\LogInvoiceDetailSupplier;
@@ -58,7 +60,7 @@ class InvoiceService
         if (isset($stockDate)) {
             $invoices = InvoiceSupplier::where('StockDate', $stockDate);
         }
-        $invoices = $invoices->orderBy('Id', 'DESC')->paginate($record);
+        $invoices = $invoices->with('detail.product')->orderBy('Id', 'DESC')->paginate($record);
 
         $data = ['invoices' => $invoices, 'accounts' => $accounts, 'suppliers' => $suppliers, 'record' => $record,
          'productName' => $productName, 'sinvoice' => $sinvoice, 'supplier'=> $supplier,
@@ -76,6 +78,8 @@ class InvoiceService
         foreach ($object['detail'] as $key => $value) {
             $priceDetail +=  $value->Quantity * $value->Price;
         }
+
+        
 
         return ['object'=> $object, 'suppliers' => $suppliers, 'priceInvoice'=> $priceInvoice, 'priceDetail' => $priceDetail];
     }
@@ -176,7 +180,7 @@ class InvoiceService
            }
     }
 
-    public function createInvoiceDetail(Request $request)
+    public function createInvoiceDetail(InvoiceDetailRequest $request)
     {
         $invoiceDetail = InvoiceDetailSupplier::create([
            'Codeorder' => $request->CodeorderItem,
@@ -234,7 +238,7 @@ class InvoiceService
         }
     }
 
-    public function updateInvoiceDetail(Request $request, $Id){
+    public function updateInvoiceDetail(UpdateInvoiceDetailRequest $request, $Id){
         $currentInvoiceDetail = InvoiceDetailSupplier::where('Id', $Id)->first();
         $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->where('Id', '!=', $currentInvoiceDetail->Id)->get();
         $totalPriceInvoice = InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->TotalPrice + InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->PurchaseCosts;
@@ -243,25 +247,25 @@ class InvoiceService
             $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
         }
         $currentTotalPrice = $totalPriceInvoiceDetails + ($request->quantity * $request->price);
-        if($currentTotalPrice <= $totalPriceInvoice){
-            InvoiceDetailSupplier::where('Id', $Id)->update([
-            'Codeorder' => $request->codeorder,
-            'Jancode' => $request->jancode,
-            'Quantity' => $request->quantity,
-            'Price' => $request->price,
-            'PriceTax' => $request->tax
-        ]);
-        LogInvoiceDetailSupplier::create([
-            'uname' => Auth::user()->uname,
-            'action' => 'update',
-            'Invoice' => $currentInvoiceDetail->Invoice,
-            'Jancode' => $request->jancode,
-            'Codeorder' => $request->codeorder
-        ]);
-        return [1, $currentTotalPrice];
-        }else{
-            return 2;
-        }
+            if($currentTotalPrice <= $totalPriceInvoice){
+                InvoiceDetailSupplier::where('Id', $Id)->update([
+                'Codeorder' => $request->codeorder,
+                'Jancode' => $request->Jancode,
+                'Quantity' => $request->quantity,
+                'Price' => $request->price,
+                'PriceTax' => $request->tax
+            ]);
+            LogInvoiceDetailSupplier::create([
+                'uname' => Auth::user()->uname,
+                'action' => 'update',
+                'Invoice' => $currentInvoiceDetail->Invoice,
+                'Jancode' => $request->Jancode,
+                'Codeorder' => $request->codeorder
+            ]);
+            return [1, $currentTotalPrice];
+            }else{
+                return 2;
+            }
     }
 
     public function createMoreInvoiceDetail(AddInvoiceDetailRequest $request, $Invoice)

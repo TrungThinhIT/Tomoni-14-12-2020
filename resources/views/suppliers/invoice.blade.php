@@ -214,7 +214,7 @@
                                     <th>Nhà cung cấp</th>
                                     <th>Web order</th>
                                     <th>Jancode</th>
-                                    <th>Name</th>
+                                    {{-- <th>Name</th> --}}
                                     <th>Số lượng</th>
                                     <th>Đơn giá</th>
                                     <th>Tổng tiền hoá đơn</th>
@@ -238,11 +238,13 @@
                                     <td>@foreach ($value['detail'] as $item)
                                         {{$item->Jancode}}
                                         @endforeach</td>
-                                        <td>
-                                             @foreach ($value['detail'] as $name)
-                                                 {{$name->product->name}}
-                                             @endforeach
-                                        </td>
+                                        {{-- <td>
+                                            @foreach ($value['detail'] as $item)
+
+                                            {{$item->first()->product}}
+
+                                        @endforeach
+                                        </td> --}}
                                     <td>@foreach ($value['detail'] as $item)
                                         {{$item->Quantity}}
                                         @endforeach</td>
@@ -446,11 +448,12 @@
         var Price = $("#don_gia_" + JanCount).val().replace(",", "");
         var PriceTax = $("#thue_jancode_" + JanCount).val();
         var Invoice = $("#uinvoice").val();
+        
+        $('span[id^="Jancode_'+JanCount+'"]').remove();
 
         if (allTotalPrice < (Quantity * Price) + TotalPrice) {
             alert('Tổng giá cao hơn tổng tiền hóa đơn')
         } else if (allTotalPrice == (Quantity * Price) + TotalPrice) {
-            alert('Chúc mừng bạn nhập thành công')
             $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -466,13 +469,14 @@
                         PriceTax: PriceTax
                     },
                     success: function (response) {
-                        if (response == 1) {
+                        if (response == 1) {                            
+                             alert('Chúc mừng bạn nhập thành công')
                             location.reload();
                         }
-                        if (response == 2) {
-                            location.reload();
-                        }
-                    }
+                    },error:function (response){
+                var message = response.responseJSON.errors.Jancode;
+                        $(document).find('[name=Jancode_'+JanCount+']').after('<span class="alert-danger-custom" id="Jancode_'+JanCount+'">' +message+ '</span>');
+                }
                 });
         } else {
                 $.ajax({
@@ -499,18 +503,18 @@
                             );
                             document.getElementById("InsertJan_" + JanCount).disabled = true;
 
-        document.getElementById("codeorder_"+JanCount).disabled = true;
-        document.getElementById("Jancode_"+JanCount).disabled = true;
-        document.getElementById("so_luong_"+JanCount).disabled = true;
-        document.getElementById("don_gia_"+JanCount).disabled = true;
-        document.getElementById("thue_jancode_"+JanCount).disabled = true;
+                            document.getElementById("codeorder_"+JanCount).disabled = true;
+                            document.getElementById("Jancode_"+JanCount).disabled = true;
+                            document.getElementById("so_luong_"+JanCount).disabled = true;
+                            document.getElementById("don_gia_"+JanCount).disabled = true;
+                            document.getElementById("thue_jancode_"+JanCount).disabled = true;
 
                             TotalPrice = TotalPrice + (Quantity * Price)
                         }
-                        if (response == 2) {
-                            location.reload();
-                        }
-                    }
+                    },error:function (response){
+                var message = response.responseJSON.errors.Jancode;
+                        $(document).find('[name=Jancode_'+JanCount+']').after('<span class="alert-danger-custom" id="Jancode_'+JanCount+'">' +message+ '</span>');
+                }
                 });
         }
     }
@@ -530,7 +534,8 @@
 					"</div>" +
 					"<div class='col-md-2 mb-2'>" +
 						"<label for='validationDefault01'>Jancode*</label>" +
-						"<input type='text' class='form-control' id='Jancode_" + JanCount + "'" +
+                        "<input type='text' class='form-control' id='Jancode_" + JanCount + "'" +
+                        "name='Jancode_" + JanCount + "'" +
                             "class='input'  onkeyup='search_jancode()' list='ujan_wh" + JanCount + "'" +
                             " required>" +
                             "<datalist id='ujan_wh" + JanCount + "'" + "></datalist>" +
