@@ -44,12 +44,10 @@ Route::get('/backdoor/uname={uname}', function ($uname) {
 Route::prefix('auth')->namespace('auth')->name('auth.')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('loginIndex');
     Route::post('/login', [LoginController::class, 'login'])->name('doLogin');
-
     Route::get('/logout', function () {
         Auth::logout();
         return redirect()->route('auth.loginIndex');
     })->name('logout');
-
     Route::get('/password-reset', [PasswordResetController::class, 'index'])->name('passwordResetIndex');
     Route::post('/password-reset', [PasswordResetController::class, 'sendToken'])->name('doPasswordReset');
     Route::get('/change-password/token={token}', [PasswordResetController::class, 'indexChangePassword'])->name('getChangePassword');
@@ -66,7 +64,6 @@ Route::prefix('/')->middleware('auth')->group(function () {
     })->name('index');
 
     Route::prefix('suppliers')->middleware('role')->namespace('suppliers')->name('supplier.')->group(function () {
-
         Route::prefix('invoice')->name('invoice.')->group(function () {
             Route::get('/', [InvoiceController::class, 'list'])->name('index');
             // Route::get('/{Invoice}', [InvoiceController::class, 'show'])->name('showInvoice');
@@ -79,21 +76,18 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::put('/{Invoice}', [InvoiceController::class, 'updateInvoice'])->name('updateInvoice');
             Route::put('/detail/{Id}', [InvoiceController::class, 'updateInvoiceDetail'])->name('updateInvoiceDetail');
         });
-
         Route::prefix('payment')->name('payment.')->group(function () {
             Route::get('/', [PaymentSupplierController::class, 'index'])->name('index');
             Route::post('/', [PaymentSupplierController::class, 'create'])->name('create');
             Route::put('/{Id}', [PaymentSupplierController::class, 'update'])->name('update');
             Route::get('/delete/{Id}', [PaymentSupplierController::class, 'delete'])->name('delete');
         });
-
         Route::prefix('management')->name('management.')->group(function () {
             Route::get('/', [SupplierController::class, 'list'])->name('index');
             Route::post('/', [SupplierController::class, 'create'])->name('create');
             Route::get('/{code_name}', [SupplierController::class, 'show'])->name('show');
             Route::put('/{code_name}', [SupplierController::class, 'update'])->name('update');
         });
-
         Route::get('/payback', function () {
             return view('suppliers.payback');
         })->name('payback');
@@ -172,15 +166,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
     Route::prefix('commons')->middleware('role')->name('commons.')->group(function () {
         Route::get('/search-user', [LedgerController::class, 'searchUser'])->name('search-user');
-
         Route::get('/search-code-order', [InvoiceController::class, 'searchCodeOrder'])->name('searchCodeOrder');
-
         Route::get('/search-code-jan', [InvoiceController::class, 'searchCodeJan'])->name('searchCodeJan');
-
         Route::get('/search-ma-hoa-don', [BillController::class, 'searchBillCode'])->name('searchBillCode');
-
         Route::get('/search-supplier', [PaymentSupplierController::class, 'searchSupplier'])->name('searchSupplier');
-
         Route::get('/search-invoice', [PaymentSupplierController::class, 'searchInvoice'])->name('searchInvoice');
     });
 
