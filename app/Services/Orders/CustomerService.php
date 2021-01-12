@@ -45,6 +45,7 @@ class CustomerService
         }
         
         $customer = $customer->sortByDesc('dateget')->paginate($record);
+        
         return ['customer' => $customer, 'record' => $record, 'uname' => $uname, 'dateStart' => $date_start, 'dateEnd' => $date_end];
     }
 }

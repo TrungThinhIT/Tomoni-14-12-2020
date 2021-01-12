@@ -4,7 +4,7 @@
     <button type="button" class="close" data-dismiss="modal">&times;</button>
 </div>
 <div style="float: right" class="mt-3">
-    {!! $inventory->withQueryString()->links('commons.paginate') !!}</div>
+    {!! $inventory->withQueryString()->links('commons.paginate_level2') !!}</div>
     
 <div class="row">
 <div class="col-8"><table id="example" class="table table-bordered table-striped" style="margin-top: 1%;">
@@ -16,6 +16,7 @@
             <th>Quantity</th>
             <th>Total Quantity</th>
             <td>Item In Box</td>
+            <td>Date</td>
         </tr>
     </thead>
     <tbody id="myTable">
@@ -41,6 +42,11 @@
                 @endif</td>
             <td>{{number_format($item->debtQuantity, 0)}}</td>
             <td>{{$item->item_in_box}}</td>
+            <td>@if ($item->jan_code)
+                {{$item->Date_Create}}
+                @else
+                {{$item->Dateinsert}}
+                @endif</td>
         </tr>
         @php $count ++; @endphp
         @endforeach
@@ -119,7 +125,7 @@
             })
     }
 
-    $('.pagination a').unbind('click').on('click', function (e) {
+    $('.level-2 .pagination a').unbind('click').on('click', function (e) {
         e.preventDefault();
         var page = $(this).attr('href').split('page=')[1];
         getPosts(page);

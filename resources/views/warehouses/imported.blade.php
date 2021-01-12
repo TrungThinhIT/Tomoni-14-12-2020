@@ -43,6 +43,7 @@
                             <thead>
                                 <tr>
                                     <th>No.</th>
+                                    <th>So hoa don</th>
                                     <th>Jancode</th>
                                     <th>Name</th>
                                     <th>Số lượng</th>
@@ -57,8 +58,9 @@
                                 <tr>
                                     <td>{{$data['importeds']->perPage()*($data['importeds']->currentPage()-1)+$count}}
                                     </td>
+                                    <td>{{$item->Invoice}}</td>
                                     <td data-code="{{$item->Jancode}}" class="view_transaction">{{$item->Jancode}}</td>
-                                    <td>{{$item['product']->name}}</td>
+                                    <td>{{ $item['product']->name }}</td>
                                     <td>{{$item->totalQuantity}}</td>
                                     <td>{{$item->totalPrice}}</td>
                                 </tr>

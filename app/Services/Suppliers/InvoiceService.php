@@ -61,11 +61,9 @@ class InvoiceService
             $invoices = InvoiceSupplier::where('StockDate', $stockDate);
         }
         $invoices = $invoices->with('detail.product')->orderBy('Id', 'DESC')->paginate($record);
-
-        $data = ['invoices' => $invoices, 'accounts' => $accounts, 'suppliers' => $suppliers, 'record' => $record,
+        return ['invoices' => $invoices, 'accounts' => $accounts, 'suppliers' => $suppliers, 'record' => $record,
          'productName' => $productName, 'sinvoice' => $sinvoice, 'supplier'=> $supplier,
         'webOrder'=> $webOrder, 'janCode' => $janCode, 'paymentDate'=> $paymentDate, 'stockDate'=> $stockDate];
-        return $data;
     }
 
     public function showInvoiceById($Id){

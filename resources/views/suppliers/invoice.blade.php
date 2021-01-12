@@ -239,9 +239,9 @@
                                         {{$item->Jancode}}
                                         @endforeach</td>
                                         {{-- <td>
-                                            @foreach ($value['detail'] as $item)
+                                            @foreach ($value['detail'] as $detail => $name)
 
-                                            {{$item->first()->product}}
+                                            {{$name['product']->name}}
 
                                         @endforeach
                                         </td> --}}

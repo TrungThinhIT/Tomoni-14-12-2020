@@ -18,7 +18,7 @@ class ImportedService {
             $importeds = $importeds->where('Jancode', $jan_code);
         }
 
-        $importeds = $importeds->with('product')->select()->selectRaw('sum(Quantity) as totalQuantity')->selectRaw('sum(Price) as totalPrice')->groupBy('Jancode')->paginate(10);
+        $importeds = $importeds->has('product')->select()->selectRaw('sum(Quantity) as totalQuantity')->selectRaw('sum(Price) as totalPrice')->groupBy('Jancode')->paginate(10);
         return ['importeds' => $importeds, 'jan_code'=> $jan_code];
     }
 

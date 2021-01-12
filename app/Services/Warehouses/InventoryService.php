@@ -23,8 +23,14 @@ class InventoryService
             $importeds = $importeds->where('Jancode', $janCode);
         }
 
-        $importeds = $importeds->select()->selectRaw('sum(Quantity) as totalQuantity')->selectRaw('sum(Price) as totalPrice')->groupBy('Jancode')->get();
+        $importeds = $importeds->join(
+            'product_standard',
+            'product_standard.jan_code',
+            '=',
+            'acountant_jancodeitem.Jancode',
+        );
 
+        $importeds = $importeds->select()->selectRaw('sum(acountant_jancodeitem.Quantity) as totalQuantity')->selectRaw('sum(acountant_jancodeitem.Price) as totalPrice')->groupBy('Jancode')->get();
         $exporteds = Bill::where('deleted_at', null)->select()->distinct()->join(
             'product',
             'product.codeorder',
@@ -47,7 +53,6 @@ class InventoryService
         foreach ($exporteds as $value) {
             $value->setAttribute('Jancode', $value->jan_code);
         }
-
         $inventories = collect($importeds)->merge($exporteds)->groupBy('Jancode');
 
         foreach ($inventories as $value) {
@@ -58,6 +63,7 @@ class InventoryService
                 $value[0]->setAttribute('TotalQuantity', $value[0]->totalQuantity);
             }
         }
+        
 
         $inventories = $inventories->flatten();
 
@@ -104,11 +110,11 @@ class InventoryService
             }
         }
         if ($request->ajax() || 'NULL') {
-            $inventory = $inventory->sortByDesc('Dateinsert')->paginate(10);
+            $inventory = $inventory->sortByDesc('Dateinsert')->paginate(1);
             return view('warehouses.includes.modalInventory', compact('inventory'));
         } else {
 
-            $inventory = $inventory->sortByDesc('Dateinsert')->paginate(10);
+            $inventory = $inventory->sortByDesc('Dateinsert')->paginate(1);
             return view('warehouses.includes.modalInventory', compact('inventory'));
         }
     }

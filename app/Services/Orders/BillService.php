@@ -6,7 +6,9 @@ use App\Http\Requests\Orders\CreateBillRequest;
 use App\Models\Bill;
 use App\Models\LogAccountant;
 use App\Models\LogAdmin;
+use App\Models\NoteWarehouse;
 use App\Models\Order;
+use App\Models\PaymentCustomer;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Transport;
@@ -110,7 +112,22 @@ class BillService
 
     public function getBillById($billcode)
     {
-        return Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->get();
+        $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->get();
+        $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->get();
+            $mua = Order::query()->where('Sohoadon', $billcode)->get();
+        $customer = collect($nap)->merge($mua)->sortBy('dateget');
+        $deDebt = 0;
+        foreach ($customer as $value) {
+            if ($value->depositID) {
+                $deDebt += $value->price_in;
+            } else {
+                $deDebt -= $value->total_all;
+            }
+            $value->setAttribute('deDebt', $deDebt);
+        }
+        
+        $customer = $customer->sortByDesc('dateget')->paginate(10);
+        return ['bill' => $bill,'customer' => $customer];
     }
 
     public function getBillDetailById($codeorder)
@@ -122,9 +139,16 @@ class BillService
 
     public function UpdateBillDetailById(Request $request, $codeorder)
     {
+        $bill = Product::where('codeorder', $codeorder)->first();
         Product::where('codeorder', $codeorder)->update([
             'price' => $request->price,
             'quantity' => $request->quantity
+        ]);
+        NoteWarehouse::create([
+            'note' => $codeorder . ' cập nhập số lượng từ ' . $bill->quantity . '  đến ' . $request->quantity,
+            'uname' => Auth::user()->uname,
+            'action' => 'update',
+            'Jancode' => $bill->jan_code
         ]);
         return response()->json(Product::where('codeorder', $codeorder)->first());
 

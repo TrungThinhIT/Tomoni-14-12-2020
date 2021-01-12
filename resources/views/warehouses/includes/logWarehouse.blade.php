@@ -5,6 +5,8 @@
     <b style="color: deeppink"> {{$item->action}}</b>
 @elseif($item->action == 'import')
     <b style="color: cornflowerblue"> {{$item->action}}</b>
+    @elseif($item->action == 'update')
+    <b style="color: deeppink"> {{$item->action}}</b>
     @else
     <b style="color: darkorange"> {{$item->action}}</b>
 @endif - <b style="color: yellowgreen"> {{$item->created_at}}</b>: {{$item->note}}
@@ -14,6 +16,8 @@
     <b style="color: deeppink"> {{$item->action}}</b>
 @elseif($item->action == 'import')
     <b style="color: cornflowerblue"> {{$item->action}}</b>
+    @elseif($item->action == 'update')
+    <b style="color: deeppink"> {{$item->action}}</b>
     @else
     <b style="color: darkorange"> {{$item->action}}</b>
 @endif - <b style="color: yellowgreen">{{$item->created_at}}</b>: {{$item->note}}

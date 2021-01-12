@@ -32,8 +32,8 @@ class BillController extends Controller
     }
 
     public function getBillById($billcode){
-        $bill = $this->billService->getBillById($billcode);
-        return view('orders.order', compact('bill'));
+        $data = $this->billService->getBillById($billcode);
+        return view('orders.order', compact('data'));
     }
 
     public function getBillDetailById($codeorder){

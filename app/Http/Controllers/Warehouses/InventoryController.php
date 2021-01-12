@@ -24,13 +24,13 @@ class InventoryController extends Controller
         return $this->inventoryService->detailInventory($request, $jancode);
     }
 
-    public function noteImport(Request $request, $Id){
-        return $this->inventoryService->doNoteImport($request, $Id);
-    }
+    // public function noteImport(Request $request, $Id){
+    //     return $this->inventoryService->doNoteImport($request, $Id);
+    // }
 
-    public function noteExport(Request $request, $id){
-        return $this->inventoryService->doNoteExport($request, $id);
-    }
+    // public function noteExport(Request $request, $id){
+    //     return $this->inventoryService->doNoteExport($request, $id);
+    // }
 
     public function loadNote($jancode){
         return $this->inventoryService->loadNoteWarehouse($jancode);
