@@ -73,10 +73,7 @@
                                         <td>{{$item->note}}</td>
                                         <td>{{$item->useradmin}}</td> --}}
                                         <td>
-                                            <div>
-                                                <input type="text" class="form-control" id="shd{{$item->Id}}" readonly
-                                                    value="{{$item->Sohoadon}}" >
-                                            </div>
+                                            {{$item->Sohoadon}}
                                         </td>
                                     </tr>
                                     @endforeach

@@ -8,6 +8,9 @@
                 <div class="card-header bg-info-gradient text-white bubble-shadow">
                     <h4>Chi tiết đơn hàng: <strong
                             style="color: chartreuse">{{$billDetail['detail']->codeorder}}</strong></h4>
+                    
+                            <a href="{{route('index')}}">Index</a>&nbsp; - &nbsp;<a href="{{route('orders.bills.getBillById', $billDetail['detail']->SohoaDon)}}">{{$billDetail['detail']->SohoaDon}}</a>
+                            &nbsp; - &nbsp;<a href="{{route('orders.bills.getBillDetailById', $billDetail['detail']->codeorder)}}">{{$billDetail['detail']->codeorder}}</a>
                 </div>
                 <div class="card-body row">
                     <div style=" margin-left:1%; width:100%; padding:1%">

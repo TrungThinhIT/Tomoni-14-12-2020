@@ -21,8 +21,8 @@ class BillCustomerController extends Controller
     }
 
     public function order($billcode){
-        $bill = $this->billService->getBillById($billcode);
-        return view('customers.order', compact('bill'));
+        $data = $this->billService->getBillById($billcode);
+        return view('customers.order', compact('data'));
     }
 
     public function orderDetail($codeorder){

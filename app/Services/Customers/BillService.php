@@ -7,6 +7,7 @@ use App\Models\Bill;
 use App\Models\LogAccountant;
 use App\Models\LogAdmin;
 use App\Models\Order;
+use App\Models\PaymentCustomer;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Transport;
 use Illuminate\Http\Request;
@@ -47,8 +48,6 @@ class BillService
             $bills = $bills->orWhereDate('Date_Create', $Date_Create);
         }
 
-
-
         $bills = $bills->where('deleted_at', null)
             ->select()->selectRaw('count(Id) as total')
             ->selectRaw('sum(PriceOut) as totalPriceOut')
@@ -65,9 +64,25 @@ class BillService
     public function getBillById($billcode)
     {
         $uname = Auth::user()->uname;
-        return Bill::where('So_Hoadon', $billcode)->with('Order')->whereHas('Order', function ($query) use ($uname) {
+        $bill = Bill::where('So_Hoadon', $billcode)->with('Order')->whereHas('Order', function ($query) use ($uname) {
             return $query->where('uname', $uname);
-        })->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->get();
+        })->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
+        $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->get();
+        $codeorders = Bill::where('So_Hoadon', $billcode)->where('uname', $uname)->where('deleted_at', null)->get('Codeorder')->toArray();
+            $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
+        $customer = collect($nap)->merge($mua)->sortBy('dateget');
+        $deDebt = 0;
+        foreach ($customer as $value) {
+            if ($value->depositID) {
+                $deDebt += $value->price_in;
+            } else {
+                $deDebt -= $value->total_all;
+            }
+            $value->setAttribute('deDebt', $deDebt);
+        }
+        
+        $customer = $customer->sortByDesc('dateget')->paginate(10);
+        return ['bill' => $bill, 'customer' => $customer];
     }
 
     public function getBillDetailById($codeorder)

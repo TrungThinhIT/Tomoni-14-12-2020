@@ -7,7 +7,7 @@
             <div class="card card-documentation">
                 <div class="card-header bg-info-gradient text-white bubble-shadow">
                     <h4>Hi im Cong no khach hang</h4>
-                    <!-- <p class="mb-0 op-8">Documentation and examples for Bootstrap’s powerful, responsive navigation header, the navbar. Includes support for branding, navigation, and more, including support for our collapse plugin.</p> -->
+                    <a href="{{route('index')}}">Index</a>&nbsp; - &nbsp;<a href="{{route('orders.de', $data['Uname'])}}">{{$data['Uname']}}</a>
                 </div>
                 <div class="card-body">
                     <div>

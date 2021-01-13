@@ -43,9 +43,9 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td><input type="number" readonly class="form-control" value="{{$billDetail['detail']->total}}"></td>
-                                    <td><input type="number" readonly class="form-control" value="{{$billDetail['detail']->quantity}}"></td>
-                                    <td><input type="number" value="{{$billDetail['detail']->total_all}}" readonly class="form-control"></td>
+                                    <td>{{$billDetail['detail']->total}}</td>
+                                    <td>{{$billDetail['detail']->quantity}}</td>
+                                    <td>{{$billDetail['detail']->total_all}}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" rowspan="4">
@@ -59,39 +59,27 @@
                                                 class="btn btn-primary">Gửi</button>
                                         </div>
                                     </td>
-                                    <td>Tổng</td>
-                                    <td>2</td>
-                                    <td>123</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td>Phí dịch vụ</td>
                                     <td colspan="2">
-                                        <div>
-                                            <input style="width: 70%; margin-right:1%"
-                                                value="{{$billDetail['detail']->Transport->first()->fee_box}}"
-                                                type="text" class="form-control" readonly>
-                                        </div>
+                                    {{$billDetail['detail']->Transport->first()->fee_box}}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Shipping nội địa:</td>
                                     <td colspan="2">
-                                        <div>
-                                            <input style="width: 70%; margin-right:1%" type="text"
-                                                value="{{$billDetail['detail']->Transport->first()->fee_service}}"
-                                                class="form-control" readonly>
-                                        </div>
+                                        {{$billDetail['detail']->Transport->first()->fee_service}}
                                     </td>
                                 </tr>
                                 <input type="text" hidden value="{{$billDetail['detail']->codeorder}}" id="codeorder">
                                 <tr>
                                     <td>Tracking number</td>
                                     <td colspan="2">
-                                        <div>
-                                            <input style="width: 70%; margin-right:1%" type="text"
-                                                value="{{$billDetail['detail']->shipid}}" class="form-control"
-                                                readonly>
-                                        </div>
+                                        {{$billDetail['detail']->shipid}}
                                     </td>
                                 </tr>
 

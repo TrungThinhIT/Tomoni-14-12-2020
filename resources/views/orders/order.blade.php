@@ -8,8 +8,8 @@
             <div class="card card-documentation">
                 <div class="card-header bg-info-gradient text-white bubble-shadow">
                     <h4>Đơn hàng đang xữ lý</h4>
+                    <a href="{{route('index')}}">Index</a>&nbsp; - &nbsp;<a href="{{route('orders.bills.getBillById', $data['bill']->first()->So_Hoadon)}}">{{$data['bill']->first()->So_Hoadon}}</a>
                 </div>
-                
                 <div class=" row">
                     <div class="row" style="width: 100%">
 

@@ -35,7 +35,6 @@
                                         <th>Price In</th>
                                         <th>Price Out</th>
                                         <th>Price Debt</th>
-                                        <th>Function</th>
                                     </tr>
                                 </thead>
                                 <tbody id="myTable">

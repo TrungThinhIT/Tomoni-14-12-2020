@@ -112,9 +112,10 @@ class BillService
 
     public function getBillById($billcode)
     {
-        $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->get();
+        $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
         $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->get();
-            $mua = Order::query()->where('Sohoadon', $billcode)->get();
+        $codeorders = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->get('Codeorder')->toArray();
+            $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
         $deDebt = 0;
         foreach ($customer as $value) {

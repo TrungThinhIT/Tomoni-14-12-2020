@@ -7,6 +7,7 @@
             <div class="card card-documentation">
                 <div class="card-header bg-info-gradient text-white bubble-shadow">
                     <h4>Hoá đơn của {{$data['Uname']}}</h4>
+                    <a href="{{route('index')}}">Index</a>&nbsp; - &nbsp;<a href="{{route('orders.bills.indexAllByUname', $data['Uname'])}}">{{$data['Uname']}}</a>
                 </div>
                 <div class="card-body row">
                     <div class="card" style=" margin-left:1%; width:100%; padding:1%">
