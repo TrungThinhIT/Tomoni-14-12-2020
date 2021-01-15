@@ -21,7 +21,7 @@ class ExportedCustomerController extends Controller
         return view('customers.exported', compact('data'));
     }
 
-    public function detail($jancode){
-        return $this->exportedService->detailByJanCode($jancode);
+    public function detail(Request $request, $jancode){
+        return $this->exportedService->detailByJanCode($request, $jancode);
     }
 }

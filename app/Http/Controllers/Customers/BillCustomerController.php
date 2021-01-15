@@ -20,9 +20,17 @@ class BillCustomerController extends Controller
         return view('customers.bill', compact('data'));
     }
 
+    public function export(Request $request){
+        return $this->billService->ExportALlBillByUname($request);
+    }
+
     public function order($billcode){
         $data = $this->billService->getBillById($billcode);
         return view('customers.order', compact('data'));
+    }
+
+    public function getPaymentDetail(Request $request, $billcode){
+        return $this->billService->getPaymentByBillCodeAndDate($request, $billcode);
     }
 
     public function orderDetail($codeorder){

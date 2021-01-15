@@ -15,7 +15,7 @@
                                 @csrf
                             <div >
                             <div  >
-                                <input class="form-control" value="{{ old('Uname')}}" type="text" name="Uname" placeholder="Nhập User Name"  id="example-date-input" list='litsusername' onkeyup='searchUser(this)' required> <datalist id='litsusername'></datalist>
+                                <input class="form-control" value="{{ old('Uname')}}" type="text" name="Uname" placeholder="Nhập User Name" autofocus autocomplete="off"  id="example-date-input" list='litsusername' onkeyup='searchUser(this)'> <datalist id='litsusername'></datalist>
                                 <span class="alert-danger-custom">{{$errors->first('Uname')}}</span>
                             </div>
 
@@ -32,10 +32,21 @@
                                         <div >
                                             <button type="submit" class="btn btn-primary" style="margin-left: 2%;">Tìm kiếm</button>
                                         </div>
-                                        <input type="text" class="form-control ml-2" value="{{ $data['Uname'] }}" name="Uname" placeholder="Nhập User Name" style="width: 15%;" />
-                                        <input type="text" class="form-control ml-2" value="{{ $data['PriceIn'] }}" name="PriceIn" placeholder="Nhập Price In" style="width: 15%;" />
-                                        <input type="text" class="form-control ml-2" value="{{ $data['PriceOut'] }}" name="PriceOut" placeholder="Nhập Price Out" style="width: 15%;" />
-                                        <input type="text" class="form-control ml-2" value="{{ $data['Pricedelb'] }}" name="Pricedelb" placeholder="Nhập Price Delb" style="width: 15%;" />
+                                        <input type="text" class="form-control ml-2" value="{{ $data['Uname'] }}" name="Uname" id="Uname" placeholder="Nhập User Name" style="width: 15%;" />
+                                        <input type="text" class="form-control ml-2" value="{{ $data['PriceIn'] }}" name="PriceIn" id="PriceIn" placeholder="Nhập Price In" style="width: 15%;" />
+                                        <input type="text" class="form-control ml-2" value="{{ $data['PriceOut'] }}" name="PriceOut" id="PriceOut" placeholder="Nhập Price Out" style="width: 15%;" />
+                                        <input type="text" class="form-control ml-2" value="{{ $data['Pricedelb'] }}" name="Pricedelb" id="Pricedelb" placeholder="Nhập Price Delb" style="width: 15%;" />
+                                        <div>
+                                            <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2" style="margin-left: 2%;">Reset</button>
+                                            <script>
+                                                function resetFormSearch() {
+                                                    document.getElementById("Uname").value = "";
+                                                    document.getElementById("PriceIn").value = "";
+                                                    document.getElementById("PriceOut").value = "";
+                                                    document.getElementById("Pricedelb").value = "";
+                                                }
+                                            </script>
+                                        </div>
                                     </form>
                             </fieldset>
                             </form>

@@ -20,19 +20,15 @@ class PaymentCustomerService
             $PCustomers = $PCustomers->where('uname', 'like', '%' . $Uname . '%');
         }
 
-        if (!empty($date_inprice)) {
-            $PCustomers = $PCustomers->whereDate('date_inprice', $date_inprice);
-        }
-
-        if (!empty($date_insert)) {
-            $PCustomers = $PCustomers->whereDate('date_insert', $date_insert);
+        if($date_inprice && $date_insert){
+            $PCustomers = $PCustomers->whereBetween('dateget', [$date_inprice, $date_insert]);
         }
 
         if (!empty($Sohoadon)) {
             $PCustomers = $PCustomers->where('Sohoadon', 'like', '%' . $Sohoadon . '%');
         }
 
-        $PCustomers = $PCustomers->paginate(10);
+        $PCustomers = $PCustomers->orderByDesc('dateget')->paginate(10);
         return ['PCustomers' => $PCustomers, 'Uname' => $Uname, 'date_inprice' => $date_inprice, 'date_insert' => $date_insert, 'Sohoadon' => $Sohoadon];
     }
 

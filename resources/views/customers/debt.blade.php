@@ -12,6 +12,9 @@
                 <div class="card-body">
                     <div>
                         <div style="margin: 1% 1% 1% 1%;">
+                            <div style="float: left;" class="mt-2">
+                                <button type="button" class="btn btn-primary" onclick="window.location.href='debt/export'">Export</button>
+                            </div>
                             <form action="{{route('customer.debt.index')}}">
                             <div style="float: left;" class="mt-2">
                                 <select type="text" name="record" onchange="this.form.submit()" class="form-control"

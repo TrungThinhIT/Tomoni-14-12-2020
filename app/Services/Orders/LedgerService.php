@@ -21,12 +21,10 @@ class LedgerService
 
     public function showList(Request $request)
     {
-
         $Uname = $request->Uname;
-        $PriceIn = $request->PriceIn;
-        $PriceOut = $request->PriceOut;
-        $Pricedelb = $request->Pricedelb;
-
+        $PriceInSearch = $request->PriceIn;
+        $PriceOutSearch = $request->PriceOut;
+        $PricedelbSearch = $request->Pricedelb;
         $users = Ledger::get()->toArray();
 
         foreach($users as $item){
@@ -44,14 +42,26 @@ class LedgerService
             ]);
         }
 
-        $ledgers = Ledger::query();
+       $ledgers = Ledger::select();
 
-        $ledgers->where('Uname', 'like', '%' . $Uname . '%')->orWhere('PriceIn', $PriceIn)
-            ->orWhere('PriceOut', $PriceOut)->orWhere('Pricedelb', $Pricedelb);
+       if($Uname){
+          $ledgers =  $ledgers->where('Uname', $Uname);
+       }
 
+       if($PriceInSearch){
+           $ledgers = $ledgers->where('PriceIn', $PriceInSearch);
+       }
+       
+       if($PriceOutSearch){
+           $ledgers = $ledgers->where('PriceOut', '=', $PriceOutSearch);
+       }
+
+       if($PricedelbSearch){
+           $ledgers = $ledgers->where('Pricedelb', $PricedelbSearch);
+       }
         $ledgers = $ledgers->orderBy('Id', 'DESC')->paginate(5);
 
-        $data = ['Uname' => $Uname, 'PriceIn' => $PriceIn, 'PriceOut' => $PriceOut, 'Pricedelb' => $Pricedelb, 'ledgers' => $ledgers];
+        $data = ['Uname' => $Uname, 'PriceIn' => $PriceInSearch, 'PriceOut' => $PriceOutSearch, 'Pricedelb' => $PricedelbSearch, 'ledgers' => $ledgers];
         return $data;
     }
 

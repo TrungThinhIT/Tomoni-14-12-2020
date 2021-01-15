@@ -18,4 +18,8 @@ class DebtController extends Controller
         $data = $this->debtService->index($request);
         return view('customers.debt', compact('data'));
     }
+
+    public function export(){
+       return $this->debtService->export(); 
+    }
 }

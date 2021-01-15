@@ -35,7 +35,7 @@ class CustomerService
             if ($value->depositID) {
                 $deDebt += $value->price_in;
             } else {
-                $deDebt -= $value->total_all;
+                $deDebt -= $value->total;
             }
             $value->setAttribute('deDebt', $deDebt);
         }

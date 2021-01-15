@@ -1,6 +1,5 @@
 @extends('commons_customer.layout')
 @section('title', 'Đơn hàng')
-<link rel="stylesheet" href="{{asset('assets/css/progress.css')}}">
 @section('content')
 <div class="main-panel">
     <div class="content content-documentation">
@@ -9,14 +8,13 @@
                 <div class="card-header bg-info-gradient text-white bubble-shadow">
                     <h4>Đơn hàng đang xữ lý</h4>
                 </div>
-                <div class=" row">
 
                     <div class="row" style="width: 100%">
 
                         <div class="card" style=" margin-left:1%; width:100%; ">
-                            <ul class="list-group list-group-flush">
 
-                                @foreach ($data['bill'] as $item)
+                            @foreach ($data['bill'] as $item)
+                            <ul class="list-group list-group-flush">
                                 <div class="card " style="width:100%">
                                     <div class="row d-flex justify-content-between px-3 top"
                                         style="margin: 1% 3% 0% 3% ">
@@ -40,6 +38,7 @@
                                                         {{number_format($item['Product']->price, 0)}} </p>
                                                     <p class="mb-0"><strong>Số lượng:</strong>
                                                         {{$item['Product']->quantity}}</p>
+                                                        <p class="mb-0"><strong>Số thùng: </strong>{{$item['Product']->quantity / $item['Product']->item_in_box}}</p>
                                                 </div>
                                             </h5>
                                         </div>
@@ -83,70 +82,107 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endforeach
 
                             </ul>
+                            @endforeach
 
                         </div>
 
                     </div>
-
-                </div>
-                <div class="card " style="width:100%">
-                    <div style="float: right" class="mt-3">
-                        {!! $data['customer']->withQueryString()->links('commons.paginate') !!}</div>
+                <div class="card" style="width:100%">
+                    <div class="mt-3">
+                        {!! $data['hien_mau']->withQueryString()->links('commons.paginate') !!}</div>
+                        Công nợ: {{number_format($data['customer']->first()->deDebt, 0)}}
                     <table class="table table-bordered table-striped" style="margin-top: 1%;">
                         <thead>
                             <tr>
                                 <th>Stt</th>
-                                <th>Action</th>
                                 <th>Date Time</th>
                                 <th>Deposit</th>
                                 <th>Price In</th>
-                                <th>Price Out</th>
                                 <th>Price Debt</th>
                             </tr>
                         </thead>
                         <tbody id="myTable">
                             @php
                             $count = 1;
-                            $deDebt = 0;
                             @endphp
 
-                            @foreach ($data['customer'] as $item)
+                            @foreach ($data['hien_mau'] as $item) 
+                            @php
+                                $allPriceIn = 0;
+                            @endphp
                             <tr>
-                                <td>{{$data['customer']->perPage()*($data['customer']->currentPage()-1)+$count}}</td>
-                                <td>@if ($item->depositID)
-                                    Nạp
+                                <td>{{$data['hien_mau']->perPage()*($data['hien_mau']->currentPage()-1)+$count}}</td>
+                                <td data-date="{{$item[0]->dateget}}" class="view_transaction">{{Carbon\Carbon::parse($item[0]->dateget)->format('d/m/Y')}}</td>
+                                <td>@if (count($item) >= 2)
+                                    @foreach ($item as $value)
+                                    {{$value->depositID}} <br>
+                                    @endforeach
                                 @else
-                                    Mua
+                                {{$item[0]->depositID}}
+                            @endif</td>
+                                <td>@if (count($item) >= 2)
+                                        @foreach ($item as $value)
+                                            @php
+                                                $allPriceIn += $value->price_in
+                                            @endphp
+                                        @endforeach                  
+                                        {{number_format($allPriceIn, 0)}}
+                                    @else
+                                    {{number_format($item[0]->price_in, 0)}}
                                 @endif</td>
-                                <td>@if ($item->depositID)
-                                    {{Carbon\Carbon::parse($item->dateget)->format('d/m/Y')}}
+                                <td>@if (count($item) >= 2)
+                                    @php
+                                    $index = count($item) - 1;
+                                    @endphp
+                                    {{number_format($item[$index]->priceIn, 0)}}
                                 @else
-                                    {{Carbon\Carbon::parse($item->dateget)->format('d/m/Y h:m:i')}}
-                                @endif</td>
-                                <td>@if ($item->depositID)
-                                    {{$item->depositID}}
-                                @else
-                                    <a href="{{route('customer.bill.orderDetail', $item->codeorder)}}">{{$item->codeorder}}</a>
-                                @endif</td>
-                                <td>@if ($item->depositID)
-                                    {{number_format($item->price_in)}}
-                                @endif</td>
-                                <td>@if (!($item->depositID))
-                                    {{number_format($item->total_all)}}
-                                @endif</td>
-                                <td>{{number_format($item->deDebt, 0)}}</td>
+                                {{number_format($item[0]->priceIn, 0)}}
+                            @endif</td>
                             </tr>
                             @php $count++; @endphp
                             @endforeach
                         </tbody>
-                    </table>
                     </div>
+                    </table>
+                   
+                    <div class="modal" id="modalDetail">
+                        <div class="modal-dialog modal-lg" style="min-width: 40%;" >
+                          <div class="modal-content">
+    
+                            <!-- Modal Header -->
+    
+    
+                          </div>
+                        </div>
+                      </div> 
             </div>
         </div>
 
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+                                $('.view_transaction').click(function() {
+                                    var date = $(this).data('date');
+                                    var billcode = "{{$data['bill']->first()->So_Hoadon}}"
+                                    $.ajax({
+                                        headers: {
+                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                                                .attr('content')
+                                        },
+                                        type: 'GET',
+                                        url: "payment" + '/' + billcode,
+                                        data: {
+                                            date: date
+                                        },
+                                        success: function(data) {
+                                            $('#modalDetail').modal('show');
+                                            $('.modal-content').html('').append(data);
+                                        }
+                                    });
+                                });
+                            });
+</script>
 @endsection

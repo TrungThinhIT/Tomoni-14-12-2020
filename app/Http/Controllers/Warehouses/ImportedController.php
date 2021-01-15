@@ -21,9 +21,9 @@ class ImportedController extends Controller
         return view('warehouses.imported', compact('data'));
     }
 
-    public function detail($jan_code)
+    public function detail(Request $request, $jan_code)
     {
-        return $this->importedService->detailByJanCode($jan_code);
+        return $this->importedService->detailByJanCode($request, $jan_code);
     }
 
     public function loadNote($jancode){

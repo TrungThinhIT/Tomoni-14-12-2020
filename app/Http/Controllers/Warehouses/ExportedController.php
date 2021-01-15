@@ -20,8 +20,8 @@ class ExportedController extends Controller
         return view('warehouses.exported', compact('data'));
     }
 
-    public function detail($jan_code){
-        return $this->exportedService->detailByJanCode($jan_code);
+    public function detail(Request $request, $jan_code){
+        return $this->exportedService->detailByJanCode($request, $jan_code);
     }
 
     public function loadNote($jancode){

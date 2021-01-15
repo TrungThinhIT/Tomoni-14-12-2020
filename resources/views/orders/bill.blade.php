@@ -60,6 +60,7 @@
                                             class="form-control ml-2"
                                             value="{{$data['So_Hoadon']}}"
                                             name="So_Hoadon"
+                                            id="So_Hoadon"
                                             placeholder="Nhập So hoa don"
                                             style="width: 11%;"/>
                                             <input
@@ -67,12 +68,13 @@
                                             class="form-control ml-2"
                                             value="{{$data['Uname']}}"
                                             name="Uname"
+                                            id="Uname"
                                             placeholder="Nhập Uname"
                                             style="width: 11%;"/>
                                         <div >
-                                            <input class="form-control" type="date" value="{{$data['Date_Create']}}" name="Date_Create">
+                                            <input class="form-control" type="date" value="{{$data['Date_Create']}}" name="Date_Create" id="Date_Create">
                                         </div>
-                                        <input
+                                        {{-- <input
                                             type="text"
                                             class="form-control ml-2"
                                             id="priceIn"
@@ -83,7 +85,17 @@
                                             class="form-control ml-2"
                                             id="priceOut"
                                             placeholder="Nhập price out"
-                                            style="width: 11%;"/>
+                                            style="width: 11%;"/> --}}
+                                            <div>
+                                                <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2" style="margin-left: 2%;">Reset</button>
+                                                <script>
+                                                    function resetFormSearch() {
+                                                        document.getElementById("So_Hoadon").value = "";
+                                                        document.getElementById("Date_Create").value = "";
+                                                        document.getElementById("Uname").value = "";
+                                                    }
+                                                </script>
+                                            </div>
                                     </fieldset>
                                 </form>
 

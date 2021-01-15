@@ -45,13 +45,13 @@ class ExportedService
         return ['exporteds' => $exporteds, 'jan_code'=> $jan_code, 'name'=> $name];
     }
 
-    public function detailByJanCode($jan_code){
+    public function detailByJanCode(Request $request, $jan_code){
         $exported = Bill::where('deleted_at', null)->where('accoutant_order.uname', Auth::user()->uname)->select()->distinct()->join(
             'product',
             'product.codeorder',
             '=',
             'accoutant_order.Codeorder'
-        )->where('jan_code', $jan_code)->get();
+        )->where('jan_code', $jan_code)->paginate(1);
         return view('customers.includes.modalExported', compact('exported'));
     }
 }

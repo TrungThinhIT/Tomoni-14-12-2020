@@ -14,12 +14,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Transport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class BillService
 {
     public function searchBillCode(Request $request)
     {
-        $data = Bill::where('So_Hoadon', 'like', '%' . $request->BillCode . "%")->limit(10)->get();
+        $data = Bill::where('So_Hoadon', 'like', '%' . $request->BillCode . "%")->select('So_Hoadon')->distinct()->limit(10)->get();
         return response()->json($data);
     }
     public function getALl(Request $request)
@@ -52,7 +53,7 @@ class BillService
         }
 
         if (!empty($Date_Create)) {
-            $bills = $bills->orWhereDate('Date_Create', $Date_Create);
+            $bills = $bills->whereDate('Date_Create', $Date_Create);
         }
 
         if (!empty($Uname)) {
@@ -89,6 +90,8 @@ class BillService
         }
         $So_Hoadon = $request->So_Hoadon;
         $Date_Create = $request->Date_Create;
+        // $PriceIn = $request->priceIn;
+        // $PriceOut = $request->priceOut;
 
         $bills = Bill::with('Order')->whereHas('Order', function ($query) use ($uname) {
             return $query->where('uname', $uname);
@@ -99,8 +102,16 @@ class BillService
         }
 
         if (!empty($Date_Create)) {
-            $bills = $bills->orWhereDate('Date_Create', $Date_Create);
+            $bills = $bills->whereDate('Date_Create', $Date_Create);
         }
+
+        // if (!empty($PriceIn)) {
+        //     $bills = $bills->where('PriceIn', $PriceIn);
+        // }
+
+        // if (!empty($PriceOut)) {
+        //     $bills = $bills->where('PriceOut', $PriceOut);
+        // }
 
         $bills = $bills->where('deleted_at', null)
             ->select()->selectRaw('count(Id) as total')
@@ -110,25 +121,102 @@ class BillService
         return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $uname, 'Date_Create' => $Date_Create];
     }
 
-    public function getBillById($billcode)
+    public function getBillById(Request $request, $billcode)
     {
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+        $date = Carbon::parse($endDate);
+        $endDate2 = $date->addDays(1);
+
         $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
         $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->get();
         $codeorders = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->get('Codeorder')->toArray();
             $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
+        if($startDate && $endDate){
+            $customer = $customer->whereBetween('dateget', [$startDate, $endDate2]);
+            // dd($customer);
         $deDebt = 0;
+        $checkScroll = 1;
         foreach ($customer as $value) {
             if ($value->depositID) {
                 $deDebt += $value->price_in;
             } else {
-                $deDebt -= $value->total_all;
+                if($value->date_payment < $endDate2){
+                    $deDebt -= $value->total;
+                }
             }
             $value->setAttribute('deDebt', $deDebt);
         }
-        
-        $customer = $customer->sortByDesc('dateget')->paginate(10);
-        return ['bill' => $bill,'customer' => $customer];
+        }else{       
+        $deDebt = 0;
+        $checkScroll = 0;
+        foreach ($customer as $value) {
+            if ($value->depositID) {
+                $deDebt += $value->price_in;
+            } else {
+                $deDebt -= $value->total;
+                }
+            $value->setAttribute('deDebt', $deDebt);
+            }
+        }
+
+        $hien_mau = PaymentCustomer::query()->where('Sohoadon', $billcode)->orderBy('dateget', 'ASC')->get();
+        $priceIn = 0;
+        foreach($hien_mau as $value){
+            $value->setAttribute('priceIn', $priceIn += $value->price_in);    
+        }
+
+        $hien_mau = $hien_mau->sortByDesc('dateget')->groupBy('dateget');
+
+        $hien_mau = $hien_mau->paginate(10);
+
+        $customer = $customer->sortByDesc('dateget');
+        // dd($customer);
+
+        if(count($customer) >= 1){
+            $priceDebt = $customer->first()->deDebt;
+        }else{
+            $priceDebt = 0;
+        }
+        return ['bill' => $bill,'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll];
+    }
+
+    public function getTranfer(Request $request, $codeorder){
+        $currentBill = Bill::where('Codeorder', $codeorder)->where('deleted_at', null)->first();
+        $bills = Bill::where('uname', $currentBill->uname)->where('So_Hoadon', '!=', $request->billcode)->where('deleted_at', null)->select()->selectRaw('count(Id) as total')
+        ->groupBy('So_Hoadon')->orderBy('Date_Create', 'ASC')->get();
+        $codeorder = $codeorder;
+        $html = view('orders.includes.modalTranfer', compact('bills', 'codeorder'));
+        return $html;
+    }
+
+    public function putTranfer(Request $request, $codeorder){
+        $currentBill = Bill::where('Codeorder', $codeorder)->where('deleted_at', null)->first();
+        $billNew = Bill::where('Codeorder', $codeorder)->where('deleted_at', null)->update([
+            'So_Hoadon' => $request->sohoadon
+        ]);
+        if($billNew){
+            $checkBill = Bill::where('So_Hoadon', $currentBill->So_Hoadon)->first();
+            LogAccountant::create([
+                'codeorder' => $currentBill->Codeorder,
+                'uname' => Auth::user()->uname,
+                'Sohoadon' => $currentBill->So_hoadon,
+                'Note' => 'Di chuyển từ số hoá đơn ' .$currentBill->So_hoadon. ' đến ' .$request->sohoadon
+            ]);
+            if($checkBill != null){
+                return 1;
+            }else{
+            return 3;
+        }
+        }else{
+            return 2;
+        }
+    }
+
+    public function getPaymentByBillCodeAndDate(Request $request, $billcode){
+        $nap = PaymentCustomer::where('Sohoadon', $billcode)->whereDate('dateget', $request->date)->orderBy('date_insert', 'DESC')->get();
+        return view('orders.includes.modalPaymentDetail', compact('nap'));
     }
 
     public function getBillDetailById($codeorder)

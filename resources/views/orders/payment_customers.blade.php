@@ -160,9 +160,8 @@ function searchUser(obj) {
                     $("#listbillcode").empty();
                     for (var i = 0; i < len; i++) {
                         var name = response[i]['So_Hoadon'];
-                        var name1 = response[i]['Codeorder'];
 
-                        $("#listbillcode").append("<option value='" + name + "'>" + name1 +
+                        $("#listbillcode").append("<option value='" + name + "'>" + name +
                             "</option>");
 
                     }

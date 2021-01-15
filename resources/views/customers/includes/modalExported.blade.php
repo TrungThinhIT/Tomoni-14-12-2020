@@ -3,7 +3,8 @@
     <h4 class="modal-title">Chi tiết hoá đơn </h4>
     <button type="button" class="close" data-dismiss="modal">&times;</button>
 </div>
-
+<div style="float: right" class="mt-3">
+    {!! $exported->withQueryString()->links('commons.paginate_level2') !!}</div>
 <div class="row">
     <div class="col-12">
         <table id="example" class="table table-bordered table-striped"
@@ -21,7 +22,7 @@
         @php $count = 1; @endphp
         @foreach ($exported as $item)
         <tr>
-            <td>{{$count}}
+            <td>{{$exported->perPage()*($exported->currentPage()-1)+$count}}
             </td>
             <td>{{$item->Codeorder}}</td>
             <td>{{number_format($item->price, 0)}}</td>
@@ -91,5 +92,21 @@
                     });
                 }
             })
+    }
+
+    $('.level-2 .pagination a').unbind('click').on('click', function (e) {
+        e.preventDefault();
+        var page = $(this).attr('href').split('page=')[1];
+        getPosts(page);
+    });
+
+    function getPosts(page) {
+        $.ajax({
+            type: "GET",
+            url: 'exported/' + jancode + '?page=' + page,
+            success: function (data) {
+                $('.modal-content').html('').append(data);
+            }
+        })
     }
 </script>

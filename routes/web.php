@@ -104,6 +104,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::get('/by-uname/{uname}', [BillController::class, 'indexAllByUname'])->name('indexAllByUname');
             Route::get('/log/{codeorder}', [BillController::class, 'loadLog'])->name('loadLog');
             Route::get('/{billcode}', [BillController::class, 'getBillById'])->name('getBillById');
+            Route::get('/tranfer/{codeorder}', [BillController::class, 'getTranfer'])->name('getTranfer');
+            Route::put('/tranfer/{codeorder}', [BillController::class, 'putTranfer'])->name('putTranfer');
+            Route::get('/payment/{billcode}', [BillController::class, 'getPaymentDetail'])->name('getPaymentDetail');
             Route::get('/detail/{codeorder}', [BillController::class, 'getBilLDetailById'])->name('getBillDetailById');
             Route::put('/detail/{codeorder}', [BillController::class, 'UpdateBillDetailById'])->name('UpdateBillDetailById');
             Route::post('/', [BillController::class, 'create'])->name('create');
@@ -179,7 +182,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
         })->name('index');
         Route::prefix('bill')->name('bill.')->group(function () {
             Route::get('/', [BillCustomerController::class, 'index'])->name('index');
+            Route::get('/export', [BillCustomerController::class, 'export'])->name('export');
             Route::get('/{billcode}', [BillCustomerController::class, 'order'])->name('order');
+            Route::get('/payment/{billcode}', [BillCustomerController::class, 'getPaymentDetail'])->name('getPaymentDetail');
             Route::get('/detail/{codeorder}', [BillCustomerController::class, 'orderDetail'])->name('orderDetail');
             Route::get('/detail/load-log/{codeorder}', [BillCustomerController::class, 'loadLog'])->name('loadLog');
             Route::post('/detail/add-log/{codeorder}', [BillCustomerController::class, 'addLog'])->name('addLog');
@@ -191,6 +196,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
         Route::prefix('debt')->name('debt.')->group(function () {
             Route::get('/', [DebtController::class, 'index'])->name('index');
+            Route::get('/export', [DebtController::class, 'export'])->name('export');
         });
 
         Route::prefix('exported')->name('exported.')->group(function () {

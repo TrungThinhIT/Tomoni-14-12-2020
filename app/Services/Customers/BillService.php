@@ -45,7 +45,53 @@ class BillService
         }
 
         if (!empty($Date_Create)) {
-            $bills = $bills->orWhereDate('Date_Create', $Date_Create);
+            $bills = $bills->whereDate('Date_Create', $Date_Create);
+        }
+
+        $bills = $bills->where('deleted_at', null)
+            ->select()->selectRaw('count(Id) as total')
+            ->selectRaw('sum(PriceOut) as totalPriceOut')
+            ->groupBy('So_Hoadon')->orderBy('Date_Create', 'ASC')->get();
+        $priceDebt = 0;
+        foreach ($bills as $value) {
+            $priceDebt += ($value->PriceIn - $value->totalPriceOut);
+            $value->setAttribute('totalPriceDebt', $priceDebt);            # code...
+        }
+        $bills = $bills->sortByDESC('Date_Create')->paginate(10);
+        return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $uname, 'Date_Create' => $Date_Create];
+    }
+
+    public function ExportALlBillByUname(Request $request)
+    {
+        $codeOrderByBill = Bill::select('Codeorder')->get()->toArray();
+        $billcodes = DB::table('quanlythe')->where('Sohoadon', '!=', null)->select('Sohoadon')->distinct()->get()->toArray();
+        foreach ($codeOrderByBill as  $value) {
+            $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
+            Bill::where('Codeorder', $value)->update([
+                'PriceOut' => $priceOrder->total
+            ]);
+        }
+
+        foreach ($billcodes as $value) {
+            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->selectRaw('sum(price_in) as totalPriceIn')->first();
+            Bill::where('So_Hoadon', $value->Sohoadon)->update([
+                'PriceIn' => $sumPriceIn->totalPriceIn
+            ]);
+        }
+        $So_Hoadon = $request->eSo_Hoadon;
+        $Date_Create = $request->eDate_Create;
+        $uname = Auth::user()->uname;
+
+        $bills = Bill::with('Order')->whereHas('Order', function ($query) use ($uname) {
+            return $query->where('uname', $uname);
+        });
+
+        if (!empty($So_Hoadon)) {
+            $bills = $bills->where('So_Hoadon', 'like', '%' . $So_Hoadon);
+        }
+
+        if (!empty($Date_Create)) {
+            $bills = $bills->whereDate('Date_Create', $Date_Create);
         }
 
         $bills = $bills->where('deleted_at', null)
@@ -76,13 +122,26 @@ class BillService
             if ($value->depositID) {
                 $deDebt += $value->price_in;
             } else {
-                $deDebt -= $value->total_all;
+                $deDebt -= $value->total;
             }
             $value->setAttribute('deDebt', $deDebt);
         }
-        
-        $customer = $customer->sortByDesc('dateget')->paginate(10);
-        return ['bill' => $bill, 'customer' => $customer];
+        $hien_mau = PaymentCustomer::query()->where('Sohoadon', $billcode)->where('uname', $uname)->orderBy('dateget', 'ASC')->get();
+        $priceIn = 0;
+        foreach($hien_mau as $value){
+            $value->setAttribute('priceIn', $priceIn += $value->price_in);    
+        }
+
+        $hien_mau = $hien_mau->sortByDesc('dateget')->groupBy('dateget');
+
+        $hien_mau = $hien_mau->paginate(10);
+        $customer = $customer->sortByDesc('dateget');
+        return ['bill' => $bill, 'customer' => $customer, 'hien_mau'=> $hien_mau];
+    }
+
+    public function getPaymentByBillCodeAndDate(Request $request, $billcode){
+        $nap = PaymentCustomer::where('Sohoadon', $billcode)->where('uname', Auth::user()->uname)->whereDate('dateget', $request->date)->get();
+        return view('orders.includes.modalPaymentDetail', compact('nap'));
     }
 
     public function getBillDetailById($codeorder)

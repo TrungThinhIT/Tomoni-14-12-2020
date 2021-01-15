@@ -7,7 +7,6 @@
             <div class="card card-documentation">
                 <div class="card-header bg-info-gradient text-white bubble-shadow">
                     <h4>Hi im Cong no khach hang</h4>
-                    <a href="{{route('index')}}">Index</a>&nbsp; - &nbsp;<a href="{{route('orders.de', $data['Uname'])}}">{{$data['Uname']}}</a>
                 </div>
                 <div class="card-body">
                     <div>

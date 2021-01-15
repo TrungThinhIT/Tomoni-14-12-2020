@@ -11,10 +11,10 @@
                 <div class="card-body row">
                     <div class="card" style=" margin-left:1%; width:100%; padding:1%">
                         <div >
+                            <fieldset >
                             <form action="{{route('customer.bill.index', $data['Uname'])}}">
-                                <fieldset >
                                     <div class="form-row" style=" margin-top: 1%;">
-                                        <div >
+                                        <div>
                                             <button
                                                 type="submit"
                                                 class="btn btn-primary"
@@ -26,26 +26,41 @@
                                             class="form-control ml-2"
                                             value="{{$data['So_Hoadon']}}"
                                             name="So_Hoadon"
+                                            id="So_Hoadon"
                                             placeholder="Nhập So hoa don"
                                             style="width: 11%;"/>
                                         <div >
-                                            <input class="form-control" type="date" value="{{$data['Date_Create']}}" name="Date_Create">
+                                            <input class="form-control" type="date" value="{{$data['Date_Create']}}" name="Date_Create" id="Date_Create">
                                         </div>
-                                        <input
-                                            type="text"
-                                            class="form-control ml-2"
-                                            id="priceIn"
-                                            placeholder="Nhập price in"
-                                            style="width: 11%;"/>
-                                        <input
-                                            type="text"
-                                            class="form-control ml-2"
-                                            id="priceOut"
-                                            placeholder="Nhập price out"
-                                            style="width: 11%;"/>
-                                    </fieldset>
+                                        <div>
+                                            <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2" style="margin-left: 2%;">Reset</button>
+                                            <script>
+                                                function resetFormSearch() {
+                                                    document.getElementById("So_Hoadon").value = "";
+                                                    document.getElementById("Date_Create").value = "";
+                                                }
+                                            </script>
+                                        </div>
                                 </form>
 
+                                <form action="{{route('customer.bill.index', $data['Uname'])}}">
+                                        <div class="form-row" style=" margin-top: 1%;">
+                                            <input
+                                                type="text"
+                                                value="{{$data['So_Hoadon']}}"
+                                                name="So_Hoadon"
+                                                id="So_Hoadon"
+                                                hidden
+                                                style="width: 11%;"/>
+                                            <div >
+                                                <input type="date" value="{{$data['Date_Create']}}" name="Date_Create" id="Date_Create" hidden>
+                                            </div>
+                                            <div>
+                                                <button type="button" class="btn btn- ml-2" style="margin-left: 2%;">Export</button>
+                                            </div>
+                                    </form>
+
+                                </fieldset>
                                 <div style="float: right" class="mt-3">
                                     {!! $data['bills']->withQueryString()->links('commons.paginate') !!}</div>
                                 <table class="table table-bordered table-striped" style="margin-top: 1%;">
@@ -53,7 +68,6 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>So hoa don</th>
-                                            <th>Uname</th>
                                             <th>Price In</th>
                                             <th>Price Out</th>
                                             <th>Total</th>
@@ -70,7 +84,6 @@
                                             <td>
                                                 <a href="{{route('customer.bill.order', $item->So_Hoadon)}}">{{$item->So_Hoadon}}</a>
                                             </td>
-                                            <td>{{$item['Order']->uname}}</td>
                                             <td>{{number_format($item->PriceIn, 0)}}</td>
                                             <td>
                                                 {{number_format($item->totalPriceOut, 0)}}

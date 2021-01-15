@@ -134,7 +134,7 @@
     function getPosts(page) {
         $.ajax({
             type: "GET",
-            url: 'inventory/' + {{$item->Jancode}} + '?page=' + page,
+            url: 'inventory/' + jancode + '?page=' + page,
             success: function (data) {
                 $('.modal-content').html('').append(data);
             }

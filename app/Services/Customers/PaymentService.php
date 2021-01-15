@@ -5,6 +5,7 @@ namespace App\Services\Customers;
 use Illuminate\Http\Request;
 use App\Models\PaymentCustomer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class PaymentService
 {
@@ -14,25 +15,20 @@ class PaymentService
         $date_insert = $request->date_insert;
         $Sohoadon = $request->Sohoadon;
 
-        $PCustomers = PaymentCustomer::query();
+        $date = Carbon::parse($date_insert);
+        $date_insert = $date->addDays(1);
 
-        if (!empty($Uname)) {
-            $PCustomers = $PCustomers->where('uname', 'like', '%'.$Uname.'%');
+        $PCustomers = PaymentCustomer::where('uname', $Uname);
+
+        if($dateget && $date_insert){
+          $PCustomers = $PCustomers->whereBetween('dateget', [$dateget, $date_insert]);
         }
 
-        if (!empty($dateget)) {
-            $PCustomers = $PCustomers->whereDate('dateget', $dateget);
-        }
-
-        if (!empty($date_insert)) {
-            $PCustomers = $PCustomers->whereDate('date_insert', $date_insert);
-        }
-
-        if (!empty($Sohoadon)) {
+        if ($Sohoadon) {
             $PCustomers = $PCustomers->where('Sohoadon', 'like', '%'.$Sohoadon.'%');
         }
 
-        $PCustomers = $PCustomers->paginate(10);
+        $PCustomers = $PCustomers->orderByDesc('dateget')->paginate(10);
         return ['PCustomers'=> $PCustomers, 'dateget' => $dateget, 'date_insert' => $date_insert, 'Sohoadon' => $Sohoadon];
     }
 }

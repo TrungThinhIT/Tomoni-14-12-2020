@@ -22,9 +22,9 @@ class ImportedService {
         return ['importeds' => $importeds, 'jan_code'=> $jan_code];
     }
 
-    public function detailByJanCode($jan_code){
-        $imported = InvoiceDetailSupplier::where('Jancode', $jan_code)->orderBy('Dateinsert', 'DESC')->get();
-        return view('warehouses.includes.modalImported', compact('imported'));
+    public function detailByJanCode(Request $request, $jan_code){
+        $imported = InvoiceDetailSupplier::where('Jancode', $jan_code)->orderBy('Dateinsert', 'DESC')->paginate(1);
+        return view('warehouses.includes.modalImported', compact('imported'))->render();
     }
 
     public function loadNote($jancode){

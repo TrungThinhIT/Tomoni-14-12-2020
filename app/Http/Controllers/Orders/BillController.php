@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Orders;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Orders\CreateBillRequest;
-use App\Models\Bill;
 use App\Services\Orders\BillService;
 use Illuminate\Http\Request;
 
@@ -31,9 +30,21 @@ class BillController extends Controller
         return view('orders.billByUname', compact('data'));
     }
 
-    public function getBillById($billcode){
-        $data = $this->billService->getBillById($billcode);
+    public function getBillById(Request $request, $billcode){
+        $data = $this->billService->getBillById($request, $billcode);
         return view('orders.order', compact('data'));
+    }    
+
+    public function getTranfer(Request $request, $codeorder){
+        return $this->billService->getTranfer($request, $codeorder);
+    }
+
+    public function putTranfer(Request $request, $codeorder){
+        return $this->billService->putTranfer($request, $codeorder);
+    }
+
+    public function getPaymentDetail(Request $request, $billcode){
+        return $this->billService->getPaymentByBillCodeAndDate($request, $billcode);
     }
 
     public function getBillDetailById($codeorder){

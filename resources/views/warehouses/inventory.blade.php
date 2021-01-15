@@ -51,7 +51,6 @@
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Date new</th>
                                     <th>Jancode</th>
                                     <th>Name</th>
                                     <th>Nhập</th>
@@ -64,7 +63,6 @@
                                 @foreach ($data['inventories'] as $item)
                                 <tr>
                                     <td>{{$data['inventories']->perPage()*($data['inventories']->currentPage()-1)+$count}}
-                                        <td>{{$item[0]->Dateinsert}}</td>
                                     <td data-code="{{$item[0]->Jancode}}" class="view_transaction">{{$item[0]->Jancode}}</td>
                                     <td>{{$item[0]->name}}</td>
                                     <td>@if ($item)
