@@ -130,7 +130,15 @@ class BillService
         $nowDate = now()->addDays(-2);
 
         $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
-        // dd($bill);
+        $totalWeightReal = 0;
+        $totalWeightKhoi = 0 ;
+        foreach($bill as $value){
+            $weightKhoi = $value->Product->ProductStandard->length * $value->Product->ProductStandard->width * $value->Product->ProductStandard->height / 1000000;
+            $value->setAttribute('totalWeightkhoi', $weightKhoi);
+            $totalWeightKhoi += $weightKhoi;
+            $totalWeightReal += $value->Product->ProductStandard->weight;
+        }
+        
         $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->get();
         $codeorders = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->get('Codeorder')->toArray();
         $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
@@ -191,7 +199,8 @@ class BillService
         } else {
             $priceDebt = 0;
         }
-        return ['bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll, 'moneyNeedToPay' => $moneyNeedToPay];
+        return ['bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
+         'moneyNeedToPay' => $moneyNeedToPay, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi];
     }
 
     public function getTranfer(Request $request, $codeorder)
