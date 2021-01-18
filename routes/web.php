@@ -160,6 +160,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::prefix('inventory')->name('inventory.')->group(function () {
             Route::get('/', [InventoryController::class, 'index'])->name('index');
             Route::get('/{jancode}', [InventoryController::class, 'detail'])->name('detail');
+            Route::get('/detail/{jancode}', [InventoryController::class, 'detailProduct'])->name('detailProduct');
+            Route::put('/detail/{jancode}', [InventoryController::class, 'updateProduct'])->name('updateProduct');
             Route::put('/note-import/{Id}', [InventoryController::class, 'noteImport'])->name('noteImport');
             Route::put('/note-export/{id}', [InventoryController::class, 'noteExport'])->name('noteExport');
             Route::get('/load-note/{jancode}', [InventoryController::class, 'loadNote'])->name('loadNote');

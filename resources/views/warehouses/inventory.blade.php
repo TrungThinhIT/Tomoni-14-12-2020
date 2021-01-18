@@ -55,7 +55,10 @@
                                     <th>Name</th>
                                     <th>Nhập</th>
                                     <th>Xuất</th>
-                                    <th>Total Quantity</th>
+                                    <th>Tồn kho</th>
+                                    <th>Câng nặng thực tế</th>
+                                    <th>Câng nặng theo thể tích</th>
+                                    <th>Function</th>
                                 </tr>
                             </thead>
                             <tbody id="myTable">
@@ -72,6 +75,11 @@
                                             {{$item[1]->totalQuantity}}
                                             @endif</td>
                                     <td>{{$item[0]->TotalQuantity}}</td>
+                                    <td>@if ($item[0]->weight)
+                                        {{{number_format($item[0]->weight, 2)}}} @else 0
+                                    @endif kg</td>
+                                    <td>{{{number_format(($item[0]->width * $item[0]->length * $item[0]->height) / 1000000, 2)}}} kg</td>
+                                    <td><button type="button" data-code="{{$item[0]->Jancode}}" class="btn btn-success viewUpdate">Edit</button></td>
                                 </tr>
                                 @php $count ++; @endphp
                                 @endforeach
@@ -103,6 +111,23 @@
                 },
                 type: 'GET',
                 url: "inventory" + '/' + jan_code,
+
+                success: function (data) {
+                    $('#modalDetail').modal('show');
+                    $('.modal-content').html('').append(data);
+                }
+            });
+        });
+
+        $('.viewUpdate').click(function () {
+            const jan_code = $(this).data('code');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                        .attr('content')
+                },
+                type: 'GET',
+                url: "inventory" + '/detail/' + jan_code,
 
                 success: function (data) {
                     $('#modalDetail').modal('show');

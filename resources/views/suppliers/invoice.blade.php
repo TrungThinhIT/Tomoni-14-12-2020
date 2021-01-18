@@ -214,7 +214,7 @@
                                     <th>Nhà cung cấp</th>
                                     <th>Web order</th>
                                     <th>Jancode</th>
-                                    {{-- <th>Name</th> --}}
+                                    <th>Name</th>
                                     <th>Số lượng</th>
                                     <th>Đơn giá</th>
                                     <th>Tổng tiền hoá đơn</th>
@@ -226,7 +226,21 @@
 
                             <tbody id="myTable">
                                 @foreach ($data['invoices'] as $invoice => $value)
-                                <tr>
+                                @php
+                                    $checkStatus = 1;    
+                                @endphp
+                                @foreach ($value['detail'] as $item)
+                                         @if ($item->checkStatus == 0)
+                                            @php
+                                                $checkStatus = 0
+                                            @endphp
+                                        @endif
+                                        @endforeach
+                                <tr @if ($checkStatus == 0)
+                                class="bg-danger"
+                                {{-- @else
+                                class="bg-success"  --}}
+                                @endif>
                                     <th>{{$value->DateInvoice}}</th>
                                     <td><a href="{{route('supplier.invoice.showByIdInvoice', $value->Id)}}">{{$value->Invoice}}</a>
                                     </td>
@@ -236,15 +250,15 @@
                                         {{$item->Codeorder}}
                                         @endforeach</td>
                                     <td>@foreach ($value['detail'] as $item)
-                                        {{$item->Jancode}}
+                                            {{$item->Jancode}}
                                         @endforeach</td>
-                                        {{-- <td>
+                                        <td>
                                             @foreach ($value['detail'] as $detail => $name)
 
-                                            {{$name['product']->name}}
+                                            {{$name->name}} <br>
 
                                         @endforeach
-                                        </td> --}}
+                                        </td>
                                     <td>@foreach ($value['detail'] as $item)
                                         {{$item->Quantity}}
                                         @endforeach</td>

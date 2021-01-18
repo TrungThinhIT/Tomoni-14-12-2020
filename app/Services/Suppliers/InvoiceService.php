@@ -10,6 +10,7 @@ use App\Models\InvoiceDetailSupplier;
 use App\Models\InvoiceSupplier;
 use App\Models\LogInvoiceDetailSupplier;
 use App\Models\LogInvoiceSupplier;
+use App\Models\ProductStandard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -60,7 +61,24 @@ class InvoiceService
         if (isset($stockDate)) {
             $invoices = InvoiceSupplier::where('StockDate', $stockDate);
         }
-        $invoices = $invoices->with('detail.product')->orderBy('Id', 'DESC')->paginate($record);
+        $invoices = $invoices->with('detail.product')->orderBy('Id', 'DESC')->get();
+
+        foreach($invoices as $value){
+            foreach($value['detail'] as $product){
+                $product_standard = DB::table('product_standard')->where('jan_code', $product->Jancode)->first();
+                if($product_standard != null){
+                 $name =  $product_standard->name;
+                $product->setAttribute('name', $name);
+                    if($product_standard->weight > 0 && $product_standard->length > 0 && $product_standard->width && $product_standard->height > 0){
+                        $product->setAttribute('checkStatus', 1);
+                    }else{
+                        $product->setAttribute('checkStatus', 0);
+                    }
+                }
+            }
+        }
+        
+        $invoices = $invoices->paginate($record);
         return ['invoices' => $invoices, 'accounts' => $accounts, 'suppliers' => $suppliers, 'record' => $record,
          'productName' => $productName, 'sinvoice' => $sinvoice, 'supplier'=> $supplier,
         'webOrder'=> $webOrder, 'janCode' => $janCode, 'paymentDate'=> $paymentDate, 'stockDate'=> $stockDate];

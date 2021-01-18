@@ -140,7 +140,7 @@
                                     <div>
                                         <input type="text" class="form-control" value="{{$value->Codeorder}}"
                                             id="order_{{$value->Id}}" onchange="updateDetail(this);"
-                                            placeholder="First name" list='listcodeorder'
+                                            placeholder="Code order" list='listcodeorder'
                                             onkeyup='search_ordercode(this)'> <datalist id='listcodeorder'></datalist>
                                     </div>
                                 </td>
@@ -148,14 +148,14 @@
                                     <div>
                                         <input type="text" class="form-control" value="{{$value->Jancode}}"
                                         name="janco_{{$value->Id}}"  id="janco_{{$value->Id}}" onchange="updateDetail(this);"
-                                            placeholder="First name" list='ujan_wh' onkeyup='search_jancode(this)'>
+                                            placeholder="Jan code" list='ujan_wh' onkeyup='search_jancode(this)'>
                                         <datalist id='ujan_wh'></datalist>
                                     </div>
                                 </td>
                                 <td>
                                     <div>
                                         <input type="text" class="form-control" value="{{$value->Quantity}}"
-                                            id="quant_{{$value->Id}}" placeholder="First name"
+                                            id="quant_{{$value->Id}}" placeholder="Quantity"
                                             onchange="updateDetail(this);">
                                     </div>
                                 </td>
@@ -163,14 +163,14 @@
                                 <td>
                                     <div>
                                         <input type="text" class="form-control" value="{{$value->Price}}"
-                                            id="price_{{$value->Id}}" placeholder="First name"
+                                            id="price_{{$value->Id}}" placeholder="Price"
                                             onchange="updateDetail(this);">
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
                                         <select type="text" class="form-control" id="taxco_{{$value->Id}}"
-                                            onchange="updateDetail(this);" placeholder="First name">
+                                            onchange="updateDetail(this);" placeholder="Tax">
                                             <option value="10" {{$value->TaxPurchaseCosts == 10 ? 'selected':''}}>10%
                                             </option>
                                             <option value="8" {{$value->TaxPurchaseCosts == 8 ? 'selected':''}}>8%

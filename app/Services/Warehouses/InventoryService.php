@@ -7,6 +7,7 @@ use App\Models\InvoiceDetailSupplier;
 use App\Models\Bill;
 use App\Models\NoteWarehouse;
 use App\Models\Product;
+use App\Models\ProductStandard;
 use Illuminate\Support\Facades\Auth;
 
 class InventoryService
@@ -43,7 +44,9 @@ class InventoryService
             'product.jan_code',
         );
 
-        $exporteds = $exporteds->select('product.quantity')->select('product.item_in_box')->selectRaw('product_standard.name')->selectRaw('product.jan_code')->selectRaw('sum(quantity) as totalQuantity')->selectRaw('sum(product.item_in_box) as itemInBox')
+        $exporteds = $exporteds->select('product.quantity')->select('product.item_in_box')->selectRaw('product_standard.name')
+        ->selectRaw('product_standard.weight')->selectRaw('product_standard.length')->selectRaw('product_standard.width')->selectRaw('product_standard.height')
+        ->selectRaw('product.jan_code')->selectRaw('sum(quantity) as totalQuantity')->selectRaw('sum(product.item_in_box) as itemInBox')
             ->groupBy('product.jan_code')->get();
 
         if ($janCode) {
@@ -110,12 +113,31 @@ class InventoryService
             }
         }
         if ($request->ajax() || 'NULL') {
-            $inventory = $inventory->sortByDesc('Dateinsert')->paginate(1);
+            $inventory = $inventory->sortByDesc('Dateinsert')->paginate(10);
             return view('warehouses.includes.modalInventory', compact('inventory'));
         } else {
 
-            $inventory = $inventory->sortByDesc('Dateinsert')->paginate(1);
+            $inventory = $inventory->sortByDesc('Dateinsert')->paginate(10);
             return view('warehouses.includes.modalInventory', compact('inventory'));
+        }
+    }
+
+    public function detailUpdateProduct($jancode){
+        $product = ProductStandard::where('jan_code', $jancode)->first();
+        return view('warehouses.includes.modalUpdateProduct', compact('product'));
+    }
+
+    public function doUpdateProduct(Request $request, $jancode){
+        $product = ProductStandard::where('jan_code', $jancode)->update([
+            'weight' => $request->weight,
+            'length' => $request->length,
+            'width' => $request->width,
+            'height' => $request->height
+        ]);
+        if($product){
+            return 1;
+        }else{
+            return 2;
         }
     }
     

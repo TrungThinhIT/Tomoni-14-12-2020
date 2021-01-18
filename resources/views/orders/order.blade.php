@@ -108,12 +108,12 @@
                                     <fieldset >
                                         <div class="form-row" style=" margin-top: 1%;">
                                             <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Tổng tiền hoá đơn</label>
+                                                <label for="validationDefault01">Ngày bắt đầu</label>
                                                 <input name="startDate" value="{{$data['startDate']}}" class="form-control"
                                                     type="date" id="startDate">
                                             </div>
                                             <div class="col-md-2 mb-2">
-                                                <label for="validationDefault01">Tổng tiền hoá đơn</label>
+                                                <label for="validationDefault01">Ngày kết thúc</label>
                                                 <input name="endDate" class="form-control" value="{{$data['endDate']}}"
                                                     type="date" id="endDate">
                                             </div>
@@ -132,7 +132,7 @@
                                         </div>
                                     </fieldset>
                                 </form>
-                                <div style="float: left" class="mt-3"><p style="font-weight: bold"> Công nợ:  {{number_format($data['priceDebt'], 0)}}&ensp;&ensp;</p></div>
+                                <div style="float: left" class="mt-3"><p style="font-weight: bold"> Số dư:  {{number_format($data['priceDebt'], 0)}}&ensp;&ensp;</p></div>
                                 <div style="float: left" class="mt-3"><p style="font-weight: bold"> Số tiền cần thanh toán:  {{number_format($data['moneyNeedToPay'], 0)}}</p></div>
                                 <div style="float: right" class="mt-3">
                                     {!! $data['hien_mau']->withQueryString()->links('commons.paginateBillOrder') !!}</div>

@@ -46,7 +46,7 @@ class ExportedService {
             'product.codeorder',
             '=',
             'accoutant_order.Codeorder'
-        )->where('jan_code', $jan_code)->paginate(1);
+        )->where('jan_code', $jan_code)->paginate(10);
         return view('warehouses.includes.modalExported', compact('exported'));
     }
 
