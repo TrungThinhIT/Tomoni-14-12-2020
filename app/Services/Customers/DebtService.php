@@ -8,6 +8,8 @@ use App\Models\PaymentCustomer;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use PHPExcel;
+use PHPExcel_IOFactory;
 
 class DebtService
 {
@@ -38,28 +40,4 @@ class DebtService
         return ['customer' => $customer, 'record' => $record, 'uname' => $uname];
     }
 
-    public function export(){
-        $uname = Auth::user()->uname;
-
-        $deDebt = 0;
-        $action = '';
-
-        $nap = PaymentCustomer::query()->where('uname', $uname)->get();
-        $mua = Order::query()->where('uname', $uname)->get();
-
-        $customer = collect($nap)->merge($mua)->sortBy('dateget');
-        foreach ($customer as $value) {
-            if ($value->depositID) {
-                $deDebt += $value->price_in;
-                $action = 'Nạp';
-            } else {
-                $deDebt -= $value->total_all;
-                $action = 'Mua';
-            }
-            $value->setAttribute('deDebt', $deDebt);
-            $value->setAttribute('action', $action);
-        }
-        $customer = $customer->sortByDesc('dateget');
-        return Excel::download(new DebtExport($customer), 'debt.xlsx');
-    }
 }

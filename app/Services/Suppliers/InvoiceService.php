@@ -140,7 +140,7 @@ class InvoiceService
     }
 
     public function searchCodeOrder(Request $request){
-        $codeOrders = DB::table('oder')->where('codeorder', 'like', '%'. $request->search_ordercode ."%")->orderBy('codeorder', 'DESC')->limit(20)->get();
+        $codeOrders = DB::table('oder')->where('codeorder', 'like', '%'. $request->search_ordercode ."%")->orderBy('codeorder', 'DESC')->limit(10)->orderBy('dateget', 'ASC')->get();
 
         return response()->json($codeOrders);
     }

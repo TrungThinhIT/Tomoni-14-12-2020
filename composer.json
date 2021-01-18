@@ -14,9 +14,10 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
-        "maatwebsite/excel": "^3.1",
         "mckenziearts/laravel-notify": "^2.1",
-        "yoeunes/toastr": "^1.2"
+        "phpoffice/phpspreadsheet": "^1.16",
+        "yoeunes/toastr": "^1.2",
+        "phpoffice/phpexcel": "dev-master"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -24,7 +25,8 @@
         "laravel/sail": "^0.0.5",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3"
+        "phpunit/phpunit": "^9.3.3",
+        "phpoffice/phpexcel": "dev-master"
     },
     "config": {
         "optimize-autoloader": true,

@@ -41,7 +41,9 @@
                                                         {{$item['Product']->quantity}}</p>
                                                         <p class="mb-0"><strong>Số thùng: </strong>{{$item['Product']->quantity / $item['Product']->item_in_box}}</p>
                                                         <p class="mb-0"><strong>Ngày đặt hàng: </strong>{{Carbon\Carbon::parse($item['Order']->dateget)->format('d/m/Y')}}</p>
-                                                        <p class="mb-0"><strong>Ngày thanh toán: </strong>{{Carbon\Carbon::parse($item['Order']->date_payment)->format('d/m/Y')}}</p>
+                                                        <p class="mb-0"><strong>Ngày thanh toán: </strong>@if ($item['Order']->date_payment)
+                                                            {{Carbon\Carbon::parse($item['Order']->date_payment)->format('d/m/Y')}}
+                                                        @endif</p>
                                                 </div>
                                             </h5>
                                         </div>
@@ -130,7 +132,8 @@
                                         </div>
                                     </fieldset>
                                 </form>
-                                <div style="float: left" class="mt-3">Công nợ: {{number_format($data['priceDebt'], 0)}}</div>
+                                <div style="float: left" class="mt-3"><p style="font-weight: bold"> Công nợ:  {{number_format($data['priceDebt'], 0)}}&ensp;&ensp;</p></div>
+                                <div style="float: left" class="mt-3"><p style="font-weight: bold"> Số tiền cần thanh toán:  {{number_format($data['moneyNeedToPay'], 0)}}</p></div>
                                 <div style="float: right" class="mt-3">
                                     {!! $data['hien_mau']->withQueryString()->links('commons.paginateBillOrder') !!}</div>
                                 <table class="table table-bordered table-striped" style="margin-top: 1%;" id="paginateScroll">
@@ -257,7 +260,7 @@
                                             billcode: billcode
                                         },
                                         success: function(data) {
-                                            $('#modalDetail').modal('show');
+                                            $('#modalTranfer').modal('show');
                                             $('.modal-content').html('').append(data);
                                         }
                                     });
