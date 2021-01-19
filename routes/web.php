@@ -100,6 +100,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::prefix('orders')->middleware('role')->namespace('orders')->name('orders.')->group(function () {
         Route::prefix('bills')->name('bills.')->group(function () {
             Route::get('/', [BillController::class, 'indexAll'])->name('indexALl');
+            Route::get('/bill-export', [BillController::class, 'exportExcel'])->name('exportExcel');
             Route::get('/delete/{Id}', [BillController::class, 'deleteBillCode'])->name('deleteBillCode');
             Route::get('/by-uname/{uname}', [BillController::class, 'indexAllByUname'])->name('indexAllByUname');
             Route::get('/log/{codeorder}', [BillController::class, 'loadLog'])->name('loadLog');

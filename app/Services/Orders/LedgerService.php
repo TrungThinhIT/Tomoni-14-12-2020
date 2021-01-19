@@ -59,9 +59,13 @@ class LedgerService
        if($PricedelbSearch){
            $ledgers = $ledgers->where('Pricedelb', $PricedelbSearch);
        }
+       $sumDebt =0;
+       foreach($ledgers->get() as $value){
+           $sumDebt += $value->Pricedelb;
+       }
         $ledgers = $ledgers->orderBy('Id', 'DESC')->paginate(5);
 
-        $data = ['Uname' => $Uname, 'PriceIn' => $PriceInSearch, 'PriceOut' => $PriceOutSearch, 'Pricedelb' => $PricedelbSearch, 'ledgers' => $ledgers];
+        $data = ['Uname' => $Uname, 'PriceIn' => $PriceInSearch, 'PriceOut' => $PriceOutSearch, 'Pricedelb' => $PricedelbSearch, 'ledgers' => $ledgers, 'sumDebt' => $sumDebt];
         return $data;
     }
 

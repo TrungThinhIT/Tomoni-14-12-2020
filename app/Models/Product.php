@@ -16,4 +16,8 @@ class Product extends Model
     public function ProductStandard(){
         return $this->belongsTo(ProductStandard::class, 'jan_code', 'jan_code');
     }
+
+    public function Inventory(){
+        return $this->hasMany(Inventory::class, 'codeorder', 'codeorder');
+    }
 }

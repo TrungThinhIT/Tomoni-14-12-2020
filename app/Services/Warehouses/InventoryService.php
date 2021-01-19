@@ -45,8 +45,8 @@ class InventoryService
         );
 
         $exporteds = $exporteds->select('product.quantity')->select('product.item_in_box')->selectRaw('product_standard.name')
-        ->selectRaw('product_standard.weight')->selectRaw('product_standard.length')->selectRaw('product_standard.width')->selectRaw('product_standard.height')
-        ->selectRaw('product.jan_code')->selectRaw('sum(quantity) as totalQuantity')->selectRaw('sum(product.item_in_box) as itemInBox')
+            ->selectRaw('product_standard.weight')->selectRaw('product_standard.length')->selectRaw('product_standard.width')->selectRaw('product_standard.height')
+            ->selectRaw('product.jan_code')->selectRaw('sum(quantity) as totalQuantity')->selectRaw('sum(product.item_in_box) as itemInBox')
             ->groupBy('product.jan_code')->get();
 
         if ($janCode) {
@@ -63,22 +63,34 @@ class InventoryService
                 $TotalQuantity = $value[0]->totalQuantity - $value[1]->totalQuantity;
                 $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
             } else {
-                $value[0]->setAttribute('TotalQuantity', $value[0]->totalQuantity);
+                $value[0]->setAttribute('TotalQuantity', ($value[0]->totalQuantity));
+            }
+            if (count($value) > 1) {
+                $TotalQuantity = $value[0]->totalQuantity - $value[1]->totalQuantity;
+                $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
+            } else {
+                if ($value[0]->name_2) {
+                    $TotalQuantity = $value[0]->totalQuantity;
+                    $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
+                } else {
+                    $TotalQuantity =  - ($value[0]->totalQuantity);
+                    $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
+                }
             }
         }
-        
+
 
         $inventories = $inventories->flatten();
 
-        if($status && $status == 1){
+        if ($status && $status == 1) {
             $inventories = $inventories->where('TotalQuantity', '>', '0');
         }
-        
-        if($status && $status == 2){
+
+        if ($status && $status == 2) {
             $inventories = $inventories->where('TotalQuantity', '=', '0');
         }
 
-        if($status && $status == 3){
+        if ($status && $status == 3) {
             $inventories = $inventories->where('TotalQuantity', '<', 0);
         }
 
@@ -90,13 +102,26 @@ class InventoryService
 
     public function detailInventory(Request $request, $jancode)
     {
+        $status = $request->status;
         $imported = InvoiceDetailSupplier::where('Jancode', $jancode)->orderBy('Dateinsert', 'DESC')->get();
+
         $exported = Bill::where('deleted_at', null)->select()->distinct()->join(
             'product',
             'product.codeorder',
             '=',
             'accoutant_order.Codeorder'
-        )->where('jan_code', $jancode)->get();
+        )->where('jan_code', $jancode);
+        if($request->status == 1){
+            $exported = $exported->whereHas('Product.Inventory', function ($query) {
+                return $query->where('action', 'Xuất order');                
+            });
+        }
+        if($request->status == 2){
+            $exported = $exported->whereHas('Product.Inventory', function ($query) {
+                return $query->where('action', 'Trả lại hàng mua');                
+            });
+        }
+        $exported = $exported->get();
         foreach ($exported as $item) {
             $item->setAttribute('Dateinsert', $item->Date_Create);
             $item->setAttribute('Jancode', $item->jan_code);
@@ -114,40 +139,43 @@ class InventoryService
         }
         if ($request->ajax() || 'NULL') {
             $inventory = $inventory->sortByDesc('Dateinsert')->paginate(10);
-            return view('warehouses.includes.modalInventory', compact('inventory'));
+            return view('warehouses.includes.modalInventory', compact('inventory', 'jancode', 'status'));
         } else {
-
             $inventory = $inventory->sortByDesc('Dateinsert')->paginate(10);
-            return view('warehouses.includes.modalInventory', compact('inventory'));
+            return view('warehouses.includes.modalInventory', compact('inventory', 'jancode', 'status'));
         }
     }
 
-    public function detailUpdateProduct($jancode){
+    public function detailUpdateProduct($jancode)
+    {
         $product = ProductStandard::where('jan_code', $jancode)->first();
         return view('warehouses.includes.modalUpdateProduct', compact('product'));
     }
 
-    public function doUpdateProduct(Request $request, $jancode){
+    public function doUpdateProduct(Request $request, $jancode)
+    {
         $product = ProductStandard::where('jan_code', $jancode)->update([
             'weight' => $request->weight,
             'length' => $request->length,
             'width' => $request->width,
             'height' => $request->height
         ]);
-        if($product){
+        if ($product) {
             return 1;
-        }else{
+        } else {
             return 2;
         }
     }
-    
-    public function loadNoteWarehouse($jancode){
+
+    public function loadNoteWarehouse($jancode)
+    {
         $log = NoteWarehouse::where('Jancode', $jancode)->orderBy('created_at', 'ASC')->get();
         $html = view('warehouses.includes.logWarehouse', compact('log'));
         return $html;
     }
 
-    public function doNoteInventory(Request $request, $jancode){
+    public function doNoteInventory(Request $request, $jancode)
+    {
         NoteWarehouse::create([
             'note' => $request->note,
             'uname' => Auth::user()->uname,

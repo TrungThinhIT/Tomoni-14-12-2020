@@ -1,22 +1,50 @@
 <!-- Modal Header -->
 <div class="modal-header">
-    <h4 class="modal-title">Chi tiết hoá đơn </h4>
+    <h4 class="modal-title">Hàng tồn kho </h4>
     <button type="button" class="close" data-dismiss="modal">&times;</button>
 </div>
-<div style="float: right" class="mt-3">
-    {!! $inventory->withQueryString()->links('commons.paginate_level2') !!}</div>
-    
+    <div>
+
 <div class="row">
-<div class="col-8"><table id="example" class="table table-bordered table-striped" style="margin-top: 1%;">
+<div class="col-8"><table id="example" class="table table-bordered table-striped" style="margin-top: 1%;"> 
+    <div style="float: left" class="ml-3 mt-3">
+        <form>
+            <fieldset>
+                <div class="form-row" style=" margin-top: 1%;">
+                    <div>
+                        <select type="text" class="form-control" id="searchStatus">
+                            <option value="">Tình trạng</option>
+                            <option value="1" {{$status == 1 ? 'selected':''}}>Xuất order</option>
+                            <option value="2" {{$status == 2 ? 'selected':''}}>Trả lại hàng mua</option>
+                        </select></div>    
+                    <div>
+                        <button type="button" onclick="search()" class="btn btn-primary ml-2"
+                            style="margin-left: 2%;">Search</button>
+                        <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2"
+                            style="margin-left: 2%;">Reset</button>
+                        <script>
+                            function resetFormSearch() {
+                                document.getElementById("searchStatus").value = "";
+                            }
+                        </script>
+                    </div>
+                </div>
+            </fieldset>
+        </form> 
+    </div>  
+    <div style="float: right" class="mt-3">
+        {!! $inventory->withQueryString()->links('commons.paginate_level2') !!}</div>
+        </div>
     <thead>
         <tr>
             <th>No.</th>
             <th>Status</th>
             <th>Description</th>
-            <th>Quantity</th>
+            <th>Uname</th>
+            <th style="min-width: 140px">Quantity</th>
             <th>Total Quantity</th>
-            <td>Item In Box</td>
-            <td>Date</td>
+            <th>Item In Box</th>
+            <th>Date</th>
         </tr>
     </thead>
     <tbody id="myTable">
@@ -28,13 +56,14 @@
             <td>@if ($item->jan_code)
                 Xuất
                 @else
-                Nhập
+                Nhập hoá đơn
                 @endif</td>
             <td>@if ($item->jan_code)
-                {{$item->codeorder}}
+                    {{$item->codeorder}}
                 @else
                 {{$item->Invoice}}
                 @endif</td>
+                <td></td>
             <td>@if ($item->jan_code)
                 {{number_format($item->quantity, 0)}}
                 @else
@@ -43,11 +72,55 @@
             <td>{{number_format($item->debtQuantity, 0)}}</td>
             <td>{{$item->item_in_box}}</td>
             <td>@if ($item->jan_code)
-                {{$item->Date_Create}}
+                {{Carbon\Carbon::parse($item->Date_Create)->format('d/m/Y h:m:i')}}
                 @else
                 {{$item->Dateinsert}}
                 @endif</td>
         </tr>
+        @if ($item->jan_code)
+            @if (count($item->Product->Inventory) > 0)
+                @foreach ($item->Product->Inventory->sortByDesc('created_at') as $item)
+                    @if ($status == 1)
+                        @if ($item->action == 'Xuất order')
+                        <tr>
+                            <td></td>
+                        <td>{{$item->action}}</td>
+                        <td>{{$item->codeorder}}</td>
+                        <td>{{$item->uname}}</td>               
+                        <td>{{$item->quantityUpdate}}</td>  
+                        <td>{{$item->quantityUpdate - $item->quantityCurrent}}</td>     
+                        <td></td>
+                        <td>{{Carbon\Carbon::parse($item->created_at)->format('d/m/Y h:m:i')}}</td>
+                        </tr> 
+                        @endif
+                    @elseif($status == 2)
+                        @if ($item->action == 'Trả lại hàng mua')
+                        <tr>
+                            <td></td>
+                        <td>{{$item->action}}</td>
+                        <td>{{$item->codeorder}}</td>
+                        <td>{{$item->uname}}</td>               
+                        <td>{{$item->quantityUpdate}}</td>  
+                        <td>{{$item->quantityUpdate - $item->quantityCurrent}}</td>     
+                        <td></td>
+                        <td>{{Carbon\Carbon::parse($item->created_at)->format('d/m/Y h:m:i')}}</td>
+                        </tr>
+                        @endif
+                    @else
+                    <tr>
+                        <td></td>
+                    <td>{{$item->action}}</td>
+                    <td>{{$item->codeorder}}</td>
+                    <td>{{$item->uname}}</td>               
+                    <td>{{$item->quantityUpdate}}</td>  
+                    <td>{{$item->quantityUpdate - $item->quantityCurrent}}</td>     
+                    <td></td>
+                    <td>{{Carbon\Carbon::parse($item->created_at)->format('d/m/Y h:m:i')}}</td>
+                    </tr> 
+                    @endif
+                @endforeach
+            @endif
+        @endif
         @php $count ++; @endphp
         @endforeach
     </tbody>
@@ -77,7 +150,7 @@
     </div>
 </div>
 <script>
-    var jancode = {{$item->Jancode}};
+    var jancode = {{$jancode}};
     $(document).ready(function () {
         $.ajax({
             type: 'get',
@@ -131,10 +204,22 @@
         getPosts(page);
     });
 
-    function getPosts(page) {
+    function getPosts(page) {        
+        var status = $('#searchStatus').val();
         $.ajax({
             type: "GET",
-            url: 'inventory/' + jancode + '?page=' + page,
+            url: 'inventory/' + jancode + '?page=' + page + '&status=' + status,
+            success: function (data) {
+                $('.modal-content').html('').append(data);
+            }
+        })
+    }
+
+    function search(){
+        var status = $('#searchStatus').val();
+        $.ajax({
+            type: "GET",
+            url: 'inventory/' + jancode + '?status=' + status,
             success: function (data) {
                 $('.modal-content').html('').append(data);
             }

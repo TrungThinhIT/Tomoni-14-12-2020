@@ -50,6 +50,7 @@
                                     </form>
                             </fieldset>
                             </form>
+                            <div style="float: left" class="mt-3"><p style="font-weight: bold"> Tổng công nợ:  {{number_format($data['sumDebt'], 0)}}&ensp;&ensp;</p></div>
                             <div style="float: right">
                                 {!! $data['ledgers']->withQueryString()->links('commons.paginate') !!}</div>
                             <table class="table table-bordered table-striped" style="margin-top: 1%;">

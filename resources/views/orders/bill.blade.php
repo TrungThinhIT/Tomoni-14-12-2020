@@ -66,6 +66,7 @@
                                         </div>
                                             <div>
                                                 <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2" style="margin-left: 2%;">Reset</button>
+                                                <button type="button" onclick="exportExcel()" class="btn btn-success ml-2" style="margin-left: 2%;">Export</button>
                                                 <script>
                                                     function resetFormSearch() {
                                                         document.getElementById("So_Hoadon").value = "";
@@ -76,6 +77,26 @@
                                             </div>
                                     </fieldset>
                                 </form>
+                                <form action="{{route('orders.bills.exportExcel')}}" id="formExportExcel">
+                                    <fieldset >
+                                        <div class="form-row" style=" margin-top: 1%;">
+                                            <input
+                                                type="text"
+                                                class="form-control ml-2"
+                                                value="{{$data['So_Hoadon']}}"
+                                                name="So_Hoadon" hidden/>
+                                                <input
+                                                type="text"
+                                                class="form-control ml-2"
+                                                value="{{$data['Uname']}}"
+                                                name="Uname" hidden/>
+                                            <div >
+                                                <input class="form-control" type="date" value="{{$data['Date_Create']}}" name="Date_Create"  hidden>
+                                            </div>
+                                        </div>
+                                        </fieldset>
+                                
+                                    </form>
                                 <div style="float: left" class="mt-3"><p style="font-weight: bold"> Tổng công nợ:  {{number_format($data['sumDebt'], 0)}}&ensp;&ensp;</p></div>
 
                                 <div style="float: right" class="mt-3">
@@ -125,6 +146,9 @@
     </div>
 </div>
 <script>
+    function exportExcel(){
+        document.getElementById("formExportExcel").submit();
+    }
     function searchCodeOrder(obj) {
         var text = $(obj).val();
             if(text.length >3){

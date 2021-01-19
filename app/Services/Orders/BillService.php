@@ -2,8 +2,10 @@
 
 namespace App\Services\Orders;
 
+use App\Exports\Orders\BillExportExcel;
 use App\Http\Requests\Orders\CreateBillRequest;
 use App\Models\Bill;
+use App\Models\Inventory;
 use App\Models\LogAccountant;
 use App\Models\LogAdmin;
 use App\Models\NoteWarehouse;
@@ -15,6 +17,9 @@ use App\Models\Transport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
+use Maatwebsite\Excel\Excel as ExcelExcel;
+use Maatwebsite\Excel\Facades\Excel as FacadesExcel;
+use Maatwebsite\Excel\Facedes\Excel;
 
 class BillService
 {
@@ -77,6 +82,57 @@ class BillService
         return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $Uname, 'Date_Create' => $Date_Create, 'sumDebt' => $sumDebt];
     }
 
+    public function BillExportExcel(Request $request)
+    {
+        $codeOrderByBill = Bill::select('Codeorder')->get()->toArray();
+        $billcodes = DB::table('quanlythe')->where('Sohoadon', '!=', null)->select('Sohoadon')->distinct()->get()->toArray();
+        foreach ($codeOrderByBill as  $value) {
+            $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
+            Bill::where('Codeorder', $value)->update([
+                'PriceOut' => $priceOrder->total,
+                'uname' => $priceOrder->uname
+            ]);
+        }
+
+        foreach ($billcodes as $value) {
+            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->selectRaw('sum(price_in) as totalPriceIn')->first();
+            Bill::where('So_Hoadon', $value->Sohoadon)->update([
+                'PriceIn' => $sumPriceIn->totalPriceIn
+            ]);
+        }
+
+        $So_Hoadon = $request->So_Hoadon;
+        $Date_Create = $request->Date_Create;
+        $Uname = $request->Uname;
+
+        $bills = $bills = Bill::with('Order')->where('deleted_at',  null);
+
+        if (!empty($So_Hoadon)) {
+            $bills = $bills->where('So_Hoadon', 'like', '%' . $So_Hoadon);
+        }
+
+        if (!empty($Date_Create)) {
+            $bills = $bills->whereDate('Date_Create', $Date_Create);
+        }
+
+        if (!empty($Uname)) {
+            $bills = $bills->whereHas('Order', function ($query) use ($Uname) {
+                return $query->where('uname', $Uname);
+            });
+        }
+
+        $bills = $bills
+            ->select()->selectRaw('count(Id) as total')
+            ->selectRaw('sum(PriceOut) as totalPriceOut')
+            ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')->get();
+
+        $sumDebt = 0;
+        foreach($bills as $value){
+            $sumDebt += $value->PriceIn - $value->totalPriceOut;
+        }
+        return FacadesExcel::download(new BillExportExcel($bills), now().'.xlsx');
+    }
+
     public function getALlBillByUname(Request $request, $uname)
     {
         $codeOrderByBill = Bill::select('Codeorder')->get()->toArray();
@@ -112,25 +168,25 @@ class BillService
             $bills = $bills->whereDate('Date_Create', $Date_Create);
         }
 
-        // if (!empty($PriceIn)) {
-        //     $bills = $bills->where('PriceIn', $PriceIn);
-        // }
-
-        // if (!empty($PriceOut)) {
-        //     $bills = $bills->where('PriceOut', $PriceOut);
-        // }
-
         $bills = $bills->where('deleted_at', null)
             ->select()->selectRaw('count(Id) as total')
             ->selectRaw('sum(PriceOut) as totalPriceOut')
             ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')
-            ->paginate(5);
-        return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $uname, 'Date_Create' => $Date_Create];
+            ->get();
+
+            $sumDebt = 0;
+        foreach($bills as $value){
+            $sumDebt += $value->PriceIn - $value->totalPriceOut;
+        }
+
+        $bills = $bills->paginate(5);
+
+        return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $uname, 'Date_Create' => $Date_Create, 'sumDebt' => $sumDebt];
     }
 
     public function getBillById(Request $request, $billcode)
     {
-        $startDate = $request->startDate;
+        $startDate = Carbon::create(2000, 10, 1);
         $endDate = $request->endDate;
         $date = Carbon::parse($endDate);
         $endDate2 = $date->addDays(1);
@@ -274,6 +330,16 @@ class BillService
             'action' => 'update',
             'Jancode' => $bill->jan_code
         ]);
+        Inventory::create([
+            'jancode' => $bill->jan_code,
+            'codeorder' => $codeorder,
+            'uname' => Auth::user()->uname,
+            'action' => $bill->quantity <= $request->quantity ? 'Xuất order':'Trả lại hàng mua',
+            'quantityCurrent' => $bill->quantity,
+            'quantityUpdate' => $request->quantity,
+            'quantity' => $bill->quantity - $request->quantity,
+            'created_at' => now()
+        ]);
         return response()->json(Product::where('codeorder', $codeorder)->first());
     }
 
@@ -289,6 +355,15 @@ class BillService
                 'So_Hoadon' => $request->So_Hoadon,
                 'Codeorder' => $request->Codeorder,
                 'note' => $request->note
+            ]);
+            $codeorder = Order::where('codeorder', $request->Codeorder)->first();
+            Inventory::create([
+                'action' => 'Thêm mới hoá đơn',
+                'codeorder' => $request->Codeorder,
+                'quantityCurrent' => $codeorder->quantity,
+                'quantityUpdate' => $codeorder->quantity,
+                'uname' => Auth::user()->uname,
+                'created_at' => now()
             ]);
             $order = Order::where('codeorder', $request->Codeorder)->update([
                 'Sohoadon' => $request->So_Hoadon

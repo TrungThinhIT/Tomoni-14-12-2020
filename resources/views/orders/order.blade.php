@@ -111,11 +111,11 @@
                                 <form action="{{route('orders.bills.getBillById', $data['bill']->first()->So_Hoadon)}}" method="get">
                                     <fieldset >
                                         <div class="form-row" style=" margin-top: 1%;">
-                                            <div class="col-md-2 mb-2">
+                                            {{-- <div class="col-md-2 mb-2">
                                                 <label for="validationDefault01">Ngày bắt đầu</label>
                                                 <input name="startDate" value="{{$data['startDate']}}" class="form-control"
                                                     type="date" id="startDate">
-                                            </div>
+                                            </div> --}}
                                             <div class="col-md-2 mb-2">
                                                 <label for="validationDefault01">Ngày kết thúc</label>
                                                 <input name="endDate" class="form-control" value="{{$data['endDate']}}"

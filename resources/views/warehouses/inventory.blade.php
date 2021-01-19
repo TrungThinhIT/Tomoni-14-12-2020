@@ -53,7 +53,7 @@
                                     <th>No.</th>
                                     <th>Jancode</th>
                                     <th>Name</th>
-                                    <th>Nhập</th>
+                                    <th>Nhập hoá đơn</th>
                                     <th>Xuất</th>
                                     <th>Tồn kho</th>
                                     <th>Cân nặng thực tế</th>
@@ -64,19 +64,28 @@
                             <tbody id="myTable">
                                 @php $count = 1; @endphp
                                 @foreach ($data['inventories'] as $item)
+                                {{-- {{dd($item)}} --}}
                                 <tr @if ($item[0]->weight <= 0 || $item[0]->width <= 0 || $item[0]->length <= 0 || $item[0]->height <= 0)
                                     class="table-danger"
                                 @endif>
                                     <td>{{$data['inventories']->perPage()*($data['inventories']->currentPage()-1)+$count}}
                                     <td data-code="{{$item[0]->Jancode}}" class="view_transaction">{{$item[0]->Jancode}}</td>
                                     <td>{{$item[0]->name}}</td>
-                                    <td>@if ($item)
+                                    <td>@if ($item[0]->name_2)
                                         {{$item[0]->totalQuantity}}
                                         @endif</td>
                                         <td>@if (count($item) > 1)
                                             {{$item[1]->totalQuantity}}
+                                            @else
+                                                @if ($item[0]->name_2)
+                                                @else
+                                                    {{$item[0]->totalQuantity}}
+                                                @endif
                                             @endif</td>
-                                    <td>{{$item[0]->TotalQuantity}}</td>
+
+                                            <td>
+                                                {{$item[0]->TotalQuantity}}
+                                                </td>
                                     <td>@if ($item[0]->weight)
                                         {{{number_format($item[0]->weight, 2)}}} @else 0
                                     @endif kg</td>
@@ -88,7 +97,7 @@
                             </tbody>
                         </table>
                         <div class="modal" id="modalDetail">
-                            <div class="modal-dialog modal-lg" style="min-width: 80%;">
+                            <div class="modal-dialog modal-lg" style="min-width: 90%;">
                                 <div class="modal-content">
 
                                 </div>
