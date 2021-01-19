@@ -2,6 +2,7 @@
 
 namespace App\Services\Orders;
 
+use App\Http\Requests\Orders\PaymentCustomerRequest;
 use App\Models\PaymentCustomer;
 use Illuminate\Http\Request;
 
@@ -30,6 +31,20 @@ class PaymentCustomerService
 
         $PCustomers = $PCustomers->orderByDesc('dateget')->paginate(10);
         return ['PCustomers' => $PCustomers, 'Uname' => $Uname, 'date_inprice' => $date_inprice, 'date_insert' => $date_insert, 'Sohoadon' => $Sohoadon];
+    }
+
+    public function insert(PaymentCustomerRequest $request){
+        PaymentCustomer::create([
+            'uname' => $request->uname,
+            'depositID' => $request->depositId,
+            'dateget' => $request->dateInprice,
+            'date_insert' => $request->dateInsert,
+            'note' => $request->note,
+            'price_in' => $request->priceIn,
+            'Sohoadon' => $request->SoHoadon
+        ]);
+        toastr()->success('Create successfully!', 'Notifycation');
+        return back();
     }
 
     public function updateById(Request $request, $Id)

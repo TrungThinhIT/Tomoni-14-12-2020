@@ -56,15 +56,17 @@
                                     <th>Nhập</th>
                                     <th>Xuất</th>
                                     <th>Tồn kho</th>
-                                    <th>Câng nặng thực tế</th>
-                                    <th>Câng nặng theo thể tích</th>
+                                    <th>Cân nặng thực tế</th>
+                                    <th>Cân nặng theo thể tích</th>
                                     <th>Function</th>
                                 </tr>
                             </thead>
                             <tbody id="myTable">
                                 @php $count = 1; @endphp
                                 @foreach ($data['inventories'] as $item)
-                                <tr>
+                                <tr @if ($item[0]->weight <= 0 || $item[0]->width <= 0 || $item[0]->length <= 0 || $item[0]->height <= 0)
+                                    class="table-danger"
+                                @endif>
                                     <td>{{$data['inventories']->perPage()*($data['inventories']->currentPage()-1)+$count}}
                                     <td data-code="{{$item[0]->Jancode}}" class="view_transaction">{{$item[0]->Jancode}}</td>
                                     <td>{{$item[0]->name}}</td>
@@ -78,7 +80,7 @@
                                     <td>@if ($item[0]->weight)
                                         {{{number_format($item[0]->weight, 2)}}} @else 0
                                     @endif kg</td>
-                                    <td>{{{number_format(($item[0]->width * $item[0]->length * $item[0]->height) / 1000000, 2)}}} kg</td>
+                                    <td>{{{number_format(($item[0]->width * $item[0]->length * $item[0]->height) / 1000000, 2)}}} khối</td>
                                     <td><button type="button" data-code="{{$item[0]->Jancode}}" class="btn btn-success viewUpdate">Edit</button></td>
                                 </tr>
                                 @php $count ++; @endphp

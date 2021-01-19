@@ -138,6 +138,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
 
         Route::prefix('payment-customers')->name('payment-customers.')->group(function () {
             Route::get('/', [PaymentCustomerController::class, 'index'])->name('index');
+            Route::post('/', [PaymentCustomerController::class, 'insert'])->name('insert');
             Route::put('/{Id}', [PaymentCustomerController::class, 'update'])->name('update');
         });
 

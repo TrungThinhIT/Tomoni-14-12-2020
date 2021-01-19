@@ -65,9 +65,16 @@ class BillService
         $bills = $bills
             ->select()->selectRaw('count(Id) as total')
             ->selectRaw('sum(PriceOut) as totalPriceOut')
-            ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')
+            ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')->get();
+
+        $sumDebt = 0;
+        foreach($bills as $value){
+            $sumDebt += $value->PriceIn - $value->totalPriceOut;
+        }
+
+        $bills = $bills
             ->paginate(5);
-        return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $Uname, 'Date_Create' => $Date_Create];
+        return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $Uname, 'Date_Create' => $Date_Create, 'sumDebt' => $sumDebt];
     }
 
     public function getALlBillByUname(Request $request, $uname)
@@ -131,14 +138,14 @@ class BillService
 
         $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
         $totalWeightReal = 0;
-        $totalWeightKhoi = 0 ;
-        foreach($bill as $value){
+        $totalWeightKhoi = 0;
+        foreach ($bill as $value) {
             $weightKhoi = $value->Product->ProductStandard->length * $value->Product->ProductStandard->width * $value->Product->ProductStandard->height / 1000000;
             $value->setAttribute('totalWeightkhoi', $weightKhoi);
             $totalWeightKhoi += $weightKhoi;
             $totalWeightReal += $value->Product->ProductStandard->weight;
         }
-        
+
         $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->get();
         $codeorders = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->get('Codeorder')->toArray();
         $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
@@ -166,7 +173,7 @@ class BillService
             $mua = $mua->sortBy('dateget');
             // dd($mua);
             foreach ($mua as $value) {
-                if($value->date_payment < $nowDate){
+                if ($value->date_payment < $nowDate) {
                     $moneyNeedToPay -= $value->total;
                 }
             }
@@ -199,8 +206,10 @@ class BillService
         } else {
             $priceDebt = 0;
         }
-        return ['bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
-         'moneyNeedToPay' => $moneyNeedToPay, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi];
+        return [
+            'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
+            'moneyNeedToPay' => $moneyNeedToPay, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi
+        ];
     }
 
     public function getTranfer(Request $request, $codeorder)
@@ -216,16 +225,18 @@ class BillService
     public function putTranfer(Request $request, $codeorder)
     {
         $currentBill = Bill::where('Codeorder', $codeorder)->where('deleted_at', null)->first();
+        $currentSoHoadon = $currentBill->So_Hoadon;
         $billNew = Bill::where('Codeorder', $codeorder)->where('deleted_at', null)->update([
             'So_Hoadon' => $request->sohoadon
         ]);
         if ($billNew) {
-            $checkBill = Bill::where('So_Hoadon', $currentBill->So_Hoadon)->first();
+            $checkBill = Bill::where('So_Hoadon', $currentSoHoadon)->first();
             LogAccountant::create([
                 'codeorder' => $currentBill->Codeorder,
                 'uname' => Auth::user()->uname,
-                'Sohoadon' => $currentBill->So_hoadon,
-                'Note' => 'Di chuyển từ số hoá đơn ' . $currentBill->So_hoadon . ' đến ' . $request->sohoadon
+                'Sohoadon' => $currentSoHoadon,
+                'Note' => 'Di chuyển từ số hoá đơn ' . $currentSoHoadon . ' đến ' . $request->sohoadon,
+                'DateAct' => now()
             ]);
             if ($checkBill != null) {
                 return 1;

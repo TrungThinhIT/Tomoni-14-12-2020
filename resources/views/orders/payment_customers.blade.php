@@ -7,8 +7,79 @@
             <div class="card card-documentation">
                 <div class="card-header bg-info-gradient text-white bubble-shadow">
                     <h4>Khách hàng thanh toán</h4>
-                    <!-- <p class="mb-0 op-8">Documentation and examples for Bootstrap’s powerful, responsive navigation header, the navbar. Includes support for branding, navigation, and more, including support for our collapse plugin.</p> -->
                 </div>
+                <form action="{{route('orders.payment-customers.insert')}}" method="POST">
+                    @csrf
+                    <fieldset>
+                        <div class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">
+                            <div class="col-md-2 mb-2">
+                                <label for="validationDefault01">DepositID</label>
+                                <input value="{{ old('depositId') }}" type="text" class="form-control" name="depositId"
+                                id="depositId"
+                                placeholder="Nhập số DepositID">
+                                <span class="alert-danger-custom">{{$errors->first('depositId')}}</span>
+                            </div>
+                            <div class="col-md-1 mb-1">
+                                <label for="validationDefault01">User name</label>
+                                <input class="form-control" value="{{ old('uname') }}" type="text"
+                                    name="uname" id="uname"
+                                    placeholder="User name" list="litsusername" onkeyup='searchUser(this)'> <datalist id='litsusername'></datalist>
+                                <span class="alert-danger-custom">{{$errors->first('uname')}}</span>
+                            </div>
+                            <div class="col-md-1 mb-1">
+                                <label for="validationDefault01">Note</label>
+                                <input data-type="currency" value="{{ old('note') }}" type="text" class="form-control" name="note" id="note" placeholder="Nhập note">
+                                <span class="alert-danger-custom">{{$errors->first('note')}}</span>
+                            </div>
+                            <div class="col-md-2 mb-1">
+                                <label for="validationDefault01">Date Inprice</label>
+                                <input type="date" value="{{ old('dateInprice') }}" class="form-control" name="dateInprice" id="dateInprice"
+                                    placeholder="Ngày nhập tiền">
+                                <span class="alert-danger-custom">{{$errors->first('dateInprice')}}</span>
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label for="validationDefault01">Date Insert</label>
+                                <input type="date" class="form-control" value="{{ old('dateInsert') }}" name="dateInsert" id="dateInsert"
+                                    placeholder="Ngày vào tiền">
+                                <span class="alert-danger-custom">{{$errors->first('dateInsert')}}</span>
+                            </div>
+                            <div class="col-md-1 mb-1">
+                                <label for="validationDefault01">Price In</label>
+                                <input class="form-control" value="{{ old('priceIn') }}" type="text"
+                                    name="priceIn" id="priceIn" placeholder="Price In">
+                                <span class="alert-danger-custom">{{$errors->first('priceIn')}}</span>
+                            </div>
+                            <div class="col-md-1 mb-1">
+                                <label for="validationDefault01">Số hoá đơn</label>
+                                <input class="form-control" value="{{ old('SoHoadon') }}" type="text"
+                                    name="SoHoadon" id="SoHoadon" placeholder="So hoa don" list="listbillcode" onkeyup='searchMaHoaDon(this)'> <datalist id='listbillcode'></datalist>
+                                <span class="alert-danger-custom">{{$errors->first('SoHoadon')}}</span>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Insert</button>
+                            </div>
+                            <div>
+                                <button type="button" onclick="resetFormInsert()" class="btn btn-info ml-2" style="margin-top: 20px;">Reset</button>
+                                <script>
+                                    function resetFormInsert() {
+                                        debugger;
+                                        document.getElementById("depositId").value = "";
+                                        document.getElementById("uname").value = "",
+                                        document.getElementById("note").value = "",
+                                        document.getElementById("dateInprice").value = "";
+                                        document.getElementById("dateInsert").value = "";
+                                        document.getElementById("priceIn").value = "",
+                                        document.getElementById("SoHoadon").value = "";
+                                    }
+
+                                </script>
+                            </div>
+                        </div>
+
+
+                    </fieldset>
+
+                </form>
                 <div class="card-body">
                     <div>
                         <div style="margin: 1% 1% 1% 1%;">

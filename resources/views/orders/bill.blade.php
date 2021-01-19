@@ -18,16 +18,6 @@
                                 <input class="form-control" value="{{ old('So_Hoadon')}}" type="text" name="So_Hoadon" placeholder="So_Hoadon" >
                                 <span class="alert-danger-custom">{{$errors->first('So_Hoadon')}}</span>
                             </div>
-{{--
-                            <div  style="  margin-top: 3%;">
-                                <input class="form-control" value="{{ old('PriceIn')}}" type="text" name="PriceIn" placeholder="Price In"  id="example-date-input">
-                                <span class="alert-danger-custom">{{$errors->first('PriceIn')}}</span>
-                            </div>
-
-                            <div  style="  margin-top: 3%;">
-                                <input class="form-control" value="{{ old('PriceOut')}}" type="text" name="PriceOut" placeholder="Price Out"  id="example-date-input">
-                                <span class="alert-danger-custom">{{$errors->first('PriceOut')}}</span>
-                            </div> --}}
 
                             <div  style="  margin-top: 3%;">
                                 <input class="form-control" value="{{ old('Codeorder')}}" type="text" name="Codeorder" placeholder="Codeorder"  list='listcodeorder' onkeyup='searchCodeOrder(this)'> <datalist id='listcodeorder'></datalist>
@@ -74,18 +64,6 @@
                                         <div >
                                             <input class="form-control" type="date" value="{{$data['Date_Create']}}" name="Date_Create" id="Date_Create">
                                         </div>
-                                        {{-- <input
-                                            type="text"
-                                            class="form-control ml-2"
-                                            id="priceIn"
-                                            placeholder="Nhập price in"
-                                            style="width: 11%;"/>
-                                        <input
-                                            type="text"
-                                            class="form-control ml-2"
-                                            id="priceOut"
-                                            placeholder="Nhập price out"
-                                            style="width: 11%;"/> --}}
                                             <div>
                                                 <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2" style="margin-left: 2%;">Reset</button>
                                                 <script>
@@ -98,6 +76,7 @@
                                             </div>
                                     </fieldset>
                                 </form>
+                                <div style="float: left" class="mt-3"><p style="font-weight: bold"> Tổng công nợ:  {{number_format($data['sumDebt'], 0)}}&ensp;&ensp;</p></div>
 
                                 <div style="float: right" class="mt-3">
                                     {!! $data['bills']->withQueryString()->links('commons.paginate') !!}</div>

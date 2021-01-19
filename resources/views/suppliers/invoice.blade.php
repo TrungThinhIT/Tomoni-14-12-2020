@@ -237,9 +237,7 @@
                                         @endif
                                         @endforeach
                                 <tr @if ($checkStatus == 0)
-                                class="bg-danger"
-                                {{-- @else
-                                class="bg-success"  --}}
+                                class="table-danger"
                                 @endif>
                                     <th>{{$value->DateInvoice}}</th>
                                     <td><a href="{{route('supplier.invoice.showByIdInvoice', $value->Id)}}">{{$value->Invoice}}</a>
@@ -252,7 +250,7 @@
                                     <td>@foreach ($value['detail'] as $item)
                                             {{$item->Jancode}}
                                         @endforeach</td>
-                                        <td>
+                                        <td style="min-width: 300px">
                                             @foreach ($value['detail'] as $detail => $name)
 
                                             {{$name->name}} <br>
@@ -260,10 +258,10 @@
                                         @endforeach
                                         </td>
                                     <td>@foreach ($value['detail'] as $item)
-                                        {{$item->Quantity}}
+                                        {{$item->Quantity}} <br>
                                         @endforeach</td>
                                     <td>@foreach ($value['detail'] as $item)
-                                        {{$item->Price}}
+                                        {{$item->Price}} <br>
                                         @endforeach</td>
                                     <td>{{$value->TotalPrice}}</td>
                                     <td>{{$value->PaymentDate}}</td>
