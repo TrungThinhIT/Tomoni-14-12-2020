@@ -65,7 +65,7 @@
                                 @php $count = 1; @endphp
                                 @foreach ($data['inventories'] as $item)
                                 {{-- {{dd($item)}} --}}
-                                <tr @if ($item[0]->weight <= 0 || $item[0]->width <= 0 || $item[0]->length <= 0 || $item[0]->height <= 0)
+                                <tr id="{{$item[0]->Jancode}}" @if ($item[0]->weight <= 0 || $item[0]->width <= 0 || $item[0]->length <= 0 || $item[0]->height <= 0)
                                     class="table-danger"
                                 @endif>
                                     <td>{{$data['inventories']->perPage()*($data['inventories']->currentPage()-1)+$count}}
@@ -83,13 +83,13 @@
                                                 @endif
                                             @endif</td>
 
-                                            <td>
+                                            <td id="totalQuantity_{{$item[0]->Jancode}}">
                                                 {{$item[0]->TotalQuantity}}
                                                 </td>
-                                    <td>@if ($item[0]->weight)
+                                    <td id="weight_{{$item[0]->Jancode}}">@if ($item[0]->weight)
                                         {{{number_format($item[0]->weight * $item[0]->TotalQuantity, 2)}}} @else 0
                                     @endif kg</td>
-                                    <td>{{{number_format(($item[0]->width * $item[0]->length * $item[0]->height) / 1000000 * $item[0]->TotalQuantity, 2)}}} khối</td>
+                                    <td id="weightKhoi_{{$item[0]->Jancode}}">{{{number_format(($item[0]->width * $item[0]->length * $item[0]->height) / 1000000 * $item[0]->TotalQuantity, 2)}}} khối</td>
                                     <td><button type="button" data-code="{{$item[0]->Jancode}}" class="btn btn-success viewUpdate">Edit</button></td>
                                 </tr>
                                 @php $count ++; @endphp
