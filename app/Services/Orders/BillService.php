@@ -3,6 +3,7 @@
 namespace App\Services\Orders;
 
 use App\Exports\Orders\BillExportExcel;
+use App\Exports\Orders\OrderExportExcel;
 use App\Http\Requests\Orders\CreateBillRequest;
 use App\Models\Bill;
 use App\Models\Inventory;
@@ -23,6 +24,14 @@ use Maatwebsite\Excel\Facedes\Excel;
 
 class BillService
 {
+
+    protected $orderExportExcel; 
+
+    public function __construct(OrderExportExcel $orderExportExcel)
+    {
+        $this->orderExportExcel = $orderExportExcel;
+    }
+
     public function searchBillCode(Request $request)
     {
         $data = Bill::where('So_Hoadon', 'like', '%' . $request->BillCode . "%")->select('So_Hoadon')->distinct()->limit(10)->get();
@@ -262,10 +271,14 @@ class BillService
         } else {
             $priceDebt = 0;
         }
+        if($request->check == 'true'){
+            return $this->orderExportExcel->ExportOrder($bill);
+        }else{   
         return [
             'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
             'moneyNeedToPay' => $moneyNeedToPay, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi
         ];
+        }
     }
 
     public function getTranfer(Request $request, $codeorder)

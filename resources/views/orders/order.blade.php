@@ -126,12 +126,29 @@
                                             </div>
                                             <div style="margin-top: 1.7%">
                                                 <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2" style="margin-left: 2%;">Reset</button>
+                                                <button type="button" onclick="exportExcel()" class="btn btn-success ml-2" style="margin-left: 2%;">Export</button>
+                                                <script>
+                                                    function exportExcel(){
+                                                        document.getElementById('exportExcel').submit();
+                                                    }
+                                                </script>
                                                 <script>
                                                     function resetFormSearch() {
                                                         document.getElementById("startDate").value = "";
                                                         document.getElementById("endDate").value = "";
                                                     }
                                                 </script>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                                <form action="{{route('orders.bills.exportBillById', $data['bill']->first()->So_Hoadon)}}" method="get" id="exportExcel">
+                                    <fieldset >
+                                        <div class="form-row" style=" margin-top: 1%;">
+                                            <div class="col-md-2 mb-2">
+                                                <input type="text" name="check" value="true" hidden>
+                                                <input name="endDate" class="form-control" value="{{$data['endDate']}}"
+                                                    type="date" id="endDate" hidden>
                                             </div>
                                         </div>
                                     </fieldset>

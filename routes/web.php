@@ -104,7 +104,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::get('/delete/{Id}', [BillController::class, 'deleteBillCode'])->name('deleteBillCode');
             Route::get('/by-uname/{uname}', [BillController::class, 'indexAllByUname'])->name('indexAllByUname');
             Route::get('/log/{codeorder}', [BillController::class, 'loadLog'])->name('loadLog');
-            Route::get('/{billcode}', [BillController::class, 'getBillById'])->name('getBillById');
+            Route::get('/{billcode}', [BillController::class, 'getBillById'])->name('getBillById');            
+            Route::get('/export/{billcode}', [BillController::class, 'exportBillById'])->name('exportBillById');
             Route::get('/tranfer/{codeorder}', [BillController::class, 'getTranfer'])->name('getTranfer');
             Route::put('/tranfer/{codeorder}', [BillController::class, 'putTranfer'])->name('putTranfer');
             Route::get('/payment/{billcode}', [BillController::class, 'getPaymentDetail'])->name('getPaymentDetail');

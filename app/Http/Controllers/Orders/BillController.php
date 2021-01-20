@@ -37,7 +37,11 @@ class BillController extends Controller
     public function getBillById(Request $request, $billcode){
         $data = $this->billService->getBillById($request, $billcode);
         return view('orders.order', compact('data'));
-    }    
+    }   
+    
+    public function exportBillById(Request $request, $billcode){
+        return $this->billService->getBillById($request, $billcode);
+    }
 
     public function getTranfer(Request $request, $codeorder){
         return $this->billService->getTranfer($request, $codeorder);
