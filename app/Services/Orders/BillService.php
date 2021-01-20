@@ -91,56 +91,56 @@ class BillService
         return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $Uname, 'Date_Create' => $Date_Create, 'sumDebt' => $sumDebt];
     }
 
-    public function BillExportExcel(Request $request)
-    {
-        $codeOrderByBill = Bill::select('Codeorder')->get()->toArray();
-        $billcodes = DB::table('quanlythe')->where('Sohoadon', '!=', null)->select('Sohoadon')->distinct()->get()->toArray();
-        foreach ($codeOrderByBill as  $value) {
-            $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
-            Bill::where('Codeorder', $value)->update([
-                'PriceOut' => $priceOrder->total,
-                'uname' => $priceOrder->uname
-            ]);
-        }
+    // public function BillExportExcel(Request $request)
+    // {
+    //     $codeOrderByBill = Bill::select('Codeorder')->get()->toArray();
+    //     $billcodes = DB::table('quanlythe')->where('Sohoadon', '!=', null)->select('Sohoadon')->distinct()->get()->toArray();
+    //     foreach ($codeOrderByBill as  $value) {
+    //         $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
+    //         Bill::where('Codeorder', $value)->update([
+    //             'PriceOut' => $priceOrder->total,
+    //             'uname' => $priceOrder->uname
+    //         ]);
+    //     }
 
-        foreach ($billcodes as $value) {
-            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->selectRaw('sum(price_in) as totalPriceIn')->first();
-            Bill::where('So_Hoadon', $value->Sohoadon)->update([
-                'PriceIn' => $sumPriceIn->totalPriceIn
-            ]);
-        }
+    //     foreach ($billcodes as $value) {
+    //         $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->selectRaw('sum(price_in) as totalPriceIn')->first();
+    //         Bill::where('So_Hoadon', $value->Sohoadon)->update([
+    //             'PriceIn' => $sumPriceIn->totalPriceIn
+    //         ]);
+    //     }
 
-        $So_Hoadon = $request->So_Hoadon;
-        $Date_Create = $request->Date_Create;
-        $Uname = $request->Uname;
+    //     $So_Hoadon = $request->So_Hoadon;
+    //     $Date_Create = $request->Date_Create;
+    //     $Uname = $request->Uname;
 
-        $bills = $bills = Bill::with('Order')->where('deleted_at',  null);
+    //     $bills = $bills = Bill::with('Order')->where('deleted_at',  null);
 
-        if (!empty($So_Hoadon)) {
-            $bills = $bills->where('So_Hoadon', 'like', '%' . $So_Hoadon);
-        }
+    //     if (!empty($So_Hoadon)) {
+    //         $bills = $bills->where('So_Hoadon', 'like', '%' . $So_Hoadon);
+    //     }
 
-        if (!empty($Date_Create)) {
-            $bills = $bills->whereDate('Date_Create', $Date_Create);
-        }
+    //     if (!empty($Date_Create)) {
+    //         $bills = $bills->whereDate('Date_Create', $Date_Create);
+    //     }
 
-        if (!empty($Uname)) {
-            $bills = $bills->whereHas('Order', function ($query) use ($Uname) {
-                return $query->where('uname', $Uname);
-            });
-        }
+    //     if (!empty($Uname)) {
+    //         $bills = $bills->whereHas('Order', function ($query) use ($Uname) {
+    //             return $query->where('uname', $Uname);
+    //         });
+    //     }
 
-        $bills = $bills
-            ->select()->selectRaw('count(Id) as total')
-            ->selectRaw('sum(PriceOut) as totalPriceOut')
-            ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')->get();
+    //     $bills = $bills
+    //         ->select()->selectRaw('count(Id) as total')
+    //         ->selectRaw('sum(PriceOut) as totalPriceOut')
+    //         ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')->get();
 
-        $sumDebt = 0;
-        foreach ($bills as $value) {
-            $sumDebt += $value->PriceIn - $value->totalPriceOut;
-        }
-        return FacadesExcel::download(new BillExportExcel($bills), now() . '.xlsx');
-    }
+    //     $sumDebt = 0;
+    //     foreach ($bills as $value) {
+    //         $sumDebt += $value->PriceIn - $value->totalPriceOut;
+    //     }
+    //     return FacadesExcel::download(new BillExportExcel($bills), now() . '.xlsx');
+    // }
 
     public function getALlBillByUname(Request $request, $uname)
     {
@@ -195,7 +195,7 @@ class BillService
 
     public function getBillById(Request $request, $billcode)
     {
-        $startDate = Carbon::create(2000, 10, 1);
+        $startDate = Carbon::create(2020, 10, 1);
         $endDate = $request->endDate;
         $date = Carbon::parse($endDate);
         $endDate2 = $date->addDays(1);
