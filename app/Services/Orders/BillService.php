@@ -195,7 +195,7 @@ class BillService
 
     public function getBillById(Request $request, $billcode)
     {
-        $startDate = Carbon::create(2000, 10, 1);
+        $startDate = Carbon::create(2020, 10, 1);
         $endDate = $request->endDate;
         $date = Carbon::parse($endDate);
         $endDate2 = $date->addDays(1);

@@ -134,7 +134,6 @@
                                                 </script>
                                                 <script>
                                                     function resetFormSearch() {
-                                                        document.getElementById("startDate").value = "";
                                                         document.getElementById("endDate").value = "";
                                                     }
                                                 </script>
