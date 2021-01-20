@@ -43,41 +43,31 @@
             <th>Uname</th>
             <th style="min-width: 140px">Quantity</th>
             <th>Total Quantity</th>
-            <th>Item In Box</th>
             <th>Date</th>
         </tr>
     </thead>
     <tbody id="myTable">
+        @foreach ($inventory as $index => $item)
         @php $count = 1; @endphp
-        @foreach ($inventory as $item)
-        <tr>
-            <td>{{$inventory->perPage()*($inventory->currentPage()-1)+$count}}
-            </td>
-            <td>@if ($item->jan_code)
-                Xuất
-                @else
-                Nhập hoá đơn
-                @endif</td>
-            <td>@if ($item->jan_code)
-                    {{$item->codeorder}}
-                @else
-                {{$item->Invoice}}
-                @endif</td>
-                <td></td>
-            <td>@if ($item->jan_code)
-                {{number_format($item->quantity, 0)}}
-                @else
-                {{number_format($item->Quantity, 0)}}
-                @endif</td>
-            <td>{{number_format($item->debtQuantity, 0)}}</td>
-            <td>{{$item->item_in_box}}</td>
-            <td>@if ($item->jan_code)
-                {{Carbon\Carbon::parse($item->Date_Create)->format('d/m/Y h:m:i')}}
-                @else
-                {{$item->Dateinsert}}
-                @endif</td>
-        </tr>
-        @if ($item->jan_code)
+        @foreach ($item->sortByDesc('created_at') as $value)
+        <tr @if ($index == 0 || $index % 2 == 0)
+            class="table-success"
+        @else
+            class="table-warning"
+        @endif>
+            <td>{{$count}}</td>
+            <td>{{$value->action}}</td>
+            <td>{{$value->codeorder}}</td>
+                <td>{{$value->uname}}</td>
+            <td>
+                {{number_format($value->quantityUpdate, 0)}}</td>
+            <td>{{number_format($value->debtQuantity, 0)}}</td>
+            <td>
+                {{Carbon\Carbon::parse($value->created_at)->format('d/m/Y h:m:i')}}</td>
+        @php $count ++; @endphp
+    </tr>
+        @endforeach
+        {{-- @if ($item->jan_code)
             @if (count($item->Product->Inventory) > 0)
                 @foreach ($item->Product->Inventory->sortByDesc('created_at') as $item)
                     @if ($status == 1)
@@ -120,8 +110,7 @@
                     @endif
                 @endforeach
             @endif
-        @endif
-        @php $count ++; @endphp
+        @endif --}}
         @endforeach
     </tbody>
 </table></div>

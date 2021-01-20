@@ -87,9 +87,9 @@
                                                 {{$item[0]->TotalQuantity}}
                                                 </td>
                                     <td>@if ($item[0]->weight)
-                                        {{{number_format($item[0]->weight, 2)}}} @else 0
+                                        {{{number_format($item[0]->weight * $item[0]->TotalQuantity, 2)}}} @else 0
                                     @endif kg</td>
-                                    <td>{{{number_format(($item[0]->width * $item[0]->length * $item[0]->height) / 1000000, 2)}}} khối</td>
+                                    <td>{{{number_format(($item[0]->width * $item[0]->length * $item[0]->height) / 1000000 * $item[0]->TotalQuantity, 2)}}} khối</td>
                                     <td><button type="button" data-code="{{$item[0]->Jancode}}" class="btn btn-success viewUpdate">Edit</button></td>
                                 </tr>
                                 @php $count ++; @endphp

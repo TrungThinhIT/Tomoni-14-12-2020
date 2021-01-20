@@ -5,6 +5,7 @@ namespace App\Services\Warehouses;
 use Illuminate\Http\Request;
 use App\Models\InvoiceDetailSupplier;
 use App\Models\Bill;
+use App\Models\Inventory;
 use App\Models\NoteWarehouse;
 use App\Models\Product;
 use App\Models\ProductStandard;
@@ -79,7 +80,6 @@ class InventoryService
             }
         }
 
-
         $inventories = $inventories->flatten();
 
         if ($status && $status == 1) {
@@ -103,45 +103,68 @@ class InventoryService
     public function detailInventory(Request $request, $jancode)
     {
         $status = $request->status;
-        $imported = InvoiceDetailSupplier::where('Jancode', $jancode)->orderBy('Dateinsert', 'DESC')->get();
+        // $imported = InvoiceDetailSupplier::where('Jancode', $jancode)->orderBy('Dateinsert', 'DESC')->get();
 
-        $exported = Bill::where('deleted_at', null)->select()->distinct()->join(
-            'product',
-            'product.codeorder',
-            '=',
-            'accoutant_order.Codeorder'
-        )->where('jan_code', $jancode);
-        if($request->status == 1){
-            $exported = $exported->whereHas('Product.Inventory', function ($query) {
-                return $query->where('action', 'Xuất order');                
-            });
-        }
-        if($request->status == 2){
-            $exported = $exported->whereHas('Product.Inventory', function ($query) {
-                return $query->where('action', 'Trả lại hàng mua');                
-            });
-        }
-        $exported = $exported->get();
-        foreach ($exported as $item) {
-            $item->setAttribute('Dateinsert', $item->Date_Create);
-            $item->setAttribute('Jancode', $item->jan_code);
-        }
-        $inventory = collect($imported)->merge($exported)->sortBy('Dateinsert');
+        // $exported = Bill::where('deleted_at', null)->select()->distinct()->join(
+        //     'product',
+        //     'product.codeorder',
+        //     '=',
+        //     'accoutant_order.Codeorder'
+        // )->where('jan_code', $jancode);
+        // if($request->status == 1){
+        //     $exported = $exported->whereHas('Product.Inventory', function ($query) {
+        //         return $query->where('action', 'Xuất order');                
+        //     });
+        // }
+        // if($request->status == 2){
+        //     $exported = $exported->whereHas('Product.Inventory', function ($query) {
+        //         return $query->where('action', 'Trả lại hàng mua');                
+        //     });
+        // }
+        // $exported = $exported->get();
+        // foreach ($exported as $item) {
+        //     $item->setAttribute('Dateinsert', $item->Date_Create);
+        //     $item->setAttribute('Jancode', $item->jan_code);
+        // }
+        // $inventory = collect($imported)->merge($exported)->sortBy('Dateinsert');
 
-        $debtQuantity = 0;
+        // $debtQuantity = 0;
 
-        foreach ($inventory as $item) {
-            if ($item->jan_code) {
-                $item->setAttribute('debtQuantity', $debtQuantity -= $item->quantity);
-            } else {
-                $item->setAttribute('debtQuantity', $debtQuantity += $item->Quantity);
+        // foreach ($inventory as $item) {
+        //     if ($item->jan_code) {
+        //         $item->setAttribute('debtQuantity', $debtQuantity -= $item->quantity);
+        //     } else {
+        //         $item->setAttribute('debtQuantity', $debtQuantity += $item->Quantity);
+        //     }
+        // }
+        $inventories = Inventory::where('jancode', $jancode)->get();
+        if($status == 1){
+            $inventories = $inventories->where('action', 'Xuất order');
+        }
+        if($status == 2){            
+            $inventories = $inventories->where('action', 'Trả lại hàng mua');
+        }
+        $inventories = collect($inventories)->groupBy('codeorder');
+
+            foreach($inventories as $value){
+                $i = 0; 
+                foreach($value->sortBy('created_at') as $item){
+                    if($item[0]){
+                        $item->setAttribute('debtQuantity', 0);
+                        $i = $item->quantityUpdate;
+                    }else{
+                        $item->setAttribute('debtQuantity', $item->quantityUpdate - $i);
+                        $i = $item->quantityUpdate;
+                    }
+                }
+                $value = $value->sortByDesc('created_at');
             }
-        }
+            $inventories = $inventories->values();
         if ($request->ajax() || 'NULL') {
-            $inventory = $inventory->sortByDesc('Dateinsert')->paginate(10);
+            $inventory = $inventories->paginate(10);
             return view('warehouses.includes.modalInventory', compact('inventory', 'jancode', 'status'));
         } else {
-            $inventory = $inventory->sortByDesc('Dateinsert')->paginate(10);
+            $inventory = $inventories->paginate(10);
             return view('warehouses.includes.modalInventory', compact('inventory', 'jancode', 'status'));
         }
     }

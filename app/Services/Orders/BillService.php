@@ -348,9 +348,7 @@ class BillService
             'codeorder' => $codeorder,
             'uname' => Auth::user()->uname,
             'action' => $bill->quantity <= $request->quantity ? 'Xuất order':'Trả lại hàng mua',
-            'quantityCurrent' => $bill->quantity,
             'quantityUpdate' => $request->quantity,
-            'quantity' => $bill->quantity - $request->quantity,
             'created_at' => now()
         ]);
         return response()->json(Product::where('codeorder', $codeorder)->first());
@@ -363,17 +361,16 @@ class BillService
             $request->flash('request', $request->all());
             Session()->flash('Codeorder', 'Codeorder wrong!');
         } else {
-
             $bill = Bill::create([
                 'So_Hoadon' => $request->So_Hoadon,
                 'Codeorder' => $request->Codeorder,
                 'note' => $request->note
             ]);
-            $codeorder = Order::where('codeorder', $request->Codeorder)->first();
+            $codeorder = Order::where('codeorder', $request->Codeorder)->with('Product')->first();
             Inventory::create([
                 'action' => 'Thêm mới hoá đơn',
+                'jancode' => $codeorder->Product->jan_code,
                 'codeorder' => $request->Codeorder,
-                'quantityCurrent' => $codeorder->quantity,
                 'quantityUpdate' => $codeorder->quantity,
                 'uname' => Auth::user()->uname,
                 'created_at' => now()
