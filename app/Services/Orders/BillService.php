@@ -207,8 +207,8 @@ class BillService
         foreach ($bill as $value) {
             $weightKhoi = $value->Product->ProductStandard->length * $value->Product->ProductStandard->width * $value->Product->ProductStandard->height / 1000000;
             $value->setAttribute('totalWeightkhoi', $weightKhoi);
-            $totalWeightKhoi += $weightKhoi;
-            $totalWeightReal += $value->Product->ProductStandard->weight;
+            $totalWeightKhoi += $weightKhoi * $value->Product->quantity;
+            $totalWeightReal += $value->Product->ProductStandard->weight * $value->Product->quantity;
         }
 
         $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->get();

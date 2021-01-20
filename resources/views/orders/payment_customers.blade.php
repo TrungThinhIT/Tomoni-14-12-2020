@@ -37,12 +37,6 @@
                                     placeholder="Ngày nhập tiền">
                                 <span class="alert-danger-custom">{{$errors->first('dateInprice')}}</span>
                             </div>
-                            <div class="col-md-2 mb-2">
-                                <label for="validationDefault01">Date Insert</label>
-                                <input type="date" class="form-control" value="{{ old('dateInsert') }}" name="dateInsert" id="dateInsert"
-                                    placeholder="Ngày vào tiền">
-                                <span class="alert-danger-custom">{{$errors->first('dateInsert')}}</span>
-                            </div>
                             <div class="col-md-1 mb-1">
                                 <label for="validationDefault01">Price In</label>
                                 <input class="form-control" value="{{ old('priceIn') }}" type="text"
@@ -128,7 +122,6 @@
                                         <th>date_insert</th>
                                         <th>Price In</th>
                                         <th>Sohoadon</th>
-                                        <th>Function</th>
                                     </tr>
                                 </thead>
                                 <tbody id="myTable">
@@ -152,10 +145,6 @@
                                                     value="{{$item->Sohoadon}}" onchange="update{{$item->Id}}()"
                                                     placeholder="So hoa don" list="listbillcode" onkeyup='searchMaHoaDon(this)'> <datalist id='listbillcode'></datalist>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="btn btn-danger px-3"><i class="fa fa-times"
-                                                    aria-hidden="true"></i></button>
                                         </td>
                                     </tr>
                                     <script>

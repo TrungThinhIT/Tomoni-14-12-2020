@@ -29,7 +29,7 @@ class PaymentCustomerService
             $PCustomers = $PCustomers->where('Sohoadon', 'like', '%' . $Sohoadon . '%');
         }
 
-        $PCustomers = $PCustomers->orderByDesc('dateget')->paginate(10);
+        $PCustomers = $PCustomers->orderByDesc('date_insert')->paginate(10);
         return ['PCustomers' => $PCustomers, 'Uname' => $Uname, 'date_inprice' => $date_inprice, 'date_insert' => $date_insert, 'Sohoadon' => $Sohoadon];
     }
 
@@ -38,7 +38,7 @@ class PaymentCustomerService
             'uname' => $request->uname,
             'depositID' => $request->depositId,
             'dateget' => $request->dateInprice,
-            'date_insert' => $request->dateInsert,
+            'date_insert' => now(),
             'note' => $request->note,
             'price_in' => $request->priceIn,
             'Sohoadon' => $request->SoHoadon

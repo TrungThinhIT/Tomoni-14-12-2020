@@ -28,9 +28,8 @@ class PaymentCustomerRequest extends FormRequest
             'uname' => 'required|exists:users,uname',
             'note' => 'required',
             'dateInprice' => 'required|date',
-            'dateInsert' => 'required|date',
             'priceIn' => 'required|numeric',
-            'SoHoadon' => 'required|exists:accoutant_order,So_Hoadon'
+            // 'SoHoadon' => 'exists:accoutant_order,So_Hoadon'
         ];
     }
 }
