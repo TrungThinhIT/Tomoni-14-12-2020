@@ -25,7 +25,7 @@ use Maatwebsite\Excel\Facedes\Excel;
 class BillService
 {
 
-    protected $orderExportExcel; 
+    protected $orderExportExcel;
 
     public function __construct(OrderExportExcel $orderExportExcel)
     {
@@ -82,7 +82,7 @@ class BillService
             ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')->get();
 
         $sumDebt = 0;
-        foreach($bills as $value){
+        foreach ($bills as $value) {
             $sumDebt += $value->PriceIn - $value->totalPriceOut;
         }
 
@@ -136,10 +136,10 @@ class BillService
             ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')->get();
 
         $sumDebt = 0;
-        foreach($bills as $value){
+        foreach ($bills as $value) {
             $sumDebt += $value->PriceIn - $value->totalPriceOut;
         }
-        return FacadesExcel::download(new BillExportExcel($bills), now().'.xlsx');
+        return FacadesExcel::download(new BillExportExcel($bills), now() . '.xlsx');
     }
 
     public function getALlBillByUname(Request $request, $uname)
@@ -183,8 +183,8 @@ class BillService
             ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')
             ->get();
 
-            $sumDebt = 0;
-        foreach($bills as $value){
+        $sumDebt = 0;
+        foreach ($bills as $value) {
             $sumDebt += $value->PriceIn - $value->totalPriceOut;
         }
 
@@ -259,10 +259,7 @@ class BillService
             $value->setAttribute('priceIn', $priceIn += $value->price_in);
         }
 
-        $hien_mau = $hien_mau->sortByDesc('dateget')->groupBy('dateget');
-
-        $hien_mau = $hien_mau->paginate(10);
-
+        $hien_mau = $hien_mau->sortByDesc('dateget');
         $customer = $customer->sortByDesc('dateget');
         // dd($customer);
 
@@ -271,13 +268,15 @@ class BillService
         } else {
             $priceDebt = 0;
         }
-        if($request->check == 'true'){
-            return $this->orderExportExcel->ExportOrder($bill);
-        }else{   
-        return [
-            'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
-            'moneyNeedToPay' => $moneyNeedToPay, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi
-        ];
+        if ($request->check == 'true') {
+            $hien_mau = $hien_mau;
+            return $this->orderExportExcel->ExportOrder($bill, $hien_mau);
+        } else {
+            $hien_mau = $hien_mau->groupBy('dateget')->paginate(10);
+            return [
+                'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
+                'moneyNeedToPay' => $moneyNeedToPay, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi
+            ];
         }
     }
 
@@ -347,7 +346,7 @@ class BillService
             'jancode' => $bill->jan_code,
             'codeorder' => $codeorder,
             'uname' => Auth::user()->uname,
-            'action' => $bill->quantity <= $request->quantity ? 'Xuất order':'Trả lại hàng mua',
+            'action' => $bill->quantity <= $request->quantity ? 'Xuất order' : 'Trả lại hàng mua',
             'quantityUpdate' => $request->quantity,
             'created_at' => now()
         ]);

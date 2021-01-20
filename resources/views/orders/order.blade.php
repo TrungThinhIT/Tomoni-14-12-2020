@@ -40,9 +40,9 @@
                                                     <p class="mb-0"><strong>Số lượng:</strong>
                                                         {{$item['Product']->quantity}}</p>
                                                         <p class="mb-0"><strong>Số thùng: </strong>{{$item['Product']->quantity / $item['Product']->item_in_box}}</p>
-                                                        <p class="mb-0"><strong>Khối lượng thực tế: </strong>{{number_format($item->product->ProductStandard->weight, 2)}} kg</p>
+                                                        <p class="mb-0"><strong>Khối lượng thực tế: </strong>{{number_format($item->product->ProductStandard->weight * $item['Product']->quantity, 2)}} kg</p>
                                                         <p class="mb-0"><strong>Khối lượng thể tích: </strong>
-                                                            {{number_format($item->totalWeightkhoi, 2)}} khối
+                                                            {{number_format($item->totalWeightkhoi * $item['Product']->quantity, 2)}} khối
                                                         </p>
                                                         <p class="mb-0"><strong>Ngày đặt hàng: </strong>{{Carbon\Carbon::parse($item['Order']->dateget)->format('d/m/Y')}}</p>
                                                         <p class="mb-0"><strong>Ngày thanh toán: </strong>@if ($item['Order']->date_payment)

@@ -2,16 +2,18 @@
 
 namespace App\Exports\Orders;
 
+use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class OrderExportExcel
 {
-    public function ExportOrder($bills){
+    public function ExportOrder($bills, $hien_mau){
         $fileType = IOFactory::identify(public_path('excels/template/order.xlsx'));
         $objReader = IOFactory::createReader($fileType);
         $objPHPExcel = $objReader->load(public_path('excels/template/order.xlsx'));
         
-        $this->addDataToExcelFile($objPHPExcel->setActiveSheetIndex(0), $bills);
+        $this->addDataToExcelFileCell1($objPHPExcel->setActiveSheetIndex(0), $bills);
+        $this->addDataToExcelFileCell2($objPHPExcel->setActiveSheetIndex(1), $hien_mau);
         $objWriter = IOFactory::createWriter($objPHPExcel, 'Xlsx');
         
         if (!is_dir(public_path('excels'))) {
@@ -27,7 +29,7 @@ class OrderExportExcel
         return redirect($path);
     }
 
-    public function addDataToExcelFile($setCell, $bills){
+    public function addDataToExcelFileCell1($setCell, $bills){
         $index = 1;
         $row = 26;
         foreach ($bills as $key => $item) {
@@ -46,6 +48,26 @@ class OrderExportExcel
                 ->setCellValue('L' . $row, $item->Product->ProductStandard->length)
                 ->setCellValue('M' . $row, $item->Product->ProductStandard->width)
                 ->setCellValue('N' . $row, $item->Product->ProductStandard->weight);
+                // ->setCellValue('G' . $row, $item->price)
+                // ->setCellValue('H' . $row, '=F' . $row . '*G' . $row); //them dong text vao cot H, su dung ham tinh toan mac dinh trong excel de tinh gia tri
+
+            $index++;
+
+            $row++;
+        }
+    }
+
+    public function addDataToExcelFileCell2($setCell, $hien_mau){
+        $index = 1;
+        $row = 26;
+        foreach ($hien_mau as $key => $item) {
+
+            $setCell
+                ->setCellValue('A' . $row, $index)
+                ->setCellValue('B' . $row, Carbon::parse($item->dateget)->format('d/m/Y h:m:i'))
+                ->setCellValue('C' . $row, $item->price_in)
+                ->setCellValue('D' . $row, $item->priceIn)
+                ->setCellValue('E' . $row, $item->depositID);
                 // ->setCellValue('G' . $row, $item->price)
                 // ->setCellValue('H' . $row, '=F' . $row . '*G' . $row); //them dong text vao cot H, su dung ham tinh toan mac dinh trong excel de tinh gia tri
 
