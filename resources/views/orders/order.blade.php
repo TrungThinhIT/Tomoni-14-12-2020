@@ -142,7 +142,6 @@
                                         </div>
                                     </fieldset>
                                 </form>
-                                {{dd($data)}}
                                 <form action="{{route('orders.bills.exportBillById', $data['bill']->first()->So_Hoadon)}}" method="get" id="exportExcel">
                                     <fieldset >
                                         <div class="form-row" style=" margin-top: 1%;">
