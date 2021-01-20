@@ -184,9 +184,8 @@ class InventoryService
             'height' => $request->height
         ]);
         if ($product) {
-            return 1;
-        } else {
-            return 2;
+            $product = ProductStandard::where('jan_code', $jancode)->first();
+            return response()->json($product);
         }
     }
 

@@ -60,11 +60,22 @@
                     height: height
                 },
                 success: function (response) {
-                    if(response == 1){
-                        alert('Cập nhập thành công!');
-                        location.reload();
+                    console.log(response);
+                    if(response == 2){
+                        alert('Có lỗi xẩy ra vui lòng thử lại!')
                     }else{
-                        alert('Cập nhập có lỗi, vui lòng xem lại!');
+                        var newWeight = response.weight;
+                        var quantity = $("#totalQuantity_" + jancode).text();
+                        var totalNewWeight = newWeight * quantity;
+                        var totalNewWeightKhoi = ((response.width * response.height * response.length) / 1000000) * quantity;
+                        $("#weight_"+jancode).html(new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3}).format(totalNewWeight) + ' kg');
+                        $("#weightKhoi_"+jancode).html(new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3}).format(totalNewWeightKhoi) + ' khối');
+                        if(totalNewWeight > 0 && totalNewWeightKhoi > 0){
+                            $('#' + jancode).removeClass('table-danger').addClass('');
+                        }else{
+                            $('#' + jancode).removeClass('').addClass('table-danger');
+                        }
+                        toastr.success('Cập nhập thông tin thành công.', 'Notifycation', {timeOut: 1000})
                     }
                 }
             })
