@@ -35,6 +35,7 @@
                                             style="margin-left: 2%;">Reset</button>
                                         <script>
                                             function resetFormSearch() {
+                                                debugger;
                                                 document.getElementById("jan_code").value = "";
                                                 document.getElementById("status").value = "";
                                             }
