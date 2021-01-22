@@ -255,7 +255,7 @@ class InvoiceService
                 'action' => 'update',
                 'uname' => Auth::user()->uname
             ]);
-            return [1, $totalPriceCurrentInvoice];
+            return [1, $totalPriceCurrentInvoice, $totalPriceInvoiceDetails];
         }else{
             return 2;
         }

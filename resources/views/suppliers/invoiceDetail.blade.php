@@ -433,6 +433,7 @@
             success: function (response) {
                 if (response[0] == 1) {
                     priceInvoice = response[1];
+                    priceDetail = response[2];
                     if(priceInvoice > priceDetail){
         document.getElementById("btnAddMore").disabled = false;
     }else{
