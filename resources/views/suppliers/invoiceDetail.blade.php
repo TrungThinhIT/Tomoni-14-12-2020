@@ -180,7 +180,7 @@
                                         </select>
                                     </div>
                                 </td>
-                                <td><a href="{{route('supplier.invoice.deleteInvoiceDetail', $value->Id)}}" type="button" onclick="return confirm('are you sure?')" class="btn btn-danger">Xoá</a></td>
+                                <td><a href="javascript:" type="button"  id="delete" class="btn btn-danger">Xóa</a></td>
                             </tr>
                             @endforeach
 
@@ -275,7 +275,7 @@
 
     document.getElementById('totalPriceAll').value = priceInvoice;
     document.getElementById('totalPriceDetail').value = priceDetail;
-
+    
     function AddMore(){
         var errors = ['Jancode', 'Quantity', 'Price', 'Tax'];
     errors.forEach(function(item, index){
@@ -458,7 +458,31 @@
                 }
         });
     }
-
+    $(document).ready(function() {
+		$('#delete').click(function() {
+            var id = $(this).parent().parent().attr('id');
+            var id_remove = $(this).parent().parent();
+            $.ajax({
+                headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'GET',
+                url: "delete-detail/" +id ,
+                // data: {
+                //     id : id,
+                // },
+                success: function(data){
+                    console.log(data)
+                    if(data.result == "oke"){
+                        id_remove.remove();
+                    }
+                },
+                error:function(data){
+                    console.log(data)
+                }
+            })            		
+		});
+	});
     function updateDetail(item) {
         var idRaw = item.id;
         var id = idRaw.slice(6);
@@ -589,6 +613,6 @@
             });
         }
     }
-
+    
 </script>
 @endsection

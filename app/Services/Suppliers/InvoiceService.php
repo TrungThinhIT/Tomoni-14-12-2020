@@ -151,11 +151,13 @@ class InvoiceService
             'uname' => Auth::user()->uname
         ]);
         
-        InvoiceDetailSupplier::where('Id', $Id)->delete();
-
-        toastr()->success('Delete success fully!', 'Notifycation');
-        return back();
+        if(InvoiceDetailSupplier::where('Id', $Id)->delete()){
+            $data= ['result'=>'oke'];
+            return response()->json($data);
     }
+        }
+
+        // toastr()->success('Delete success fully!', 'Notifycation');
 
     public function searchCodeOrder(Request $request){
         $codeOrders = DB::table('oder')->where('codeorder', 'like', '%'. $request->search_ordercode ."%")->orderBy('codeorder', 'DESC')->limit(10)->orderBy('dateget', 'ASC')->get();
