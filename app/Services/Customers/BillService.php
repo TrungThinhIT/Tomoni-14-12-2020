@@ -184,9 +184,7 @@ class BillService
             $value->setAttribute('priceIn', $priceIn += $value->price_in);
         }
 
-        $hien_mau = $hien_mau->sortByDesc('dateget')->groupBy('dateget');
-
-        $hien_mau = $hien_mau->paginate(10);
+        $hien_mau = $hien_mau->sortByDesc('dateget');
         $customer = $customer->sortByDesc('dateget');
         // return ['bill' => $bill, 'customer' => $customer, 'hien_mau' => $hien_mau];
         if (count($customer) >= 1) {
@@ -199,6 +197,7 @@ class BillService
             return $this->orderExportExcel->ExportOrder($bill, $hien_mau);
         } else {
             $hien_mau = $hien_mau->groupBy('dateget')->paginate(10);
+
             return [
                 'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
                 'moneyNeedToPay' => $moneyNeedToPay, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi,
