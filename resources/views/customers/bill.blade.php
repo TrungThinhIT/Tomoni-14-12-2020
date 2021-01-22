@@ -61,12 +61,9 @@
                                     </form>
 
                                 </fieldset>
-                               
+                                <div style="float: left" class="mt-3"><p style="font-weight: bold"> Tổng công nợ:  {{number_format($data['sumDebt'], 0)}}&ensp;&ensp;</p></div>
                                 <div style="float: right" class="mt-3">
                                     {!! $data['bills']->withQueryString()->links('commons.paginate') !!}
-                                </div>
-                                <div style="float:left;font-weight: bold">
-                                    Tổng:{{number_format($data['sumDebt'])}}
                                 </div>
                                 <table class="table table-bordered table-striped" style="margin-top: 1%;">
                                     <thead>
@@ -77,7 +74,6 @@
                                             <th>Price Out</th>
                                             <th>Total</th>
                                             <th>PriceBelb</th>
-                                            <th>Total PriceDebt</th>
                                             <th>Date Create</th>
                                         </tr>
                                     </thead>
@@ -94,8 +90,7 @@
                                                 {{number_format($item->totalPriceOut, 0)}}
                                             </td>
                                             <td>{{$item->total}}</td>
-                                            <td>{{number_format($item->PriceIn - $item->totalPriceOut, 0)}}</td>                                            
-                                            <td>{{number_format($item->totalPriceDebt, 0)}}</td>
+                                            <td>{{number_format($item->PriceIn - $item->totalPriceOut, 0)}}</td>   
                                             <td>{{Carbon\Carbon::parse($item->Date_Create)->format('d/m/Y')}}</td>
                                         </tr>
                                         @php $count ++; @endphp
