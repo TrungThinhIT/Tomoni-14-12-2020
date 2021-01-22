@@ -110,18 +110,17 @@
                     </div>
 
                     <div class="row">
-                    <div class="col-md-2 mb-2">
-                        <label for="validationDefault01">Tổng tiền hoá đơn</label>
-                        <input type="text" class="form-control" id="totalPriceAll"  disabled readonly>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <label for="validationDefault01">Tổng tiền chi tiết</label>
-                        <input type="text" class="form-control" id="totalPriceDetail" disabled readonly>
-                    </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="validationDefault01">Tổng tiền hoá đơn</label>
+                            <input type="text" class="form-control" id="totalPriceAll" disabled readonly>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="validationDefault01">Tổng tiền chi tiết</label>
+                            <input type="text" class="form-control" id="totalPriceDetail" disabled readonly>
+                        </div>
                     </div>
 
-                    <table id="TableDetaillBill" class="table table-bordered table-striped"
-                        style="margin-top: 1%;">
+                    <table id="TableDetaillBill" class="table table-bordered table-striped" style="margin-top: 1%;">
                         <thead>
                             <tr>
                                 <th>Web order</th>
@@ -147,8 +146,9 @@
                                 <td>
                                     <div>
                                         <input type="text" class="form-control" value="{{$value->Jancode}}"
-                                        name="janco_{{$value->Id}}"  id="janco_{{$value->Id}}" onchange="updateDetail(this);"
-                                            placeholder="Jan code" list='ujan_wh' onkeyup='search_jancode(this)'>
+                                            name="janco_{{$value->Id}}" id="janco_{{$value->Id}}"
+                                            onchange="updateDetail(this);" placeholder="Jan code" list='ujan_wh'
+                                            onkeyup='search_jancode(this)'>
                                         <datalist id='ujan_wh'></datalist>
                                     </div>
                                 </td>
@@ -180,15 +180,16 @@
                                         </select>
                                     </div>
                                 </td>
-                                <td><a href="javascript:" type="button"  id="delete" class="btn btn-danger">Xóa</a></td>
+                                <td><button data-id="{{$value->Id}}" type="button" class="btn btn-danger" id="delete2" onclick="modalConfirmDelete(this)">Xóa</button></td>
                             </tr>
                             @endforeach
 
                         </tbody>
                     </table>
-                    
+
                     <div class="col-md-2 mb-2">
-                        <button class="btn btn-primary" id="btnAddMore" type="button" data-toggle="modal" data-target="#modalAddMore">Add More</button>
+                        <button class="btn btn-primary" id="btnAddMore" type="button" data-toggle="modal"
+                            data-target="#modalAddMore">Add More</button>
                     </div>
                 </div>
             </div>
@@ -196,80 +197,101 @@
     </div>
 </div>
 <div class="modal" id="modalAddMore">
-    <div class="modal-dialog modal-lg" style="min-width: 80%;" >
-      <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title">Thêm Chi tiết hoá đơn </h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        
-        <table id="TableDetaillBillUpdate" class="table table-bordered table-striped" style="margin-top: 1%;">
-            <thead>
-                <tr>
-                    <th>Web order</th>
-                    <th>JanCode</th>
-                    <th>Số lượng</th>
-                    <th>Đơn giá</th>
-                    <th>%Thuế</th>     
-                    <th>Function</th>   
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div>
-                            <input type="text" class="form-control" name="Codeorder" id="acodeorder"
-                                placeholder="Codeorder" list='listcodeorder'
-                                onkeyup='search_ordercode(this)'> <datalist id='listcodeorder'></datalist>
-                        </div>
-                    </td>
-                    <td>
-                        <div>
-                            <input type="text" class="form-control" name="Jancode" id="ajancode"
-                                placeholder="Jancode" list='ujan_wh'
-                                onkeyup='search_jancode(this)'> <datalist id='ujan_wh'></datalist>
-                        </div>
-                    </td>
-                    <td>
-                        <div>
-                            <input type="text" class="form-control" name="Quantity" id="aquantity"
-                                placeholder="Số lượng">
-                        </div>
-                    </td>
-                    </td>
-                    <td>
-                        <div>
-                            <input type="text" class="form-control" name="Price" id="aprice"
-                                placeholder="Đơn giá">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <select type="text" class="form-control" name="Tax" id="atax"
-                                placeholder="First name">
-                                <option value="10">10%</option>
-                                <option value="8">8%</option>
-                                <option value="5">5%</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td><button type="button" class="btn btn-primary" onclick="AddMore()">Add More</button></td>
-                </tr>
-        
-            </tbody>
-        </table>
-        
-        <!-- Modal footer -->
-        <div class="modal-footer">
-            <div style="float: right;">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <div class="modal-dialog modal-lg" style="min-width: 80%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thêm Chi tiết hoá đơn </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-        </div>
 
-      </div>
+            <table id="TableDetaillBillUpdate" class="table table-bordered table-striped" style="margin-top: 1%;">
+                <thead>
+                    <tr>
+                        <th>Web order</th>
+                        <th>JanCode</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>%Thuế</th>
+                        <th>Function</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div>
+                                <input type="text" class="form-control" name="Codeorder" id="acodeorder"
+                                    placeholder="Codeorder" list='listcodeorder' onkeyup='search_ordercode(this)'>
+                                <datalist id='listcodeorder'></datalist>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <input type="text" class="form-control" name="Jancode" id="ajancode"
+                                    placeholder="Jancode" list='ujan_wh' onkeyup='search_jancode(this)'> <datalist
+                                    id='ujan_wh'></datalist>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <input type="text" class="form-control" name="Quantity" id="aquantity"
+                                    placeholder="Số lượng">
+                            </div>
+                        </td>
+                        </td>
+                        <td>
+                            <div>
+                                <input type="text" class="form-control" name="Price" id="aprice" placeholder="Đơn giá">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <select type="text" class="form-control" name="Tax" id="atax" placeholder="First name">
+                                    <option value="10">10%</option>
+                                    <option value="8">8%</option>
+                                    <option value="5">5%</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td><button type="button" class="btn btn-primary" onclick="AddMore()">Add More</button></td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <div style="float: right;">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
     </div>
-  </div>
+</div>
 <script>
+
+function modalConfirmDelete(event){
+    const Id = $(event).data('id');
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+            ).then(
+                alert(Id)
+            );
+        }
+        })
+}
     var priceInvoice  = {{$data['priceInvoice']}};
     var priceDetail = {{$data['priceDetail']}};
 
@@ -305,12 +327,9 @@
                 },
                 success: function (response) {
                     console.log(response);
-                    var Id = response.Id;
-                    if(response.Codeorder == null){
-                        var Codeorder = '';
-                    }else{                        
-                        var Codeorder = response.Codeorder;
-                    }
+                    var Id = response.invoiceAdd.Id;               
+                    var Codeorder = '';
+                    response.invoiceAdd.Codeorder != null ? Codeorder = response.invoiceAdd.Codeorder:'';
                     var Jancode = response.invoiceAdd.Jancode;
                     var Quantity = response.invoiceAdd.Quantity;
                     var Price = response.invoiceAdd.Price;
@@ -369,7 +388,7 @@
                                         "</select>" +
                                     "</div>" +
                                 "</td>" +
-                                "<td><a href='suppliers/invoice/delete-detail/"+Id+"' type='button' onclick='return confirm('are you sure?')' class='btn btn-danger'>Xoá</a></td>" +
+                                "<td><button data-id='"+ Id +"' type='button' class='btn btn-danger' onclick='modalConfirmDelete(this)'>Xoá</button></td>" +
                             "</tr>");
                     toastr.success('Thêm mới thành công.', 'Notifycation', {
                         timeOut: 500
@@ -458,31 +477,6 @@
                 }
         });
     }
-    $(document).ready(function() {
-		$('#delete').click(function() {
-            var id = $(this).parent().parent().attr('id');
-            var id_remove = $(this).parent().parent();
-            $.ajax({
-                headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                type: 'GET',
-                url: "delete-detail/" +id ,
-                // data: {
-                //     id : id,
-                // },
-                success: function(data){
-                    console.log(data)
-                    if(data.result == "oke"){
-                        id_remove.remove();
-                    }
-                },
-                error:function(data){
-                    console.log(data)
-                }
-            })            		
-		});
-	});
     function updateDetail(item) {
         var idRaw = item.id;
         var id = idRaw.slice(6);
