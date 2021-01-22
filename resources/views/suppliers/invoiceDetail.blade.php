@@ -269,29 +269,6 @@
     </div>
 </div>
 <script>
-
-function modalConfirmDelete(event){
-    const Id = $(event).data('id');
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-            ).then(
-                alert(Id)
-            );
-        }
-        })
-}
     var priceInvoice  = {{$data['priceInvoice']}};
     var priceDetail = {{$data['priceDetail']}};
 
@@ -557,6 +534,52 @@ function modalConfirmDelete(event){
             "'> <option value='10'>10%</option> <option value='8'>8%</option> <option value='5'>5%</option></select> </div> </td>";
         BillDetailCount = BillDetailCount - 1;
     };
+
+       
+
+function modalConfirmDelete(event){
+    const Id = $(event).data('id');
+    Swal.fire({
+        title: 'Bạn có chắc không?',
+        text: "Thao tác này không thể hoàn lại!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Có, đồng ý xoá!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire(
+                'Thông báo!',
+                'Xoá thành công.',
+                'success'
+            ).then(
+                $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'DELETE',
+            url: "/suppliers/invoice/delete-detail/" + Id,
+            success: function (response) {
+                if (response[0] == 5) {
+                    const quantity = response[1].Quantity;
+                    const price = response[1].Price;
+                    const totalPrice = quantity * price;
+                    priceDetail = response[2];
+                    document.getElementById('totalPriceDetail').value = response[2];
+                    if(priceInvoice > priceDetail){
+                        document.getElementById("btnAddMore").disabled = false;
+                    }else{
+                        document.getElementById("btnAddMore").disabled = true;
+                    }
+                    $("#"+ Id).remove();
+                }
+            }
+        })
+            );
+        }
+        })
+}
 
     function search_ordercode(obj) {
         var text = $(obj).val();
