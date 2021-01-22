@@ -177,16 +177,14 @@ class InventoryService
 
     public function doUpdateProduct(Request $request, $jancode)
     {
-        $product = ProductStandard::where('jan_code', $jancode)->update([
+        ProductStandard::where('jan_code', $jancode)->update([
             'weight' => $request->weight,
             'length' => $request->length,
             'width' => $request->width,
             'height' => $request->height
         ]);
-        if ($product) {
-            $product = ProductStandard::where('jan_code', $jancode)->first();
-            return response()->json($product);
-        }
+        $product = ProductStandard::where('jan_code', $jancode)->first();
+        return response()->json($product);
     }
 
     public function loadNoteWarehouse($jancode)

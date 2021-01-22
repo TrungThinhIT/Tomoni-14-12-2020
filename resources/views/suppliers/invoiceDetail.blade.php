@@ -120,7 +120,7 @@
                     </div>
                     </div>
 
-                    <table id="TableDetaillBillUpdate" class="table table-bordered table-striped"
+                    <table id="TableDetaillBill" class="table table-bordered table-striped"
                         style="margin-top: 1%;">
                         <thead>
                             <tr>
@@ -132,7 +132,7 @@
                                 <th>Function</th>
                             </tr>
                         </thead>
-                        <tbody id="myTable">
+                        <tbody>
 
                             @foreach ($data['object']->detail as $item => $value)
                             <tr id="{{$value->Id}}">
@@ -171,11 +171,11 @@
                                     <div class="form-group">
                                         <select type="text" class="form-control" id="taxco_{{$value->Id}}"
                                             onchange="updateDetail(this);" placeholder="Tax">
-                                            <option value="10" {{$value->TaxPurchaseCosts == 10 ? 'selected':''}}>10%
+                                            <option value="10" {{$value->PriceTax == 10 ? 'selected':''}}>10%
                                             </option>
-                                            <option value="8" {{$value->TaxPurchaseCosts == 8 ? 'selected':''}}>8%
+                                            <option value="8" {{$value->PriceTax == 8 ? 'selected':''}}>8%
                                             </option>
-                                            <option value="5" {{$value->TaxPurchaseCosts == 5 ? 'selected':''}}>5%
+                                            <option value="5" {{$value->PriceTax == 5 ? 'selected':''}}>5%
                                             </option>
                                         </select>
                                     </div>
@@ -214,33 +214,33 @@
                     <th>Function</th>   
                 </tr>
             </thead>
-            <tbody id="myTable">
+            <tbody>
                 <tr>
                     <td>
                         <div>
                             <input type="text" class="form-control" name="Codeorder" id="acodeorder"
-                                placeholder="First name" list='listcodeorder'
+                                placeholder="Codeorder" list='listcodeorder'
                                 onkeyup='search_ordercode(this)'> <datalist id='listcodeorder'></datalist>
                         </div>
                     </td>
                     <td>
                         <div>
                             <input type="text" class="form-control" name="Jancode" id="ajancode"
-                                placeholder="First name" list='ujan_wh'
+                                placeholder="Jancode" list='ujan_wh'
                                 onkeyup='search_jancode(this)'> <datalist id='ujan_wh'></datalist>
                         </div>
                     </td>
                     <td>
                         <div>
                             <input type="text" class="form-control" name="Quantity" id="aquantity"
-                                placeholder="First name">
+                                placeholder="Số lượng">
                         </div>
                     </td>
                     </td>
                     <td>
                         <div>
                             <input type="text" class="form-control" name="Price" id="aprice"
-                                placeholder="First name">
+                                placeholder="Đơn giá">
                         </div>
                     </td>
                     <td>
@@ -304,8 +304,84 @@
                     PriceTax: tax
                 },
                 success: function (response) {
-                    alert('Thêm mới thành công!');
-                    location.reload();
+                    console.log(response);
+                    var Id = response.Id;
+                    if(response.Codeorder == null){
+                        var Codeorder = '';
+                    }else{                        
+                        var Codeorder = response.Codeorder;
+                    }
+                    var Jancode = response.invoiceAdd.Jancode;
+                    var Quantity = response.invoiceAdd.Quantity;
+                    var Price = response.invoiceAdd.Price;
+                    const totalPrice = Quantity * Price;
+                    const PriceTax = response.invoiceAdd.PriceTax;
+                    if(response.totalPriceInvoice > response.totalPriceInvoiceDetail){
+                        document.getElementById("btnAddMore").disabled = false;
+                    }else{
+                        document.getElementById("btnAddMore").disabled = true;
+                    }
+                    document.getElementById('totalPriceAll').value = response.totalPriceInvoice;
+                    document.getElementById('totalPriceDetail').value = response.totalPriceInvoiceDetail;
+                    $('#TableDetaillBill tbody').append("<tr id='" +Id + "'>" +
+                                "<td>" +
+                                    "<div>" +
+                                        "<input type='text' class='form-control' value='"+ Codeorder +"'" +
+                                            "id='order_" + Id + "' onchange='updateDetail(this);'" +
+                                            "placeholder='Code order' list='listcodeorder'" +
+                                            "onkeyup='search_ordercode(this)'>" + 
+                                            "<datalist id='listcodeorder'></datalist>" +
+                                    "</div>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<div>" +
+                                        "<input type='text' class='form-control' value='"+ Jancode +"'" +
+                                        "name='janco_'  id='janco_" + Id + "' onchange='updateDetail(this);'" +
+                                            "placeholder='Jan code' list='ujan_wh' onkeyup='search_jancode(this)'>" +
+                                        "<datalist id='ujan_wh'></datalist>" +
+                                    "</div>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<div>" +
+                                        "<input type='text' class='form-control' value='" +Quantity+ "'" +
+                                            "id='quant_" + Id + "' placeholder='Quantity'" +
+                                            "onchange='updateDetail(this);'>" +
+                                    "</div>" +
+                                "</td>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<div>" +
+                                        "<input type='text' class='form-control' value='"+ Price +"'" +
+                                            "id='price_" + Id + "' placeholder='Price'" +
+                                            "onchange='updateDetail(this);'>" +
+                                    "</div>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<div class='form-group'>" +
+                                        "<select type='text' class='form-control' id='taxco_" + Id + "'" +
+                                            "onchange='updateDetail(this);' placeholder='Tax'>" +
+                                            '<option value="10"' + (PriceTax == 10 ? 'selected': '') +
+                                            '>10%</option>' +
+                                            '<option value="8"' + (PriceTax == 8 ? 'selected': '') +
+                                            '>8%</option>' +
+                                            '<option value="5"' + (PriceTax == 5 ? 'selected': '') +
+                                            '>5%</option>' +
+                                        "</select>" +
+                                    "</div>" +
+                                "</td>" +
+                                "<td><a href='suppliers/invoice/delete-detail/"+Id+"' type='button' onclick='return confirm('are you sure?')' class='btn btn-danger'>Xoá</a></td>" +
+                            "</tr>");
+                    toastr.success('Thêm mới thành công.', 'Notifycation', {
+                        timeOut: 500
+                    });
+                    setTimeout(function(){
+                        $('#modalAddMore').modal('hide');
+                    document.getElementById('acodeorder').value = '';
+                    document.getElementById('ajancode').value = '';
+                    document.getElementById('aquantity').value = '';
+                    document.getElementById('aprice').value = '';
+                    document.getElementById('atax').value = '10';
+                    },800); 
                 },
                 error:function (response){
                     console.log(response)

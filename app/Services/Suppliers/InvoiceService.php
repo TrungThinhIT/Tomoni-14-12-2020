@@ -286,7 +286,7 @@ class InvoiceService
 
     public function createMoreInvoiceDetail(AddInvoiceDetailRequest $request, $Invoice)
     {
-        $invoiceDetail = InvoiceDetailSupplier::create([
+        InvoiceDetailSupplier::create([
            'Codeorder' => $request->Codeorder,
            'jancode' => $request->Jancode,
            'Quantity' => $request->Quantity,
@@ -301,6 +301,24 @@ class InvoiceService
             'Invoice' => $request->Invoice,
             'Jancode' => $request->Jancode,
             'Codeorder' => $request->Codeorder
+        ]);
+
+        $invoiceDetail = InvoiceDetailSupplier::where('Invoice', $Invoice)->where('Jancode', $request->Jancode)->first();
+
+        $Invoice = InvoiceSupplier::where('Invoice', $Invoice)->first();
+
+        $totalPriceInvoice = $Invoice->TotalPrice + $Invoice->PurchaseCosts;
+
+        $invoiceDetails =  InvoiceDetailSupplier::where('Invoice', $request->Invoice)->get();
+
+        $totalPriceInvoiceDetail = 0;
+        foreach($invoiceDetails as $value){
+            $totalPriceInvoiceDetail += $value->Price * $value->Quantity;
+        }
+        return response()->json([
+            'invoiceAdd' => $invoiceDetail,
+            'totalPriceInvoice' => $totalPriceInvoice,
+            'totalPriceInvoiceDetail' => $totalPriceInvoiceDetail
         ]);
     }
 }
