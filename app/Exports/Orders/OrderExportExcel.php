@@ -4,9 +4,10 @@ namespace App\Exports\Orders;
 
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
+use Illuminate\Support\Facades\File; 
 class OrderExportExcel
 {
+
     public function ExportOrder($bills, $hien_mau){
         $fileType = IOFactory::identify(public_path('excels/template/order.xlsx'));
         $objReader = IOFactory::createReader($fileType);
@@ -24,7 +25,9 @@ class OrderExportExcel
             mkdir(public_path('excels/exports'));
         }
 
-        $path = 'excels/exports/' . time() . 'export.xlsx';
+        $nameFileExcel = $bills->first()->So_Hoadon . '-export.xlsx';
+
+        $path = 'excels/exports/' . $nameFileExcel;
         $objWriter->save(public_path($path));
         return redirect($path);
     }
