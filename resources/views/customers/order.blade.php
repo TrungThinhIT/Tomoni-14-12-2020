@@ -8,12 +8,12 @@
                 <div class="card-header bg-info-gradient text-white bubble-shadow">
                     <h4>Đơn hàng đang xữ lý</h4>
                 </div>
-
                     <div class="row" style="width: 100%">
 
                         <div class="card" style=" margin-left:1%; width:100%; ">
 
                             @foreach ($data['bill'] as $item)
+                            {{-- {{dd($item)}} --}}
                             <ul class="list-group list-group-flush">
                                 <div class="card " style="width:100%">
                                     <div class="row d-flex justify-content-between px-3 top"
@@ -39,6 +39,14 @@
                                                     <p class="mb-0"><strong>Số lượng:</strong>
                                                         {{$item['Product']->quantity}}</p>
                                                         <p class="mb-0"><strong>Số thùng: </strong>{{$item['Product']->quantity / $item['Product']->item_in_box}}</p>
+                                                        <p class="mb-0"><strong>Khối lượng thực tế: </strong>{{number_format($item->product->ProductStandard->weight * $item['Product']->quantity, 2)}} kg</p>
+                                                        <p class="mb-0"><strong>Khối lượng thể tích: </strong>
+                                                            {{number_format($item->totalWeightkhoi * $item['Product']->quantity, 2)}} khối
+                                                        </p>
+                                                        <p class="mb-0"><strong>Ngày đặt hàng: </strong>{{Carbon\Carbon::parse($item['Order']->dateget)->format('d/m/Y')}}</p>
+                                                        <p class="mb-0"><strong>Ngày thanh toán: </strong>@if ($item['Order']->date_payment)
+                                                            {{Carbon\Carbon::parse($item['Order']->date_payment)->format('d/m/Y')}}
+                                                        @endif</p>
                                                 </div>
                                             </h5>
                                         </div>
@@ -79,6 +87,7 @@
                                             </p>
                                             <p class="mb-0"><strong>Jancode:</strong> {{$item['Product']->jan_code}}</p>
                                             <p><strong>Name:</strong> {{$item['Product']->ProductStandard['name']}}</p>
+                                           
                                         </div>
                                     </div>
                                 </div>
@@ -89,10 +98,63 @@
                         </div>
 
                     </div>
+                    {{-- {{dd($data['bill'])}} --}}
+                    <form action="{{route('customer.bill.idBillcode',$data['bill']->first()->So_Hoadon)}}" method="get">
+                        <fieldset>
+                            <div class="form-row" style=" margin-top: 1%;">
+                                
+                                <div class="col-md-2 mb-2">
+                                    <label for="validationDefault01">Ngày kết thúc</label>
+                                    <input name="endDate" class="form-control" value="{{$data['endDate']}}" type="date" id="endDate">
+                                </div>
+                                <div style="margin-top: 1.7%">
+                                <button type="submit" class="btn btn-primary ml-2" style="margin-left: 2%;">Search</button>
+                                </div>
+                                <div style="margin-top: 1.7%">
+                                    <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2" style="margin-left: 2%;">Reset</button>
+                                    <button type="button" onclick="exportExcel()" class="btn btn-success ml-2" style="margin-left: 2%;">Export</button>
+                                    <script>
+                                        function exportExcel(){
+                                            document.getElementById('exportExcel').submit();
+                                        }
+                                    </script>
+                                    <script>
+                                        function resetFormSearch() {
+                                            document.getElementById("endDate").value = "";
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    <form action="{{route('customer.bill.exportExcelCustomer', $data['bill']->first()->So_Hoadon)}}" method="get" id="exportExcel">
+                        <fieldset >
+                            <div class="form-row" style=" margin-top: 1%;">
+                                <div class="col-md-2 mb-2">
+                                    <input type="text" name="check" value="true" hidden>
+                                    <input name="endDate" class="form-control" value="{{$data['endDate']}}"
+                                        type="date" id="endDate" hidden>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    
                 <div class="card" style="width:100%">
-                    <div class="mt-3">
-                        {!! $data['hien_mau']->withQueryString()->links('commons.paginate') !!}</div>
-                        Công nợ: {{number_format($data['customer']->first()->deDebt, 0)}}
+                    <div style="float:left">
+                        <div>
+                            {{-- {{dd($data['priceDebt'])}} --}}
+                            Công nợ: {{number_format($data['priceDebt'], 0)}}
+                        </div>
+                        <div style="float: left" class="mt-3"><p style="font-weight: bold"> Số dư:  {{number_format($data['priceDebt'], 0)}}&ensp;&ensp;</p></div>
+                        <div style="float: left" class="mt-3"><p style="font-weight: bold"> Số tiền cần thanh toán:  {{number_format($data['moneyNeedToPay'], 0)}}&ensp;&ensp;</p></div>
+                        <div style="float: left" class="mt-3"><p style="font-weight: bold"> Tổng khối lượng thực tế:  {{number_format($data['totalWeightReal'], 2)}} kg&ensp;&ensp;</p></div>
+                        <div style="float: left" class="mt-3"><p style="font-weight: bold"> Tổng khối lượng:  {{number_format($data['totalWeightKhoi'], 2)}} khối</p></div>
+                        <div class="mt-3" style="float:right">
+                            {!! $data['hien_mau']->withQueryString()->links('commons.paginate') !!}
+                        </div>
+                    </div>
+                    
+                    
                     <table class="table table-bordered table-striped" style="margin-top: 1%;">
                         <thead>
                             <tr>
@@ -183,6 +245,7 @@
                                         }
                                     });
                                 });
+                                
                             });
 </script>
 @endsection

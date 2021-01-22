@@ -25,9 +25,9 @@ class BillController extends Controller
         return view('orders.bill', compact('data'));
     }
 
-    public function exportExcel(Request $request){
-        return $this->billService->BillExportExcel($request);
-    }
+    // public function exportExcel(Request $request){
+    //     return $this->billService->BillExportExcel($request);
+    // }
 
     public function indexAllByUname(Request $request, $uname){
         $data =  $this->billService->getALlBillByUname($request, $uname);

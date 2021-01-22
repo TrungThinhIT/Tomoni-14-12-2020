@@ -104,7 +104,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::get('/delete/{Id}', [BillController::class, 'deleteBillCode'])->name('deleteBillCode');
             Route::get('/by-uname/{uname}', [BillController::class, 'indexAllByUname'])->name('indexAllByUname');
             Route::get('/log/{codeorder}', [BillController::class, 'loadLog'])->name('loadLog');
-            Route::get('/{billcode}', [BillController::class, 'getBillById'])->name('getBillById');            
+            Route::get('/{billcode}', [BillController::class, 'getBillById'])->name('getBillById');
             Route::get('/export/{billcode}', [BillController::class, 'exportBillById'])->name('exportBillById');
             Route::get('/tranfer/{codeorder}', [BillController::class, 'getTranfer'])->name('getTranfer');
             Route::put('/tranfer/{codeorder}', [BillController::class, 'putTranfer'])->name('putTranfer');
@@ -188,11 +188,13 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::prefix('bill')->name('bill.')->group(function () {
             Route::get('/', [BillCustomerController::class, 'index'])->name('index');
             Route::get('/export', [BillCustomerController::class, 'export'])->name('export');
+            Route::get('export/{id_bill}', [BillCustomerController::class, 'exportExcel'])->name('exportExcelCustomer');
             Route::get('/{billcode}', [BillCustomerController::class, 'order'])->name('order');
             Route::get('/payment/{billcode}', [BillCustomerController::class, 'getPaymentDetail'])->name('getPaymentDetail');
             Route::get('/detail/{codeorder}', [BillCustomerController::class, 'orderDetail'])->name('orderDetail');
             Route::get('/detail/load-log/{codeorder}', [BillCustomerController::class, 'loadLog'])->name('loadLog');
             Route::post('/detail/add-log/{codeorder}', [BillCustomerController::class, 'addLog'])->name('addLog');
+            Route::get('{id_billcode}',[BillCustomerController::class,'getIdBillcode'])->name('idBillcode');
         });
 
         Route::prefix('payment')->name('payment.')->group(function () {

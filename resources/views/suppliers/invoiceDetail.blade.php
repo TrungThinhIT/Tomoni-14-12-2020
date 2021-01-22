@@ -180,7 +180,7 @@
                                         </select>
                                     </div>
                                 </td>
-                                <td><button data-id="{{$value->Id}}" type="button" class="btn btn-danger" onclick="modalConfirmDelete(this)">Xoá</button></td>
+                                <td><button data-id="{{$value->Id}}" type="button" class="btn btn-danger" id="delete2" onclick="modalConfirmDelete(this)">Xóa</button></td>
                             </tr>
                             @endforeach
 
@@ -274,7 +274,7 @@
 
     document.getElementById('totalPriceAll').value = priceInvoice;
     document.getElementById('totalPriceDetail').value = priceDetail;
-
+    
     function AddMore(){
         var errors = ['Jancode', 'Quantity', 'Price', 'Tax'];
     errors.forEach(function(item, index){
@@ -455,7 +455,6 @@
                 }
         });
     }
-
     function updateDetail(item) {
         var idRaw = item.id;
         var id = idRaw.slice(6);
@@ -632,6 +631,6 @@ function modalConfirmDelete(event){
             });
         }
     }
-
+    
 </script>
 @endsection
