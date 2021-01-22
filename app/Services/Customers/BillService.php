@@ -53,7 +53,6 @@ class BillService
         if (!empty($Date_Create)) {
             $bills = $bills->whereDate('Date_Create', $Date_Create);
         }
-
         $bills = $bills->where('deleted_at', null)
             ->select()->selectRaw('count(Id) as total')
             ->selectRaw('sum(PriceOut) as totalPriceOut')
@@ -63,8 +62,13 @@ class BillService
             $priceDebt += ($value->PriceIn - $value->totalPriceOut);
             $value->setAttribute('totalPriceDebt', $priceDebt);            # code...
         }
+        $sumDebt = 0;
+        // dd($bills);
+        foreach ($bills as $value) {
+            $sumDebt += $value->PriceIn - $value->totalPriceOut;
+        }
         $bills = $bills->sortByDESC('Date_Create')->paginate(10);
-        return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $uname, 'Date_Create' => $Date_Create];
+        return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $uname, 'Date_Create' => $Date_Create,'sumDebt'=>$sumDebt];
     }
 
     public function ExportALlBillByUname(Request $request)
@@ -238,5 +242,4 @@ class BillService
             'note' => $request->note
         ]);
     }
-    
 }

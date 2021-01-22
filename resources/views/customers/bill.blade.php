@@ -61,8 +61,13 @@
                                     </form>
 
                                 </fieldset>
+                               
                                 <div style="float: right" class="mt-3">
-                                    {!! $data['bills']->withQueryString()->links('commons.paginate') !!}</div>
+                                    {!! $data['bills']->withQueryString()->links('commons.paginate') !!}
+                                </div>
+                                <div style="float:left;font-weight: bold">
+                                    Tổng:{{number_format($data['sumDebt'])}}
+                                </div>
                                 <table class="table table-bordered table-striped" style="margin-top: 1%;">
                                     <thead>
                                         <tr>
