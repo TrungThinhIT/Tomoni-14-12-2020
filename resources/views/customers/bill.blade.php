@@ -56,7 +56,7 @@
                                                 <input type="date" value="{{$data['Date_Create']}}" name="Date_Create" id="Date_Create" hidden>
                                             </div>
                                             <div>
-                                                <button type="button" class="btn btn- ml-2" style="margin-left: 2%;">Export</button>
+                                                <button type="button" class="btn btn-success ml-2" style="margin-left: 2%;">Export</button>
                                             </div>
                                     </form>
 
