@@ -20,8 +20,7 @@ class BillCustomerController extends Controller
         return view('customers.bill', compact('data'));
     }
     public function exportExcel(Request $request,$id){
-        return $this->billService->exportExcelById($request,$id);
-
+        return $this->billService->getBillById($request,$id);
     }
     public function export(Request $request){
         return $this->billService->ExportALlBillByUname($request);
@@ -48,9 +47,9 @@ class BillCustomerController extends Controller
     public function addLog(Request $request, $codeorder){
         return $this->billService->addLog($request, $codeorder);
     }
-    public function getIdBillcode(Request $request,$id_bill){
-        $data = $this->billService->exportExcelById($request,$id_bill);
-        dd($data);
-        return view('customers.order',compact('data'));
-    }
+    // public function getIdBillcode(Request $request,$id_bill){
+    //     $data = $this->billService->exportExcelById($request,$id_bill);
+    //     dd($data);
+    //     return view('customers.order',compact('data'));
+    // }
 }

@@ -105,7 +105,7 @@
                                 
                                 <div class="col-md-2 mb-2">
                                     <label for="validationDefault01">Ngày kết thúc</label>
-                                    <input name="endDate" class="form-control" value="2019-02-21" type="date" id="endDate">
+                                    <input name="endDate" class="form-control" value="{{$data['endDate']}}" type="date" id="endDate">
                                 </div>
                                 <div style="margin-top: 1.7%">
                                 <button type="submit" class="btn btn-primary ml-2" style="margin-left: 2%;">Search</button>
@@ -132,21 +132,13 @@
                             <div class="form-row" style=" margin-top: 1%;">
                                 <div class="col-md-2 mb-2">
                                     <input type="text" name="check" value="true" hidden>
-                                    <input name="endDate" class="form-control" value=""
+                                    <input name="endDate" class="form-control" value="{{$data['endDate']}}"
                                         type="date" id="endDate" hidden>
                                 </div>
                             </div>
                         </fieldset>
                     </form>
-                    {{-- <form action="">
-                        <fieldset>
-                            <div class="form-row" style="margin-top:1%">
-                                <div class="col-md-2 mb-2">
-                                    <input type="button" name="en">
-                                </div>
-                             </div>
-                        </fieldset>
-                    </form> --}}
+                    
                 <div class="card" style="width:100%">
                     <div style="float:left">
                         <div>

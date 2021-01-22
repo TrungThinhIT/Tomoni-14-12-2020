@@ -2,6 +2,7 @@
 
 namespace App\Services\Customers;
 
+use App\Exports\Orders\OrderExportExcel;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\Orders\CreateBillRequest;
 use App\Models\Bill;
@@ -16,6 +17,10 @@ use Illuminate\Support\Facades\DB;
 
 class BillService
 {
+    public function __construct(OrderExportExcel $exportExcel)
+    {
+        $this->orderExportExcel = $exportExcel;
+    }
     public function getALlBillByUname(Request $request)
     {
         $codeOrderByBill = Bill::select('Codeorder')->get()->toArray();
@@ -197,7 +202,7 @@ class BillService
             return [
                 'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
                 'moneyNeedToPay' => $moneyNeedToPay, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi,
-                'customer'=>$customer
+                'customer' => $customer
             ];
         }
     }
