@@ -14,6 +14,7 @@
                         <div class="card" style=" margin-left:1%; width:100%; ">
 
                             @foreach ($data['bill'] as $item)
+                            {{-- {{dd($item)}} --}}
                             <ul class="list-group list-group-flush">
                                 <div class="card " style="width:100%">
                                     <div class="row d-flex justify-content-between px-3 top"
@@ -39,6 +40,14 @@
                                                     <p class="mb-0"><strong>Số lượng:</strong>
                                                         {{$item['Product']->quantity}}</p>
                                                         <p class="mb-0"><strong>Số thùng: </strong>{{$item['Product']->quantity / $item['Product']->item_in_box}}</p>
+                                                        <p class="mb-0"><strong>Khối lượng thực tế: </strong>{{number_format($item->product->ProductStandard->weight * $item['Product']->quantity, 2)}} kg</p>
+                                                        <p class="mb-0"><strong>Khối lượng thể tích: </strong>
+                                                            {{number_format($item->totalWeightkhoi * $item['Product']->quantity, 2)}} khối
+                                                        </p>
+                                                        <p class="mb-0"><strong>Ngày đặt hàng: </strong>{{Carbon\Carbon::parse($item['Order']->dateget)->format('d/m/Y')}}</p>
+                                                        <p class="mb-0"><strong>Ngày thanh toán: </strong>@if ($item['Order']->date_payment)
+                                                            {{Carbon\Carbon::parse($item['Order']->date_payment)->format('d/m/Y')}}
+                                                        @endif</p>
                                                 </div>
                                             </h5>
                                         </div>
@@ -79,6 +88,7 @@
                                             </p>
                                             <p class="mb-0"><strong>Jancode:</strong> {{$item['Product']->jan_code}}</p>
                                             <p><strong>Name:</strong> {{$item['Product']->ProductStandard['name']}}</p>
+                                           
                                         </div>
                                     </div>
                                 </div>
@@ -183,6 +193,7 @@
                                         }
                                     });
                                 });
+                                
                             });
 </script>
 @endsection

@@ -151,11 +151,18 @@ class InvoiceService
             'uname' => Auth::user()->uname
         ]);
         
-        if(InvoiceDetailSupplier::where('Id', $Id)->delete()){
-            $data= ['result'=>'oke'];
-            return response()->json($data);
-    }
+        try {
+            InvoiceDetailSupplier::where('Id', $Id)->delete();
+            $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $invoiceDetails->Invoice)->get();
+            $totalPriceInvoiceDetails = 0;
+        foreach ($invoiceDetails as $value) {
+            $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
         }
+            return response()->json([5, $invoiceDetails, $totalPriceInvoiceDetails]);
+        } catch (\Throwable $th) {
+            return $th;
+        }
+    }
 
         // toastr()->success('Delete success fully!', 'Notifycation');
 

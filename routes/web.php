@@ -69,7 +69,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             // Route::get('/{Invoice}', [InvoiceController::class, 'show'])->name('showInvoice');
             Route::get('/{Id}', [InvoiceController::class, 'showById'])->name('showByIdInvoice');
             Route::get('/delete/{Invoice}', [InvoiceController::class, 'delete'])->name('deleteInvoice');
-            Route::get('/delete-detail/{Id}', [InvoiceController::class, 'deleteDetail'])->name('deleteInvoiceDetail');
+            Route::delete('/delete-detail/{Id}', [InvoiceController::class, 'deleteDetail'])->name('deleteInvoiceDetail');
             Route::post('/', [InvoiceController::class, 'create'])->name('postInvoice');
             Route::post('/invoice-detail', [InvoiceController::class, 'createDetail'])->name('postInvoiceDetail');
             Route::post('/invoice-more-detail/{Invoice}', [InvoiceController::class, 'createMoreDetail'])->name('postMoreInvoiceDetail');
