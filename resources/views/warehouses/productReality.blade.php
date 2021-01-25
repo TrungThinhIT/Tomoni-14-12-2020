@@ -31,7 +31,7 @@
                         </div>
                         @endif
                         @if (session('wrong'))
-                            <div class="alert alert-danger">{{session('wrong')}}</div>v
+                        <div class="alert alert-danger">{{session('wrong')}}</div>v
                         @endif
                         <form runat="server" action="{{route('warehouses.productReality.store')}}" method="POST"
                             enctype="multipart/form-data">
@@ -48,18 +48,10 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-2 mb-2">
-                                        <label for="validationDefault01">Uname</label>
-                                        <input id="Uname" class="form-control" value="{{old('Uname')}}" type="text"
-                                            name="Uname" placeholder="Nhập Uname">
-                                        @error('Uname')
-                                        <div style="color: red">{{$message}}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-2 mb-2">
                                         <label for="validationDefault01">Invoice</label>
                                         <input id="Invoice" data-type="currency" type="text" class="form-control"
                                             name="Invoice" placeholder="Nhập hoá đơn" value="{{old('Invoice')}}">
-                                        @error('Uname')
+                                        @error('Invoice')
                                         <div style="color: red">{{$message}}</div>
                                         @enderror
                                     </div>
@@ -80,14 +72,47 @@
                                         @enderror
                                     </div>
                                     <div class="col-md-2 mb-2">
-                                        <label for="validationDefault01">Address</label>
-                                        <input type="text" id="address" name="address" class="form-control"
-                                            value="{{old('address')}}">
-                                        @error('address')
+                                        <label for="validationDefault01">Uname</label>
+                                        <select class="form-control" name="selectUname" id="selectUname">
+                                            <option value="">-------Chọn-------</option>
+                                            @foreach ($unames as $item)
+                                            <option value="{{$item->id}}">{{$item->uname}}</option>
+                                            @endforeach
+                                        </select>
+                                        {{-- <input id="Uname" class="form-control" value="{{old('Uname')}}" type="text"
+                                        name="Uname" placeholder="Nhập Uname"> --}}
+                                        @error('selectUname')
                                         <div style="color: red">{{$message}}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-md-2 mb-2">
+                                        <label for="validationDefault01">Address</label>
+                                        <select class="form-control" name="selectedAddress" id="selectedAddress">
+
+                                        </select>
+                                        {{-- <input type="text" id="address" name="address" class="form-control" --}}
+                                        {{-- value="{{old('address')}}"> --}}
+                                        @error('selectedAddress')
+                                        <div style="color: red">{{$message}}</div>
+                                        @enderror
+                                    </div>
+                                    {{-- <div class="col-md-2 mb-2">
+                                        <label for="validationDefault01">Delivery Date</label>
+                                        <input type="date" id="DeliveryDate" name="DeliveryDate" class="form-control"
+                                            value="{{old('DeliveryDate')}}">
+                                        @error('DeliveryDate')
+                                        <div style="color: red">{{$message}}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <label for="validationDefault01">Delivery time</label>
+                                        <input id="DeliveryTime" type="time" min="1" name="DeliveryTime"
+                                            class="form-control" value="{{old('DeliveryTime')}}">
+                                        @error('DeliveryTime')
+                                        <div style="color: red">{{$message}}</div>
+                                        @enderror
+                                    </div> --}}
+                                    <div class="col-md-4 mb-2">
                                         <label for="validationDefault01">Image</label>
                                         <input id="Image" type="file" name="Image" class="form-control"
                                             placeholder="Choose image">
@@ -124,7 +149,7 @@
                                 <th>Delivery time</th>
                             </tr>
                         </thead>
-                        
+
                         <tbody id="myTable">
                             @foreach ($product_reality as $item)
                             {{-- {{dd($item)}} --}}
@@ -136,8 +161,9 @@
                                 <td>{{$item->container}}</td>
                                 <td>{{$item->quantity}}</td>
                                 <td>{{$item->address}}</td>
-                                <td><img src="" alt="" width="80px" height="80px" ></td>
-                                <td>{{now()}}</td>
+                                <td><img src="{{asset($item->imghoadongiaohang)}}" alt="" width="80px" height="80px">
+                                </td>
+                                <td>{{$item->delivery_time}}</td>
                             </tr>
                             @endforeach
 
@@ -178,39 +204,58 @@
             reader.readAsDataURL(this.files[0]);
 
         });
-        $('.view_transaction').click(function () {
-            const jan_code = $(this).data('code');
+        //lấy address 
+        $('#selectUname').change(function () {
+            var id = $(this).val();
+            $('#selectedAddress').find('option').remove().end();
             $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
-                        .attr('content')
-                },
                 type: 'GET',
-                url: "inventory" + '/' + jan_code,
+                cache: false,
+                url: 'productReality/getAddres/' + id,
+                data: null,
+                success: function (res) {
+                    console.log(res)
+                    $.each(res, function (index, value) {
+                        $('#selectedAddress').append(new Option(value.address,
+                            value.id))
+                    })
 
-                success: function (data) {
-                    $('#modalDetail').modal('show');
-                    $('.modal-content').html('').append(data);
                 }
-            });
-        });
+            })
+        })
+        // $('.view_transaction').click(function () {
+        //     const jan_code = $(this).data('code');
+        //     $.ajax({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+        //                 .attr('content')
+        //         },
+        //         type: 'GET',
+        //         url: "inventory" + '/' + jan_code,
 
-        $('.viewUpdate').click(function () {
-            const jan_code = $(this).data('code');
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
-                        .attr('content')
-                },
-                type: 'GET',
-                url: "inventory" + '/detail/' + jan_code,
+        //         success: function (data) {
+        //             $('#modalDetail').modal('show');
+        //             $('.modal-content').html('').append(data);
+        //         }
+        //     });
+        // });
 
-                success: function (data) {
-                    $('#modalDetail').modal('show');
-                    $('.modal-content').html('').append(data);
-                }
-            });
-        });
+        // $('.viewUpdate').click(function () {
+        //     const jan_code = $(this).data('code');
+        //     $.ajax({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+        //                 .attr('content')
+        //         },
+        //         type: 'GET',
+        //         url: "inventory" + '/detail/' + jan_code,
+
+        //         success: function (data) {
+        //             $('#modalDetail').modal('show');
+        //             $('.modal-content').html('').append(data);
+        //         }
+        //     });
+        // });
     });
 
 </script>

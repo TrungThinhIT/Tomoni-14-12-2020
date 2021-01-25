@@ -25,12 +25,14 @@ class productRealityRequest extends FormRequest
     {
         return [
             'CodeOrder'=>'required',
-            'Uname'=>'required',
+            'selectUname'=>'required',
             'Invoice'=>'required',
             'Container'=>'required',
             'quantity'=>'required',
-            'Image'=>'required|image|mimes:png,jpg,jpeg',
-            'address'=>'required',
+            'Image'=>'required|image|mimes:png,jpg,jpeg,svg',
+            'selectedAddress'=>'required',
+            // 'DeliveryDate' => 'required|date',
+            // 'DeliveryTime' => 'required',
         ];
     }
 }

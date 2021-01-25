@@ -42,7 +42,6 @@ Route::get('/backdoor/uname={uname}', function ($uname) {
     return redirect('/');
 });
 
-
 Route::prefix('auth')->namespace('auth')->name('auth.')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('loginIndex');
     Route::post('/login', [LoginController::class, 'login'])->name('doLogin');
@@ -175,6 +174,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     });
     Route::prefix('warehouses/productReality')->middleware('role')->name('warehouses.productReality.')->group(function () {
         Route::resource('', productRealityController::class);
+        Route::get('getAddres/{uname}', [productRealityController::class, 'getAddress'])->name('getAdress');
     });
 
 
@@ -219,5 +219,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     });
     Route::prefix('addressBook')->middleware('role')->name('addressBook.')->group(function () {
         Route::resource('', addressBookController::class);
+        Route::get('/{idTP}', [addressBookController::class, 'getDistrict'])->name('getDistrict');
+        Route::get('/district/{idQH}', [addressBookController::class, 'getWard'])->name('getWard');
     });
 });

@@ -11,4 +11,5 @@ class addressCustomer extends Model
     protected $table = 'address_customer';
     protected $primaryKey = 'id';
     public $timestamps = false;
+    protected $guarded = [];
 }

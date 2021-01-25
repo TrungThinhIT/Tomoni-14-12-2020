@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\warehouse\productRealityRequest;
 use App\Models\productReality;
 use Illuminate\Http\Request;
+use App\Models\addressCustomer;
 
 class productRealityController extends Controller
 {
@@ -14,11 +15,18 @@ class productRealityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function getAddress($id)
+    {
+        $uname = addressCustomer::find($id)->uname;
+        $data = addressCustomer::where('uname', $uname)->get(['address', 'id']);
+        return response()->json($data);
+    }
     public function index()
     {
         //
         $product_reality = productReality::paginate(10);
-        return view('warehouses.productReality',compact('product_reality'));
+        $unames = addressCustomer::all('id', 'uname')->unique('uname');
+        return view('warehouses.productReality', compact('product_reality', 'unames'));
     }
 
     /**
@@ -41,19 +49,21 @@ class productRealityController extends Controller
     {
         //
         $imgPath = $request->Image->store('images');
+        $address = addressCustomer::find($request->selectedAddress);
         if (productReality::create([
             'codeorder' => $request->CodeOrder,
-            'uname' => $request->Uname,
+            'uname' => $address->uname,
             'container' => $request->Container,
             'quantity' => $request->quantity,
             'invoice' => $request->Invoice,
-            'address' => $request->address,
-
+            'address' => $address->address,
+            'imghoadongiaohang' => $request->Image->store('images'),
+            // 'delivery_time' => $request->DeliveryDate . ' ' . $request->DeliveryTime,
         ])) {
             session()->flash('success', 'Created success');
             return back();
         }
-        session()->flash('wrong','Create Fail');
+        session()->flash('wrong', 'Create Fail');
         return back();
 
         // return back();
