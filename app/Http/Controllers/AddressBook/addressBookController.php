@@ -76,16 +76,16 @@ class addressBookController extends Controller
 
         $city = devvn_City::find($idCity)->name;
         //lấy tên quận 
+        $idDistrict = $request->District;
         if ($request->District < 10) {
             $idDistrict = '00' . $request->District;
         }
         if ($request->District >= 10 && $request->District < 100) {
             $idDistrict = '0' . $request->District;
-        } else {
-            $idDistrict = $request->District;
         }
         $district = devvn_District::find($idDistrict)->name;
         //lấy tên xã 
+        $idWard = $request->Ward;
         if ($request->Ward < 10) {
             $idWard = '0000' . $request->Ward;
         }
@@ -97,10 +97,7 @@ class addressBookController extends Controller
         }
         if ($request->Ward >= 1000 && $request->Ward < 9999) {
             $idWard = '0' . $request->Ward;
-        } else {
-            $idWard = $request->Ward;
         }
-
         // dd($request->Ward);
         $ward = devv_xaphuongthitran::find($idWard)->name;
         $address = $city . ',' . $district . ',' . $ward . ',' . $request->StreetHome; //nối địa chỉ
@@ -150,6 +147,8 @@ class addressBookController extends Controller
     public function show(addressCustomer $addressCustomer)
     {
         //
+        return view('addressBook.modals.show');
+        return response()->json($addressCustomer);
     }
 
     /**
@@ -161,6 +160,7 @@ class addressBookController extends Controller
     public function edit(addressCustomer $addressCustomer)
     {
         //
+        return "oke";
     }
 
     /**

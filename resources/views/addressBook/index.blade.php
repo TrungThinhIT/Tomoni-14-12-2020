@@ -109,11 +109,11 @@
                                         @enderror
                                     </div>
 
-                                   
+
                                     <div class="col-md-2 mb-2">
                                         <label for="validationDefault01">Delivery time</label>
-                                        <input id="DeliveryTime" type="time"  name="DeliveryTime"
-                                            class="form-control" value="{{old('DeliveryTime')}}">
+                                        <input id="DeliveryTime" type="time" name="DeliveryTime" class="form-control"
+                                            value="{{old('DeliveryTime')}}">
                                         @error('DeliveryTime')
                                         <div style="color: red">{{$message}}</div>
                                         @enderror
@@ -139,6 +139,8 @@
                                 <th>Phone</th>
                                 <th>Uname</th>
                                 <th>DeliveryTime</th>
+
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -149,25 +151,25 @@
                                 <td>{{$item->addcode}}</td>
                                 <td>{{$item->address}}</td>
                                 <td>{{$item->phonenumber}}</td>
-                              
                                 <td>{{$item->uname}}</td>
                                 <td>{{$item->delivery_time}}</td>
+                                <td><a href="javascript:"><i id="{{$item->id}}" class="fas fa-edit view_addressBook"></i></a></td>
                             </tr>
                             @endforeach
 
                         </tbody>
                     </table>
-                    
+
                     <div style="float: right" class="mt-3">
                         {!! $list->withQueryString()->links('commons.paginate') !!}
                     </div>
-                    {{-- <div class="modal" id="modalDetail">
+                    <div class="modal" id="modalDetail">
                         <div class="modal-dialog modal-lg" style="min-width: 90%;">
                             <div class="modal-content">
 
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -232,22 +234,23 @@
             })
         })
 
-        // $('.view_transaction').click(function () {
-        //     const jan_code = $(this).data('code');
-        //     $.ajax({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
-        //                 .attr('content')
-        //         },
-        //         type: 'GET',
-        //         url: "inventory" + '/' + jan_code,
+        $('.view_addressBook').click(function () {
+            const id = $(this).attr('id');
+            alert(id)
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                        .attr('content')
+                },
+                type: 'GET',
+                url: "addressBook/"  + id,
 
-        //         success: function (data) {
-        //             $('#modalDetail').modal('show');
-        //             $('.modal-content').html('').append(data);
-        //         }
-        //     });
-        // });
+                success: function (data) {
+                    $('#modalDetail').modal('show');
+                    $('.modal-content').html('').append(data);
+                }
+            });
+        });
 
         // $('.viewUpdate').click(function () {
         //     const jan_code = $(this).data('code');
