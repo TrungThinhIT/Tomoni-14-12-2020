@@ -11,6 +11,7 @@ use App\Models\addressCustomer;
 use Illuminate\Http\Request;
 use App\Models\devvn_District;
 use App\Models\devv_xaphuongthitran;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class addressBookController extends Controller
 {
@@ -144,11 +145,22 @@ class addressBookController extends Controller
      * @param  \App\Models\addressCustomer  $addressCustomer
      * @return \Illuminate\Http\Response
      */
-    public function show(addressCustomer $addressCustomer)
+    public function show(addressCustomer $addressCustomer, $id)
     {
-        //
-        return view('addressBook.modals.show');
-        return response()->json($addressCustomer);
+
+        $data = $addressCustomer->find($id); //thong tin của đỉa chỉ
+        $arr = explode(',', $data->address); //tách chuỗi
+
+        $checkCity = devvn_City::where('name', $arr[0])->first(); //để lấy mã city
+        $listCity = devvn_City::all(); //lấy list City
+
+        $checkDistrict = devvn_District::where('name', $arr[1])->first(); //lấy mã city để trả về select theo city
+        $listDistrict = devvn_District::where('matp', $checkDistrict->matp)->get(); //listDistrict theo matp
+
+        $checkWard = devv_xaphuongthitran::where('name', $arr[2])->first();
+        $listWard = devv_xaphuongthitran::where('maqh', $checkWard->maqh)->get();
+
+        return view('addressBook.modals.show', compact('data', 'listCity', 'arr', 'checkCity', 'listDistrict', 'checkDistrict', 'checkWard', 'listWard'));
     }
 
     /**
@@ -160,7 +172,7 @@ class addressBookController extends Controller
     public function edit(addressCustomer $addressCustomer)
     {
         //
-        return "oke";
+
     }
 
     /**
@@ -170,9 +182,57 @@ class addressBookController extends Controller
      * @param  \App\Models\addressCustomer  $addressCustomer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, addressCustomer $addressCustomer)
+    public function update(Request $request, addressCustomer $addressCustomer, $id)
     {
         //
+        if ($request->selectCity < 10) {
+            $idCity = '0' . $request->selectCity;
+        } else {
+            $idCity = $request->selectCity;
+        }
+
+        $city = devvn_City::find($idCity)->name;
+        //lấy tên quận 
+        $idDistrict = $request->selectDistrict;
+        if ($request->selectDistrict < 10) {
+            $idDistrict = '00' . $request->selectDistrict;
+        }
+        if ($request->selectDistrict >= 10 && $request->selectDistrict < 100) {
+            $idDistrict = '0' . $request->selectDistrict;
+        }
+        $district = devvn_District::find($idDistrict)->name;
+        //lấy tên xã 
+        $idWard = $request->ward;
+        if ($request->ward < 10) {
+            $idWard = '0000' . $request->Ward;
+        }
+        if ($request->ward >= 10 && $request->ward < 100) {
+            $idWard = '00' . $request->ward;
+        }
+        if ($request->ward >= 100 && $request->ward < 1000) {
+            $idWard = '00' . $request->Ward;
+        }
+        if ($request->ward >= 1000 && $request->ward < 9999) {
+            $idWard = '0' . $request->ward;
+        }
+        $ward = devv_xaphuongthitran::find($idWard)->name;
+        $address = $city . ',' . $district . ',' . $ward . ',' . $request->street; //nối địa chỉ
+        $uname = addressCustomer::find($id)->uname; //lấy uname
+        if (count(addressCustomer::where([['uname', $uname], ['address', $address]])->get()->toArray()) > 0) {
+            return "Địa chỉ này của " . $uname . " đã có";
+        }
+        $update = addressCustomer::update(
+            [
+                'phonenumber' => $request->phone,
+                'address' => $address,
+                'add_default' => $request->checkbox,
+                'delivery_time' => $request->time,
+            ]['John']
+        );
+        if ($addressCustomer) {
+            return response()->json($addressCustomer);
+        }
+        return "fail";
     }
 
     /**

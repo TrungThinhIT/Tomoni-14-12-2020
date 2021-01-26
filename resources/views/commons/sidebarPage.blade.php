@@ -75,7 +75,7 @@
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link " href="{{route('addressBook.index')}}" id="navbarDropdownMenuLink" aria-expanded="false">
+                    <a class="nav-link " href="{{route('addressBook.index.index')}}" id="navbarDropdownMenuLink" aria-expanded="false">
 
                         <span class="letter-icon">A</span>
                         <p>Address Book</p>

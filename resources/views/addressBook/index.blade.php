@@ -34,7 +34,7 @@
                         <div class="alert alert-danger" style="background-color: red !important">{{session('wrong')}}
                         </div>v
                         @endif
-                        <form runat="server" action="{{route('addressBook.store')}}" method="POST"
+                        <form runat="server" action="{{route('addressBook.index.store')}}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <fieldset>
@@ -149,11 +149,12 @@
                             <tr>
                                 <td>{{$item->id}}</td>
                                 <td>{{$item->addcode}}</td>
-                                <td>{{$item->address}}</td>
-                                <td>{{$item->phonenumber}}</td>
+                                <td id="address{{$item->id}}">{{$item->address}}</td>
+                                <td id="phone{{$item->id}}">{{$item->phonenumber}}</td>
                                 <td>{{$item->uname}}</td>
-                                <td>{{$item->delivery_time}}</td>
-                                <td><a href="javascript:"><i id="{{$item->id}}" class="fas fa-edit view_addressBook"></i></a></td>
+                                <td id="time{{$item->id}}">{{$item->delivery_time}}</td>
+                                <td><a href="javascript:"><i id="{{$item->id}}"
+                                            class="fas fa-edit view_addressBook"></i></a></td>
                             </tr>
                             @endforeach
 
@@ -180,11 +181,11 @@
 
 <script>
     $(document).ready(function () {
-        // $.ajaxSetup({
-        //     headers: {
-        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //     }
-        // });
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
         $('#Image').change(function () {
 
@@ -199,13 +200,12 @@
         });
         $('#selectCity').change(function () {
             $('#selectDistrict').find('option').remove().end();
-            $('#selectDistrict').attr("placeholder=Chọn");
             $('#Ward').find('option').remove().end();
             var id = $(this).val();
             $.ajax({
                 type: "GET",
                 cache: false,
-                url: "addressBook/" + id,
+                url: id,
                 success: function (res) {
                     console.log(res)
                     $('#selectDistrict').append(new Option("Chọn quận/huyện", ""))
@@ -222,7 +222,7 @@
             $.ajax({
                 type: "GET",
                 cache: false,
-                url: "addressBook/district/" + id,
+                url: "district/" + id,
                 success: function (res) {
                     console.log(res)
                     $("#Ward").append(new Option("Chọn xã/phường/", ""))
@@ -235,17 +235,16 @@
         })
 
         $('.view_addressBook').click(function () {
-            const id = $(this).attr('id');
-            alert(id)
+            var id = $(this).attr('id');
             $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
-                        .attr('content')
-                },
+                // headers: {
+                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                //         .attr('content')
+                // },
                 type: 'GET',
-                url: "addressBook/"  + id,
-
+                url: "index/" + id,
                 success: function (data) {
+                    console.log(data)
                     $('#modalDetail').modal('show');
                     $('.modal-content').html('').append(data);
                 }
