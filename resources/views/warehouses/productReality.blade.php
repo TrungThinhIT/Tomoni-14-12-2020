@@ -100,86 +100,89 @@
                                         <label for="validationDefault01">Delivery Date</label>
                                         <input type="date" id="DeliveryDate" name="DeliveryDate" class="form-control"
                                             value="{{old('DeliveryDate')}}">
-                                        @error('DeliveryDate')
-                                        <div style="color: red">{{$message}}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-2 mb-2">
-                                        <label for="validationDefault01">Delivery time</label>
-                                        <input id="DeliveryTime" type="time" min="1" name="DeliveryTime"
-                                            class="form-control" value="{{old('DeliveryTime')}}">
-                                        @error('DeliveryTime')
-                                        <div style="color: red">{{$message}}</div>
-                                        @enderror
-                                    </div> --}}
-                                    <div class="col-md-4 mb-2">
-                                        <label for="validationDefault01">Image</label>
-                                        <input id="Image" type="file" name="Image" class="form-control"
-                                            placeholder="Choose image">
-                                        @error('Image')
-                                        <div style=" color: red">{{$message}}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="col-md-2 mb-2">
-                                        <img id="img" width="150px" height="150px" src="" hidden>
-                                    </div>
-                                    <div class="col-md-2 mb-2">
-                                        <input style="margin-top:13%" type="submit" id="BtnSubmit" name="submit"
-                                            class="btn btn-primary" value="submit">
-                                    </div>
+                                    @error('DeliveryDate')
+                                    <div style="color: red">{{$message}}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <label for="validationDefault01">Delivery time</label>
+                                    <input id="DeliveryTime" type="time" min="1" name="DeliveryTime"
+                                        class="form-control" value="{{old('DeliveryTime')}}">
+                                    @error('DeliveryTime')
+                                    <div style="color: red">{{$message}}</div>
+                                    @enderror
+                                </div> --}}
+                                <div class="col-md-4 mb-2">
+                                    <label for="validationDefault01">Image</label>
+                                    <input id="Image" type="file" name="Image" class="form-control"
+                                        placeholder="Choose image">
+                                    @error('Image')
+                                    <div style=" color: red">{{$message}}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <img id="img" width="150px" height="150px" src="" hidden>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <input style="margin-top:13%" type="submit" id="BtnSubmit" name="submit"
+                                        class="btn btn-primary" value="submit">
                                 </div>
                     </div>
-                    </fieldset>
+                </div>
+                </fieldset>
 
-                    </form>
-                    <div style="float: right" class="mt-3">
-                    </div>
-                    <table id="example" class="table table-bordered table-striped"
-                        style="margin-top: 1%; margin-right: 1%;">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>CodeOrder</th>
-                                <th>Uname</th>
-                                <th>Invoice</th>
-                                <th>Container</th>
-                                <th>quantity</th>
-                                <th>Address</th>
-                                <th>Image</th>
-                                <th>Delivery time</th>
-                            </tr>
-                        </thead>
+                </form>
+                <div style="float: right" class="mt-3">
+                </div>
+                <table id="example" class="table table-bordered table-striped"
+                    style="margin-top: 1%; margin-right: 1%;">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>CodeOrder</th>
+                            <th>Uname</th>
+                            <th>Invoice</th>
+                            <th>Container</th>
+                            <th>quantity</th>
+                            <th>Address</th>
+                            <th>Image</th>
+                            <th>Delivery time</th>
+                        </tr>
+                    </thead>
 
-                        <tbody id="myTable">
-                            @foreach ($product_reality as $item)
-                            {{-- {{dd($item)}} --}}
-                            <tr>
-                                <td>{{$item->id}}</td>
-                                <td>{{$item->codeorder}}</td>
-                                <td>{{$item->uname}}</td>
-                                <td>{{$item->invoice}}</td>
-                                <td>{{$item->container}}</td>
-                                <td>{{$item->quantity}}</td>
-                                <td>{{$item->address}}</td>
-                                <td><img src="{{asset($item->imghoadongiaohang)}}" alt="" width="80px" height="80px">
-                                </td>
-                                <td>{{$item->delivery_time}}</td>
-                            </tr>
-                            @endforeach
+                    <tbody id="myTable">
+                        @foreach ($product_reality as $item)
+                        {{-- {{dd($item)}} --}}
+                        <tr>
+                            <td>{{$item->id}}</td>
+                            <td>{{$item->codeorder}}</td>
+                            <td>{{$item->uname}}</td>
+                            <td>{{$item->invoice}}</td>
+                            <td>{{$item->container}}</td>
+                            <td>{{$item->quantity}}</td>
+                            <td>{{$item->address}}</td>
+                            <td><img src="{{asset($item->imghoadongiaohang)}}" alt="" width="80px" height="80px">
+                            </td>
+                            <td>{{$item->delivery_time}}</td>
+                        </tr>
+                        @endforeach
 
-                        </tbody>
-                    </table>
-                    <div class="modal" id="modalDetail">
-                        <div class="modal-dialog modal-lg" style="min-width: 90%;">
-                            <div class="modal-content">
+                    </tbody>
+                </table>
+                <div style="float: right" class="mt-3">
+                    {!! $product_reality->withQueryString()->links('commons.paginate') !!}
+                </div>
+                <div class="modal" id="modalDetail">
+                    <div class="modal-dialog modal-lg" style="min-width: 90%;">
+                        <div class="modal-content">
 
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 </div>

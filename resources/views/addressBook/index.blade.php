@@ -112,7 +112,7 @@
                                    
                                     <div class="col-md-2 mb-2">
                                         <label for="validationDefault01">Delivery time</label>
-                                        <input id="DeliveryTime" type="time" min="1" name="DeliveryTime"
+                                        <input id="DeliveryTime" type="time"  name="DeliveryTime"
                                             class="form-control" value="{{old('DeliveryTime')}}">
                                         @error('DeliveryTime')
                                         <div style="color: red">{{$message}}</div>
