@@ -154,6 +154,12 @@
                 },
                 success: function (response) {
                     console.log(response);
+                    $("#address"+idAddress).text(response.address)
+                    $("#phone"+idAddress).text(response.phone)
+                    $("#time"+idAddress).text(response.time)
+                    toastr.success('Cập nhật thành công', 'Notifycation', {
+                        timOut: 1000
+                    })
                     // if (response == 2) {
                     //     alert('Có lỗi xẩy ra vui lòng thử lại!')
                     // } else {

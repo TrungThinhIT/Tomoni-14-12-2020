@@ -91,7 +91,7 @@ class addressBookController extends Controller
             $idWard = '0000' . $request->Ward;
         }
         if ($request->Ward >= 10 && $request->Ward < 100) {
-            $idWard = '00' . $request->Ward;
+            $idWard = '000' . $request->Ward;
         }
         if ($request->Ward >= 100 && $request->Ward < 1000) {
             $idWard = '00' . $request->Ward;
@@ -204,33 +204,34 @@ class addressBookController extends Controller
         //lấy tên xã 
         $idWard = $request->ward;
         if ($request->ward < 10) {
-            $idWard = '0000' . $request->Ward;
+            $idWard = '0000' . $request->ward;
         }
         if ($request->ward >= 10 && $request->ward < 100) {
-            $idWard = '00' . $request->ward;
+            $idWard = '000' . $request->ward;
         }
         if ($request->ward >= 100 && $request->ward < 1000) {
-            $idWard = '00' . $request->Ward;
+            $idWard = '00' . $request->ward;
         }
         if ($request->ward >= 1000 && $request->ward < 9999) {
             $idWard = '0' . $request->ward;
         }
+        // $data = [$idCity, $idDistrict, $idWard];
+        // return response()->json($data);
         $ward = devv_xaphuongthitran::find($idWard)->name;
         $address = $city . ',' . $district . ',' . $ward . ',' . $request->street; //nối địa chỉ
-        $uname = addressCustomer::find($id)->uname; //lấy uname
-        if (count(addressCustomer::where([['uname', $uname], ['address', $address]])->get()->toArray()) > 0) {
-            return "Địa chỉ này của " . $uname . " đã có";
+        // $uname = addressCustomer::find($id)->uname; //lấy uname
+        if ($request->checkbox) {
+            $checkbox = 1;
+        } else {
+            $checkbox = 0;
         }
-        $update = addressCustomer::update(
-            [
-                'phonenumber' => $request->phone,
-                'address' => $address,
-                'add_default' => $request->checkbox,
-                'delivery_time' => $request->time,
-            ]['John']
+
+        $update = addressCustomer::find($id)->update(
+            ['address' => $address, 'phonenumber' => $request->phone, 'add_default' => $checkbox, 'delivery_time' => $request->time]
         );
-        if ($addressCustomer) {
-            return response()->json($addressCustomer);
+        if ($update) {
+            $data = ['address' => $address, 'phone' => $request->phone, 'time' => $request->time];
+            return response()->json($data);
         }
         return "fail";
     }
