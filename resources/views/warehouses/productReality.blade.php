@@ -152,8 +152,7 @@
 
                     <tbody id="myTable">
                         @foreach ($product_reality as $item)
-                        {{$product_reality}}
-                        {{-- {{dd($item)}} --}}
+
                         <tr>
                             <td>{{$item->id}}</td>
                             <td>{{$item->codeorder}}</td>
@@ -162,7 +161,7 @@
                             <td>{{$item->container}}</td>
                             <td>{{$item->quantity}}</td>
                             <td>{{$item->address}}</td>
-                            <td><img src="{{asset('images/'.$item->imghoadongiaohang)}}" alt="" width="80px" height="80px">
+                            <td><img src="{{asset('images/'.$item->imghoadongiaohang)}}" alt="">
                             </td>
                             <td>{{$item->delivery_time}}</td>
                         </tr>

@@ -53,14 +53,17 @@ class productRealityController extends Controller
         // $imgPath = $request->Image->store('images');
         $address = addressCustomer::find($request->selectedAddress);
         if ($img = $request->file('Image')) {
-            $extension =  $img->getClientOriginalExtension();
-            $name = Str::random(60);
-            while (file_exists('images/' . $name . $extension)) {
-                $name = Str::random(60);
+            // $ext = $img->getClientOriginalExtension();
+            $name =  $img->getClientOriginalName();
+            // dd($name);
+            $str = Str::random(3);
+            while (file_exists('images/' . $str . $name)) {
+                $str = Str::random(3);
             }
-            $imgage = Image::make($img->getRealPath());
-            // dd($imgage);
-            $imgage->resize(100, 100)->save(public_path('images/' . $name . '.' . $extension));
+            $image = Image::make($img->getRealPath());
+            // dd($image);
+            $image->resize(80, 80);
+            $image->save(public_path('images/' . $str . $name));
         }
         if (productReality::create([
             'codeorder' => $request->CodeOrder,
@@ -69,7 +72,7 @@ class productRealityController extends Controller
             'quantity' => $request->quantity,
             'invoice' => $request->Invoice,
             'address' => $address->address,
-            'imghoadongiaohang' => $imgage->basename,
+            'imghoadongiaohang' => $image->basename,
             // 'delivery_time' => $request->DeliveryDate . ' ' . $request->DeliveryTime,
         ])) {
             session()->flash('success', 'Created success');
