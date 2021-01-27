@@ -219,21 +219,33 @@ class addressBookController extends Controller
         // return response()->json($data);
         $ward = devv_xaphuongthitran::find($idWard)->name;
         $address = $city . ',' . $district . ',' . $ward . ',' . $request->street; //nối địa chỉ
-        // $uname = addressCustomer::find($id)->uname; //lấy uname
-        if ($request->checkbox) {
+        $uname = addressCustomer::find($id)->uname; //lấy uname
+
+        //set colunm add_default của 1 uname chỉ duy nhất có 1 đỉa chỉ mặc đỊnh
+        if ($request->checkbox == 1) {
+            $lists = addressCustomer::where([['uname', $uname], ['id', '!=', $id]])->get();
             $checkbox = 1;
+            if (!empty($lists)) {
+                foreach ($lists as $item) {
+                    $item->add_default = false;
+                    $item->save();
+                }
+            }
         } else {
             $checkbox = 0;
         }
-
         $update = addressCustomer::find($id)->update(
-            ['address' => $address, 'phonenumber' => $request->phone, 'add_default' => $checkbox, 'delivery_time' => $request->time]
+            [
+                'address' => $address, 'phonenumber' => $request->phone, 'add_default' => $checkbox,
+                'delivery_time' => $request->time,
+            ]
         );
         if ($update) {
-            $data = ['address' => $address, 'phone' => $request->phone, 'time' => $request->time];
+            $data = ['address' => $address, 'phone' => $request->phone, 'time' => $request->time, 'checkbox' => $request->checkbox];
             return response()->json($data);
+        } else {
+            return "fail";
         }
-        return "fail";
     }
 
     /**

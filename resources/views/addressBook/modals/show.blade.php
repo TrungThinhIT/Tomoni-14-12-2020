@@ -68,7 +68,9 @@
             </div>
             <div class="col-md-2 mb-2">
                 <label for="validationDefault01">Address Default</label>
-                <input type="checkbox" class="form-control" name="checkbox" id="checkbox">
+                <input type="checkbox" class="form-control" name="checkbox" id="checkbox" @if ($data->add_default)
+                checked
+                @endif>
             </div>
 
         </div>
@@ -88,6 +90,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             $('#selectCity2').change(function () {
                 $('#selectDistrict2').find('option').remove().end();
                 $('#Ward2').find('option').remove().end();
@@ -135,8 +138,13 @@
             const ward = $('#Ward2').val();
             const street = $('#street').val();
             const phone = $('#phone').val();
-            var checkbox = $('#checkbox').val();
+            var checkbox;
             var time = $('#time').val();
+            if ($('#checkbox').is(':checked')) {
+                checkbox = 1;
+            } else {
+                checkbox = 0;
+            }
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -154,9 +162,9 @@
                 },
                 success: function (response) {
                     console.log(response);
-                    $("#address"+idAddress).text(response.address)
-                    $("#phone"+idAddress).text(response.phone)
-                    $("#time"+idAddress).text(response.time)
+                    $("#address" + idAddress).text(response.address)
+                    $("#phone" + idAddress).text(response.phone)
+                    $("#time" + idAddress).text(response.time)
                     toastr.success('Cập nhật thành công', 'Notifycation', {
                         timOut: 1000
                     })
