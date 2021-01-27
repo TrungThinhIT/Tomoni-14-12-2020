@@ -79,10 +79,12 @@ class productRealityController extends Controller
             'imghoadongiaohang' => $image->basename,
             // 'delivery_time' => $request->DeliveryDate . ' ' . $request->DeliveryTime,
         ])) {
-            session()->flash('success', 'Created success');
+
+            toastr()->success('Create successfully!', 'Notifycation', ['timeOut' => 500]);
+            // session()->flash('success', 'Created success');
             return back();
         }
-        session()->flash('wrong', 'Create Fail');
+        session()->flash('wrong', 'Fail');
         return back();
 
         // return back();

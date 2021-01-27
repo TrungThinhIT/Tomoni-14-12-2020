@@ -25,11 +25,11 @@
                 <div id="ItemInvoice" style="background-color: aliceblue;"></div>
                 <div>
                     <div style="margin: 1% 1% 1% 1%;">
-                        @if (session('success'))
-                        <div class="alert alert-success">
+                        {{-- @if (session('success'))
+                        <div class="alert alert-success thongbaothanhcong">
                             {{session('success')}}
                         </div>
-                        @endif
+                        @endif --}}
                         @if (session('wrong'))
                         <div class="alert alert-danger">{{session('wrong')}}</div>v
                         @endif
@@ -236,6 +236,10 @@
                 }
             })
         })
+
+        // setTimeout(function(){
+        //     $('.thongbaothanhcong').
+        // },2000)
         // $('.view_transaction').click(function () {
         //     const jan_code = $(this).data('code');
         //     $.ajax({
