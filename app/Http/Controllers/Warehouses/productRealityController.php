@@ -21,6 +21,8 @@ class productRealityController extends Controller
     {
         $uname = addressCustomer::find($id)->uname;
         $data = addressCustomer::where('uname', $uname)->get(['address', 'id', 'add_default']);
+        $sum = $data->sum('add_default');
+        $data = ['data' => $data, 'sum' => $sum];
         return response()->json($data);
     }
     public function index()
@@ -52,18 +54,20 @@ class productRealityController extends Controller
         //
         // $imgPath = $request->Image->store('images');
         $address = addressCustomer::find($request->selectedAddress);
+        //resize img & change name img
         if ($img = $request->file('Image')) {
-            // $ext = $img->getClientOriginalExtension();
+            $ext = $img->getClientOriginalExtension();
             $name =  $img->getClientOriginalName();
             // dd($name);
-            $str = Str::random(3);
-            while (file_exists('images/' . $str . $name)) {
-                $str = Str::random(3);
+            $str = Str::random(40);
+            while (file_exists('images/' . $str . '.' . $ext)) {
+                $str = Str::random(40);
             }
             $image = Image::make($img->getRealPath());
             // dd($image);
             $image->resize(80, 80);
-            $image->save(public_path('images/' . $str . $name));
+            $image->save(public_path('images/' . $str . '.' . $ext));
+            // dd($image);
         }
         if (productReality::create([
             'codeorder' => $request->CodeOrder,

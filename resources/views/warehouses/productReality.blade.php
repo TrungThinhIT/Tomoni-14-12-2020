@@ -217,12 +217,17 @@
                 url: 'productReality/getAddres/' + id,
                 data: null,
                 success: function (res) {
-                    console.log(res)
-                    $.each(res, function (index, value) {
+                    // console.log(res.data)
+                    if (res.sum != 1) {
+                        $('#selectedAddress').append(new Option(
+                            "-------------Chọn-------------", ""))
+                    }
+                    $.each(res.data, function (index, value) {
                         if (value.add_default == 1) {
                             $('#selectedAddress').append(new Option(value.address,
                                 value.id, true, true))
                         } else {
+                            $('#hidden').removeAttr('hidden')
                             $('#selectedAddress').append(new Option(value.address,
                                 value.id))
                         }
