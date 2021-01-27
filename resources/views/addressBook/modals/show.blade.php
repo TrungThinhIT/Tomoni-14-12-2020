@@ -66,8 +66,8 @@
                 <label for="validationDefault01">Delivery Time</label>
                 <input class="form-control" value="{{$data->delivery_time}}" type="time" id="time">
             </div>
-            <div class="col-md-2 mb-2">
-                <label for="validationDefault01">Address Default</label>
+            <div class="col-md-1 mb-2">
+                <label for="validationDefault01">Default</label>
                 <input type="checkbox" class="form-control" name="checkbox" id="checkbox" @if ($data->add_default)
                 checked
                 @endif>

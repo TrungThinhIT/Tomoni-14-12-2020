@@ -55,7 +55,7 @@
                                         <div style="color: red">{{$message}}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-2 mb-2">
+                                    <div class="col-md-1 mb-2">
                                         <label for="validationDefault01">Container</label>
                                         <input id="Container" type="text" class="form-control" name="Container"
                                             placeholder="Nhập" value="{{old('Container')}}">
@@ -85,7 +85,7 @@
                                         <div style="color: red">{{$message}}</div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-2 mb-2">
+                                    <div class="col-md-4 mb-2">
                                         <label for="validationDefault01">Address</label>
                                         <select class="form-control" name="selectedAddress" id="selectedAddress">
 
@@ -152,6 +152,7 @@
 
                     <tbody id="myTable">
                         @foreach ($product_reality as $item)
+                        {{$product_reality}}
                         {{-- {{dd($item)}} --}}
                         <tr>
                             <td>{{$item->id}}</td>
@@ -161,7 +162,7 @@
                             <td>{{$item->container}}</td>
                             <td>{{$item->quantity}}</td>
                             <td>{{$item->address}}</td>
-                            <td><img src="{{asset($item->imghoadongiaohang)}}" alt="" width="80px" height="80px">
+                            <td><img src="{{asset('images/'.$item->imghoadongiaohang)}}" alt="" width="80px" height="80px">
                             </td>
                             <td>{{$item->delivery_time}}</td>
                         </tr>
@@ -219,8 +220,13 @@
                 success: function (res) {
                     console.log(res)
                     $.each(res, function (index, value) {
-                        $('#selectedAddress').append(new Option(value.address,
-                            value.id))
+                        if (value.add_default == 1) {
+                            $('#selectedAddress').append(new Option(value.address,
+                                value.id, true, true))
+                        } else {
+                            $('#selectedAddress').append(new Option(value.address,
+                                value.id))
+                        }
                     })
 
                 }

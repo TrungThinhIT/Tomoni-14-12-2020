@@ -7,6 +7,8 @@ use App\Http\Requests\warehouse\productRealityRequest;
 use App\Models\productReality;
 use Illuminate\Http\Request;
 use App\Models\addressCustomer;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class productRealityController extends Controller
 {
@@ -18,7 +20,7 @@ class productRealityController extends Controller
     public function getAddress($id)
     {
         $uname = addressCustomer::find($id)->uname;
-        $data = addressCustomer::where('uname', $uname)->get(['address', 'id']);
+        $data = addressCustomer::where('uname', $uname)->get(['address', 'id', 'add_default']);
         return response()->json($data);
     }
     public function index()
@@ -48,8 +50,18 @@ class productRealityController extends Controller
     public function store(productRealityRequest $request)
     {
         //
-        $imgPath = $request->Image->store('images');
+        // $imgPath = $request->Image->store('images');
         $address = addressCustomer::find($request->selectedAddress);
+        if ($img = $request->file('Image')) {
+            $extension =  $img->getClientOriginalExtension();
+            $name = Str::random(60);
+            while (file_exists('images/' . $name . $extension)) {
+                $name = Str::random(60);
+            }
+            $imgage = Image::make($img->getRealPath());
+            // dd($imgage);
+            $imgage->resize(100, 100)->save(public_path('images/' . $name . '.' . $extension));
+        }
         if (productReality::create([
             'codeorder' => $request->CodeOrder,
             'uname' => $address->uname,
@@ -57,7 +69,7 @@ class productRealityController extends Controller
             'quantity' => $request->quantity,
             'invoice' => $request->Invoice,
             'address' => $address->address,
-            'imghoadongiaohang' => $request->Image->store('images'),
+            'imghoadongiaohang' => $imgage->basename,
             // 'delivery_time' => $request->DeliveryDate . ' ' . $request->DeliveryTime,
         ])) {
             session()->flash('success', 'Created success');
