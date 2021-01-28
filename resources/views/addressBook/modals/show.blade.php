@@ -166,7 +166,7 @@
                     $("#phone" + idAddress).text(response.phone)
                     $("#time" + idAddress).text(response.time)
                     toastr.success('Cập nhật thành công', 'Notifycation', {
-                        timeOut: 500
+                        timeOut: 800
                     })
                     // if (response == 2) {
                     //     alert('Có lỗi xẩy ra vui lòng thử lại!')

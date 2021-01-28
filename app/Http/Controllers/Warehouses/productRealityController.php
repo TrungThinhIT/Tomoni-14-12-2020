@@ -55,19 +55,22 @@ class productRealityController extends Controller
         // $imgPath = $request->Image->store('images');
         $address = addressCustomer::find($request->selectedAddress);
         //resize img & change name img
-        if ($img = $request->file('Image')) {
+        if ($img = $request->Image) {
+            // dd($img);
             $ext = $img->getClientOriginalExtension();
             $name =  $img->getClientOriginalName();
             // dd($name);
             $str = Str::random(40);
-            while (file_exists('images/' . $str . '.' . $ext)) {
+            while (file_exists('thumnails/' . $str . '.' . $ext)) {
                 $str = Str::random(40);
             }
             $image = Image::make($img->getRealPath());
             // dd($image);
             $image->resize(80, 80);
-            $image->save(public_path('images/' . $str . '.' . $ext));
+            $image->save(public_path('thumnails/' . $str . '.' . $ext));
             // dd($image);
+
+            $img->storeAs('images/', $str . '.' . $ext);
         }
         if (productReality::create([
             'codeorder' => $request->CodeOrder,
@@ -87,7 +90,12 @@ class productRealityController extends Controller
         session()->flash('wrong', 'Fail');
         return back();
 
-        // return back();
+        //
+        return back();
+    }
+    public function getImage($img)
+    {
+        return view('warehouses.includes.imageModal', compact('img'));
     }
 
     /**

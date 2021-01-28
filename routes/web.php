@@ -175,6 +175,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::prefix('warehouses/productReality')->middleware('role')->name('warehouses.productReality.')->group(function () {
         Route::resource('', productRealityController::class);
         Route::get('getAddres/{uname}', [productRealityController::class, 'getAddress'])->name('getAdress');
+        Route::get('img/{img}',[productRealityController::class,'getImage'])->name('getImage');
     });
 
 
