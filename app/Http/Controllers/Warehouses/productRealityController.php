@@ -8,7 +8,7 @@ use App\Models\productReality;
 use Illuminate\Http\Request;
 use App\Models\addressCustomer;
 use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class productRealityController extends Controller
 {
@@ -51,7 +51,6 @@ class productRealityController extends Controller
      */
     public function store(productRealityRequest $request)
     {
-        //
         // $imgPath = $request->Image->store('images');
         $address = addressCustomer::find($request->selectedAddress);
         //resize img & change name img
@@ -61,16 +60,18 @@ class productRealityController extends Controller
             $name =  $img->getClientOriginalName();
             // dd($name);
             $str = Str::random(40);
-            while (file_exists('thumnails/' . $str . '.' . $ext)) {
+            while (file_exists('images/' . $str . '.' . $ext)) {
                 $str = Str::random(40);
             }
-            $image = Image::make($img->getRealPath());
+            // 
+            // dd($img->storeAs('images', $str . '.' . $ext));
+            $image = Image::make($img->storeAs('images', $str . '.' . $ext));
+
             // dd($image);
             $image->resize(80, 80);
             $image->save(public_path('thumnails/' . $str . '.' . $ext));
             // dd($image);
 
-            $img->storeAs('images/', $str . '.' . $ext);
         }
         if (productReality::create([
             'codeorder' => $request->CodeOrder,
