@@ -64,4 +64,21 @@
             }
         })
     }
+    $('.modalImage').click(function (e) {
+    console.log(e);
+    const img = $(this).find('a').data('img');
+    $.ajax({
+    headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+    .attr('content')
+    },
+    type: 'GET',
+    url: "./productReality/img" + '/' + img,
+    
+    success: function (data) {
+    $('#modalDetail').modal('show');
+    $('.modal-content').html('').append(data);
+    }
+    });
+    });
 </script>

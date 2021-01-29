@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouses;
 
+use App\Exports\Orders\OrderExportExcel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\warehouse\productRealityRequest;
 use App\Models\productReality;
@@ -18,6 +19,13 @@ class productRealityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected $orderExportExcel;
+
+    public function __construct(OrderExportExcel $orderExportExcel)
+    {
+        $this->orderExportExcel = $orderExportExcel;
+    }
+
     public function getAddress($id)
     {
         $uname = addressCustomer::find($id)->uname;
@@ -41,6 +49,7 @@ class productRealityController extends Controller
         $container = $request->container;
         $invoice = $request->invoice;
         $quantity = $request->quantity;
+        $export = $request->export;
 
         $product_reality = productReality::query();
 
@@ -62,6 +71,10 @@ class productRealityController extends Controller
 
         if ($quantity) {
             $product_reality = $product_reality->where('quantity', $quantity);
+        }
+
+        if ($export == "true") {
+            return $this->orderExportExcel->ExportOrder($product_reality, $product_reality);
         }
 
         $product_reality = $product_reality->paginate(2);
