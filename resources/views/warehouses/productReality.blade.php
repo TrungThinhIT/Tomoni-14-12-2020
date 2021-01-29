@@ -147,7 +147,7 @@
             </form>
             <hr>
             <div>
-                <div class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">
+                <div id="formSearch" class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">
                     <div class="col-md-2" id="custom">
                         <button id="search" class="btn btn-primary">SEARCH</button>
                     </div>
@@ -291,35 +291,53 @@
                         //         timeOut: 1000
                         //     })
                         // } else {
-                        $('#myTable').empty();
-                        $('#pagina').empty();
-                        $.each(data, function (index, value) {
-                            $.each(value.data, function (index, value) {
-                                $('#example').append(
-                                    '<tr>' +
-                                    '<td>' + value.id + '</td>' +
-                                    '<td>' + value.coderorder +
-                                    '</td>' +
-                                    '<td>' + value.uname + '</td>' +
-                                    '<td>' + value.invoice + '</td>' +
-                                    '<td>' + value.container + '</td>' +
-                                    '<td>' + value.quantity + '</td>' +
-                                    '<td>' + value.address + '</td>' +
-                                    '<td class="modalImage"><a id="image" data-img="' +
-                                    value.imghoadongiaohang + '"' +
-                                    'data-id=' + value.id +
-                                    ' href="javascript:"><img alt src=' +
-                                    location.protocol + '//' + window
-                                    .location
-                                    .host + '/thumnails/' + value
-                                    .imghoadongiaohang + '></a>' +
-                                    '<td>' + value.delivery_time +
-                                    '</td>' +
-                                    +'</tr>'
-                                )
-                            })
-                        })
-                        $('#pagina').append(data.paginate.links)
+                        $('#example').remove();
+                        $('#pagina').remove();
+                        $('#formSearch').after(data)
+                        // $.each(data, function (index, value) {
+                        //     $.each(value.data, function (index, value) {
+                        //         $('#example').append(
+                        //             '<tr>' +
+                        //             '<td>' + value.id + '</td>' +
+                        //             '<td>' + value.coderorder +
+                        //             '</td>' +
+                        //             '<td>' + value.uname + '</td>' +
+                        //             '<td>' + value.invoice + '</td>' +
+                        //             '<td>' + value.container + '</td>' +
+                        //             '<td>' + value.quantity + '</td>' +
+                        //             '<td>' + value.address + '</td>' +
+                        //             '<td class="modalImage"><a id="image" data-img="' +
+                        //             value.imghoadongiaohang + '"' +
+                        //             'data-id=' + value.id +
+                        //             ' href="javascript:"><img alt src=' +
+                        //             location.protocol + '//' + window
+                        //             .location
+                        //             .host + '/thumnails/' + value
+                        //             .imghoadongiaohang + '></a>' +
+                        //             '<td>' + value.delivery_time +
+                        //             '</td>' +
+                        //             +'</tr>'
+                        //         )
+                        //     })
+                        // })
+
+                        // data.paginate.links
+
+                        // console.log('<nav><ul class="pagination">'
+                        //         + data.paginate.links.slice(1, data.paginate.links.length-1).map(page => {
+                        //             return `<li class="page-item"><a class="page-link" href="${page.url}">${page.label}</a></li>`
+                        //         }).join('')
+                        //     +'</ul></nav>')
+
+                        // $('#pagina').append(
+                        //     '<nav><ul class="pagination">'
+                        //         + `<li class="page-item ${data.paginate.current_page <= 1 && 'disabled'}"><a class="page-link" href="${data.paginate.links[0].url}">${data.paginate.links[0].label}</a></li>`
+                        //         + data.paginate.links.slice(1, data.paginate.links.length-1).map(page => {
+                        //             return `<li class="page-item ${data.paginate.current_page == page.label && 'active'}"><a class="page-link" href="${page.url}">${page.label}</a></li>`
+                        //         }).join('')
+                        //         + `<li class="page-item ${data.paginate.current_page >= data.paginate.last_page && 'disabled'}"><a class="page-link" href="${data.paginate.links[data.paginate.links.length-1].url}">${data.paginate.links[data.paginate.links.length-1].label}</a></li>`
+                        //     +'</ul></nav>'
+                        // )
                         // }
 
                     }

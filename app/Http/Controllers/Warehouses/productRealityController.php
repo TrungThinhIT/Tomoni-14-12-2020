@@ -29,7 +29,7 @@ class productRealityController extends Controller
     public function index()
     {
         //
-        $product_reality = productReality::paginate(10);
+        $product_reality = productReality::paginate(2);
         $unames = addressCustomer::all('id', 'uname')->unique('uname');
         return view('warehouses.productReality', compact('product_reality', 'unames'));
     }
@@ -174,8 +174,9 @@ class productRealityController extends Controller
         // if (!empty($data)) {
         //     return response()->json($data);
         // }
-        $search = $search->paginate(4);
-        $search->withQueryString()->links('commons.paginate');
+        $search = $search->paginate(2);
+        return view('warehouses.includes.searchProductReality',compact('search'));
+        // $search->withQueryString()->links('commons.paginate');
         $data = ['paginate' => $search];
         return response()->json($data);
     }
