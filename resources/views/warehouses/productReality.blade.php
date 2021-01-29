@@ -23,7 +23,6 @@
     #custom {
         margin-right: -70px;
     }
-
 </style>
 @section('title', 'Hàng thực tế')
 @section('content')
@@ -149,7 +148,7 @@
             <div>
                 <div id="formSearch" class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">
                     <div class="col-md-2" id="custom">
-                        <button id="search" class="btn btn-primary">SEARCH</button>
+                        <button id="search" type="button" class="btn btn-primary">SEARCH</button>
                     </div>
                     <div class="col-md-2">
                         <input id="uname2" class="form-control inputCustom" type="text" name="uname2"
@@ -198,45 +197,7 @@
                     </div> --}}
                 </div>
             </div>
-            <table id="example" class="table table-bordered table-striped" style="margin-top: 1%; margin-right: 1%;">
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>CodeOrder</th>
-                        <th>Uname</th>
-                        <th>Invoice</th>
-                        <th>Container</th>
-                        <th>quantity</th>
-                        <th>Address</th>
-                        <th>Image</th>
-                        <th>Delivery time</th>
-                    </tr>
-                </thead>
-
-                <tbody id="myTable">
-                    @foreach ($product_reality as $item)
-
-                    <tr>
-                        <td>{{$item->id}}</td>
-                        <td>{{$item->codeorder}}</td>
-                        <td>{{$item->uname}}</td>
-                        <td>{{$item->invoice}}</td>
-                        <td>{{$item->container}}</td>
-                        <td>{{$item->quantity}}</td>
-                        <td>{{$item->address}}</td>
-                        <td class="modalImage"><a id="image" data-img="{{$item->imghoadongiaohang}}"
-                                data-id="{{$item->id}}" href="javascript:"><img
-                                    src="{{asset('thumnails/'.$item->imghoadongiaohang)}}" alt=""></a>
-                        </td>
-                        <td>{{$item->delivery_time}}</td>
-                    </tr>
-                    @endforeach
-
-                </tbody>
-            </table>
-            <div id="pagina" style="float: right" class="mt-3">
-                {!! $product_reality->withQueryString()->links('commons.paginate') !!}
-            </div>
+            <div id="data-table"></div>
             <div class="modal" id="modalDetail">
                 <div class="modal-dialog modal-lg" style="min-width: 90%;">
                     <div class="modal-content">
@@ -253,97 +214,113 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-        // $.ajaxSetup({
-        //     headers: {
-        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //     }
-        // });
-        $('#search').click(function () {
-            // $('#example').empty();
-            // $('#pagina').empty();
-            var uname2 = $('#uname2').val();
-            var codeorder2 = $('#codeorder2').val();
-            var container2 = $('#container2').val();
-            var invoice2 = $('#invoice2').val();
-            var quantity2 = $('#quantity2').val();
-            if (((uname2 == "") && (codeorder2 == "")) && ((container2 == "") && (invoice2 == "")) && (
-                    quantity2 == "")) {
-                toastr.error('Chưa nhập dữ liệu tìm kiếm', 'Notifacation', {
-                    timeOut: 1000
-                });
-            } else {
-                $.ajax({
-                    type: 'GET',
-                    url: './productReality/search',
-                    cache: false,
-                    data: {
-                        uname2: uname2,
-                        codeorder2: codeorder2,
-                        container2: container2,
-                        invoice2: invoice2,
-                        quantity2: quantity2
-                    },
-                    success: function (data) {
-                        console.log(data)
-                        // if (data.data.length == 0) {
-                        //     toastr.error('Không có dữ liệu', '', {
-                        //         timeOut: 1000
-                        //     })
-                        // } else {
-                        $('#example').remove();
-                        $('#pagina').remove();
-                        $('#formSearch').after(data)
-                        // $.each(data, function (index, value) {
-                        //     $.each(value.data, function (index, value) {
-                        //         $('#example').append(
-                        //             '<tr>' +
-                        //             '<td>' + value.id + '</td>' +
-                        //             '<td>' + value.coderorder +
-                        //             '</td>' +
-                        //             '<td>' + value.uname + '</td>' +
-                        //             '<td>' + value.invoice + '</td>' +
-                        //             '<td>' + value.container + '</td>' +
-                        //             '<td>' + value.quantity + '</td>' +
-                        //             '<td>' + value.address + '</td>' +
-                        //             '<td class="modalImage"><a id="image" data-img="' +
-                        //             value.imghoadongiaohang + '"' +
-                        //             'data-id=' + value.id +
-                        //             ' href="javascript:"><img alt src=' +
-                        //             location.protocol + '//' + window
-                        //             .location
-                        //             .host + '/thumnails/' + value
-                        //             .imghoadongiaohang + '></a>' +
-                        //             '<td>' + value.delivery_time +
-                        //             '</td>' +
-                        //             +'</tr>'
-                        //         )
-                        //     })
-                        // })
+    $(document).ready(function(){
+        $.ajax({ 
+            url: "productReality/get-table",
+            context: document.body,
+            success: function(data){
+                $('#data-table').append(data);
+        }});
+    });
 
-                        // data.paginate.links
-
-                        // console.log('<nav><ul class="pagination">'
-                        //         + data.paginate.links.slice(1, data.paginate.links.length-1).map(page => {
-                        //             return `<li class="page-item"><a class="page-link" href="${page.url}">${page.label}</a></li>`
-                        //         }).join('')
-                        //     +'</ul></nav>')
-
-                        // $('#pagina').append(
-                        //     '<nav><ul class="pagination">'
-                        //         + `<li class="page-item ${data.paginate.current_page <= 1 && 'disabled'}"><a class="page-link" href="${data.paginate.links[0].url}">${data.paginate.links[0].label}</a></li>`
-                        //         + data.paginate.links.slice(1, data.paginate.links.length-1).map(page => {
-                        //             return `<li class="page-item ${data.paginate.current_page == page.label && 'active'}"><a class="page-link" href="${page.url}">${page.label}</a></li>`
-                        //         }).join('')
-                        //         + `<li class="page-item ${data.paginate.current_page >= data.paginate.last_page && 'disabled'}"><a class="page-link" href="${data.paginate.links[data.paginate.links.length-1].url}">${data.paginate.links[data.paginate.links.length-1].label}</a></li>`
-                        //     +'</ul></nav>'
-                        // )
-                        // }
-
-                    }
-                })
+    $("#search").on("click", function(e) {
+            var uname = $('#uname2').val();
+            var codeorder = $('#codeorder2').val();
+            var container = $('#container2').val();
+            var invoice = $('#invoice2').val();
+            var quantity = $('#quantity2').val();
+            $.ajax({
+                type: "GET",
+                url: "/warehouses/productReality/get-table",
+                data: {
+                    uname: uname,
+                    codeorder: codeorder,
+                    container: container,
+                    invoice: invoice,
+                    quantity: quantity
+                },
+            success:function(data) {
+                $('#data-table').html('').append(data);
+            },
+            error:function(result) {
+                alert('error');
             }
-        })
+        });
+    });
+
+    $(document).ready(function () {
+        // // $.ajaxSetup({
+        // //     headers: {
+        // //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        // //     }
+        // // });
+        // $('#12312').click(function () {
+        //     // $('#example').empty();
+        //     // $('#pagina').empty();
+        //     var uname2 = $('#uname2').val();
+        //     var codeorder2 = $('#codeorder2').val();
+        //     var container2 = $('#container2').val();
+        //     var invoice2 = $('#invoice2').val();
+        //     var quantity2 = $('#quantity2').val();
+        //     if (((uname2 == "") && (codeorder2 == "")) && ((container2 == "") && (invoice2 == "")) && (
+        //             quantity2 == "")) {
+        //         toastr.error('Chưa nhập dữ liệu tìm kiếm', 'Notifacation', {
+        //             timeOut: 1000
+        //         });
+        //     } else {
+        //         $.ajax({
+        //             type: 'GET',
+        //             url: './productReality/search',
+        //             cache: false,
+        //             data: {
+        //                 uname2: uname2,
+        //                 codeorder2: codeorder2,
+        //                 container2: container2,
+        //                 invoice2: invoice2,
+        //                 quantity2: quantity2
+        //             },
+        //             success: function (data) {
+        //                 console.log(data)
+        //                 // if (data.data.length == 0) {
+        //                 //     toastr.error('Không có dữ liệu', '', {
+        //                 //         timeOut: 1000
+        //                 //     })
+        //                 // } else {
+        //                 $('#myTable').empty();
+        //                 $('#pagina').empty();
+        //                 $.each(data, function (index, value) {
+        //                     $.each(value.data, function (index, value) {
+        //                         $('#example').append(
+        //                             '<tr>' +
+        //                             '<td>' + value.id + '</td>' +
+        //                             '<td>' + value.coderorder +
+        //                             '</td>' +
+        //                             '<td>' + value.uname + '</td>' +
+        //                             '<td>' + value.invoice + '</td>' +
+        //                             '<td>' + value.container + '</td>' +
+        //                             '<td>' + value.quantity + '</td>' +
+        //                             '<td>' + value.address + '</td>' +
+        //                             '<td class="modalImage"><a id="image" data-img="' +
+        //                             value.imghoadongiaohang + '"' +
+        //                             'data-id=' + value.id +
+        //                             ' href="javascript:"><img alt src=' +
+        //                             location.protocol + '//' + window
+        //                             .location
+        //                             .host + '/thumnails/' + value
+        //                             .imghoadongiaohang + '></a>' +
+        //                             '<td>' + value.delivery_time +
+        //                             '</td>' +
+        //                             +'</tr>'
+        //                         )
+        //                     })
+        //                 })
+        //                 $('#pagina').append(data.paginate.links)
+        //                 // }
+
+        //             }
+        //         })
+        //     }
+        // })
         $('#Image').change(function () {
 
             let reader = new FileReader();
@@ -390,22 +367,7 @@
         // setTimeout(function(){
         //     $('.thongbaothanhcong').
         // },2000)
-        $('.modalImage').click(function (e) {
-            const img = $(this).find('a').data('img');
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
-                        .attr('content')
-                },
-                type: 'GET',
-                url: "./productReality/img" + '/' + img,
-
-                success: function (data) {
-                    $('#modalDetail').modal('show');
-                    $('.modal-content').html('').append(data);
-                }
-            });
-        });
+        
 
         // $('.viewUpdate').click(function () {
         //     const jan_code = $(this).data('code');
