@@ -19,6 +19,7 @@ use App\Http\Controllers\Warehouses\ExportedController;
 use App\Http\Controllers\Warehouses\InventoryController;
 use App\Http\Controllers\Warehouses\ImportedController;
 use App\Http\Controllers\Warehouses\productRealityController;
+use App\Models\addressCustomer;
 use App\Models\productReality;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -179,8 +180,6 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::get('search', [productRealityController::class, 'getSearch'])->name('getSearch');
         Route::get('get-table', [productRealityController::class, 'dataTable'])->name('get-table');
     });
-
-
     Route::prefix('commons')->middleware('role')->name('commons.')->group(function () {
         Route::get('/search-user', [LedgerController::class, 'searchUser'])->name('search-user');
         Route::get('/search-code-order', [InvoiceController::class, 'searchCodeOrder'])->name('searchCodeOrder');
@@ -225,6 +224,6 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::get('/{idTP}', [addressBookController::class, 'getDistrict'])->name('getDistrict');
         Route::get('/district/{idQH}', [addressBookController::class, 'getWard'])->name('getWard');
         Route::get('/modal/address/{id}', [addressBookController::class, 'getAddress'])->name('getAddress');
-        // Route::get('/search')
+        Route::get('/search',[addressCustomer::class,'search'])->name('getSearch');
     });
 });

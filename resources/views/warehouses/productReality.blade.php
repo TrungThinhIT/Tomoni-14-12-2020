@@ -205,7 +205,7 @@
             }
         });
     });
-    $('#excel').click(function(){
+    $('#excel').click(function () {
         document.forms["submit"].submit();
     })
     $("#submit").submit(function (e) {
