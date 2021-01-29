@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouses;
 
+use App\Exports\ProductReality\ProductRealityExcel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\warehouse\productRealityRequest;
 use App\Models\productReality;
@@ -18,6 +19,13 @@ class productRealityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected $productRealityExport;
+
+    public function __construct(ProductRealityExcel $productRealityExport)
+    {
+        $this->productRealityExport = $productRealityExport;
+    }
+
     public function getAddress($id)
     {
         $uname = addressCustomer::find($id)->uname;
@@ -29,7 +37,7 @@ class productRealityController extends Controller
     public function index()
     {
         //
-        $product_reality = productReality::paginate(2);
+        $product_reality = productReality::paginate(10);
         $unames = addressCustomer::all('id', 'uname')->unique('uname');
         return view('warehouses.productReality', compact('product_reality', 'unames'));
     }
@@ -41,27 +49,34 @@ class productRealityController extends Controller
         $container = $request->container;
         $invoice = $request->invoice;
         $quantity = $request->quantity;
-
+        $export = $request->export;
+        // dd($request->all());
         $product_reality = productReality::query();
 
-        if ($uname) {
+        if ($uname != "") {
             $product_reality = $product_reality->where('uname', $uname);
         }
 
-        if ($codeorder) {
+        if ($codeorder != "") {
             $product_reality = $product_reality->where('codeorder', $codeorder);
         }
 
-        if ($container) {
+        if ($container != "") {
             $product_reality = $product_reality->where('container', $container);
         }
 
-        if ($invoice) {
+        if ($invoice != "") {
             $product_reality = $product_reality->where('invoice', $invoice);
         }
 
-        if ($quantity) {
+        if ($quantity != "") {
             $product_reality = $product_reality->where('quantity', $quantity);
+        }
+
+        if ($export == "true") {
+            $products = $product_reality->get();
+            // dd($products);
+            return $this->productRealityExport->ExportProduct($products);
         }
 
         $product_reality = $product_reality->paginate(10);
@@ -209,7 +224,7 @@ class productRealityController extends Controller
         //     return response()->json($data);
         // }
         $search = $search->paginate(2);
-        return view('warehouses.includes.searchProductReality',compact('search'));
+        return view('warehouses.includes.searchProductReality', compact('search'));
         // $search->withQueryString()->links('commons.paginate');
         $data = ['paginate' => $search];
         return response()->json($data);
