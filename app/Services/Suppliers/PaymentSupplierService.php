@@ -16,7 +16,7 @@ class PaymentSupplierService
 
     public function index(Request $request){
         $suppliers = DB::table('supplier')->get();
-        $sSupplierId = $request->sSupplierId;
+        $sSupplierId = $request->sSupplierId;   
         $date_inprice = $request->date_inprice;
         $date_insert = $request->date_insert;
         $Sohoadon = $request->Sohoadon;

