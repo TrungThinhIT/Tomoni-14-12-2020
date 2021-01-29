@@ -23,6 +23,7 @@
     #custom {
         margin-right: -70px;
     }
+
 </style>
 @section('title', 'Hàng thực tế')
 @section('content')
@@ -171,8 +172,9 @@
                             placeholder="Quantity">
                     </div>
                     <div class="col-md-1">
-                        <button id="excel" class="btn btn-success">EXCEL</button>
+                        <button id="excel" onlick="" class="btn btn-success">EXCEL</button>
                     </div>
+
                     {{-- <div class="form-group">
                         <label for="validationDefault01">Uname</label>
                         <input class="form-control" type="text" name="uname2" placeholder="">
@@ -214,35 +216,36 @@
 </div>
 
 <script>
-    $(document).ready(function(){
-        $.ajax({ 
+    $(document).ready(function () {
+        $.ajax({
             url: "productReality/get-table",
             context: document.body,
-            success: function(data){
+            success: function (data) {
                 $('#data-table').append(data);
-        }});
+            }
+        });
     });
 
-    $("#search").on("click", function(e) {
-            var uname = $('#uname2').val();
-            var codeorder = $('#codeorder2').val();
-            var container = $('#container2').val();
-            var invoice = $('#invoice2').val();
-            var quantity = $('#quantity2').val();
-            $.ajax({
-                type: "GET",
-                url: "/warehouses/productReality/get-table",
-                data: {
-                    uname: uname,
-                    codeorder: codeorder,
-                    container: container,
-                    invoice: invoice,
-                    quantity: quantity
-                },
-            success:function(data) {
+    $("#search").on("click", function (e) {
+        var uname = $('#uname2').val();
+        var codeorder = $('#codeorder2').val();
+        var container = $('#container2').val();
+        var invoice = $('#invoice2').val();
+        var quantity = $('#quantity2').val();
+        $.ajax({
+            type: "GET",
+            url: "/warehouses/productReality/get-table",
+            data: {
+                uname: uname,
+                codeorder: codeorder,
+                container: container,
+                invoice: invoice,
+                quantity: quantity
+            },
+            success: function (data) {
                 $('#data-table').html('').append(data);
             },
-            error:function(result) {
+            error: function (result) {
                 alert('error');
             }
         });
@@ -367,7 +370,7 @@
         // setTimeout(function(){
         //     $('.thongbaothanhcong').
         // },2000)
-        
+
 
         // $('.viewUpdate').click(function () {
         //     const jan_code = $(this).data('code');
