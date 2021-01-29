@@ -96,7 +96,7 @@ class InventoryService
 
         $inventories = $inventories->groupBy('Jancode');
 
-        $inventories = $inventories->sortBy('Dateinsert')->paginate(10);
+        $inventories = $inventories->sortBy('Dateinsert')->paginate(1);
         return ['inventories' => $inventories, 'jan_code' => $janCode, 'status' => $status];
     }
 
@@ -161,10 +161,10 @@ class InventoryService
             }
             $inventories = $inventories->values();
         if ($request->ajax() || 'NULL') {
-            $inventory = $inventories->paginate(10);
+            $inventory = $inventories->paginate(1);
             return view('warehouses.includes.modalInventory', compact('inventory', 'jancode', 'status'));
         } else {
-            $inventory = $inventories->paginate(10);
+            $inventory = $inventories->paginate(1);
             return view('warehouses.includes.modalInventory', compact('inventory', 'jancode', 'status'));
         }
     }

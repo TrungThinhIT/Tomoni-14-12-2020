@@ -125,9 +125,45 @@
                                 </div>
                     </div>
                     </fieldset>
-
                     </form>
-                    <div style="float: right" class="mt-3">
+                    <hr>
+                    <div>
+                        <div class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">
+                            <div class="form-group">
+                                <label for="validationDefault01">Uname</label>
+                                <select class="form-control" name="selectUname2" id="selectUname2">
+                                    <option value="">----------</option>
+                                    @foreach ($unames as $item)
+                                    <option value="{{$item->Id}}">{{$item->uname}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="validationDefault01">Uname</label>
+                                <select class="form-control" name="selectUname2" id="selectUname2">
+                                    <option value="">----------</option>
+                                    @foreach ($unames as $item)
+                                    <option value="{{$item->Id}}">{{$item->uname}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="validationDefault01">Uname</label>
+                                <select class="form-control" name="selectUname2" id="selectUname2">
+                                    <option value="">----------</option>
+                                    @foreach ($unames as $item)
+                                    <option value="{{$item->Id}}">{{$item->uname}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div style="width: 50%">
+                                    <button class="form-control btn btn-primary">SEARCH</button>
+                                    <button class="form-control btn btn-success">aaa</button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <table id="example" class="table table-bordered table-striped"
                         style="margin-top: 1%; margin-right: 1%;">
@@ -161,7 +197,7 @@
                         </tbody>
                     </table>
 
-                    <div style="float: right" class="mt-3">
+                    <div id="pagina" style="float: right" class="mt-3">
                         {!! $list->withQueryString()->links('commons.paginate') !!}
                     </div>
                     <div class="modal" id="modalDetail">
@@ -186,7 +222,14 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+        $('#search').click(function (e) {
+            alert($('input[name="search"]').val());
 
+            $('#example').empty();
+            $('#pagina').empty();
+            e.preventDefault();
+
+        })
         $('#Image').change(function () {
 
             let reader = new FileReader();

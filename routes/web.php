@@ -176,6 +176,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::resource('', productRealityController::class);
         Route::get('getAddres/{uname}', [productRealityController::class, 'getAddress'])->name('getAdress');
         Route::get('img/{img}',[productRealityController::class,'getImage'])->name('getImage');
+        Route::get('search',[productRealityController::class,'getSearch'])->name('getSearch');
     });
 
 
@@ -223,5 +224,6 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::get('/{idTP}', [addressBookController::class, 'getDistrict'])->name('getDistrict');
         Route::get('/district/{idQH}', [addressBookController::class, 'getWard'])->name('getWard');
         Route::get('/modal/address/{id}',[addressBookController::class,'getAddress'])->name('getAddress');
+        // Route::get('/search')
     });
 });

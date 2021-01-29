@@ -46,7 +46,8 @@ class addressBookController extends Controller
         $users = User::all();
         $citys = devvn_City::all();
         $list = addressCustomer::paginate(10);
-        return view('addressBook.index', compact('citys', 'users', 'list'));
+        $unames = addressCustomer::all('id', 'uname')->unique('uname');
+        return view('addressBook.index', compact('citys', 'users', 'list','unames'));
     }
 
     /**

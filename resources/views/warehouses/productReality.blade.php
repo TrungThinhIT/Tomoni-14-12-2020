@@ -1,5 +1,6 @@
 @extends('layout')
 @section('css')
+
 <style>
     .form-control {
         height: unset !important;
@@ -12,6 +13,15 @@
 
     img :hover {
         box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5) !important;
+    }
+
+    .inputCustom {
+        margin: 3px !important;
+
+    }
+
+    #custom {
+        margin-right: -70px;
     }
 
 </style>
@@ -135,7 +145,58 @@
             </fieldset>
 
             </form>
-            <div style="float: right" class="mt-3">
+            <hr>
+            <div>
+                <div class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">
+                    <div class="col-md-2" id="custom">
+                        <button id="search" class="btn btn-primary">SEARCH</button>
+                    </div>
+                    <div class="col-md-2">
+                        <input id="uname2" class="form-control inputCustom" type="text" name="uname2"
+                            placeholder="Uname.....................">
+                    </div>
+                    <div class="col-md-2">
+                        <input id="codeorder2" class="form-control inputCustom" type="text" name=" coderorder2"
+                            placeholder="CoderOrder.....................">
+                    </div>
+                    <div class="col-md-2">
+                        <input id="container2" class="form-control inputCustom" type="text" name="container2"
+                            placeholder="Container.......................">
+                    </div>
+                    <div class="col-md-2">
+                        <input id="invoice2" class="form-control inputCustom" type="text" name="invoice2"
+                            placeholder="Invoice.............................">
+                    </div>
+                    <div class="col-md-1">
+                        <input id="quantity2" class="form-control inputCustom" type="text" name="quantity"
+                            placeholder="Quantity">
+                    </div>
+                    <div class="col-md-1">
+                        <button id="excel" class="btn btn-success">EXCEL</button>
+                    </div>
+                    {{-- <div class="form-group">
+                        <label for="validationDefault01">Uname</label>
+                        <input class="form-control" type="text" name="uname2" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="validationDefault01">CodeOrder</label>
+                        <input class="form-control" type="text" name="uname2" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="validationDefault01">Invoice</label>
+                        <input class="form-control" type="text" name="uname2" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="validationDefault01">Container</label>
+                        <input class="form-control" type="text" name="uname2" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <div style="width: 50%">
+                            <button class="btn btn-success form-control">EXCEL</button>
+                            <button class="btn btn-primary form-control">SEARCH</button>
+                        </div>
+                    </div> --}}
+                </div>
             </div>
             <table id="example" class="table table-bordered table-striped" style="margin-top: 1%; margin-right: 1%;">
                 <thead>
@@ -173,7 +234,7 @@
 
                 </tbody>
             </table>
-            <div style="float: right" class="mt-3">
+            <div id="pagina" style="float: right" class="mt-3">
                 {!! $product_reality->withQueryString()->links('commons.paginate') !!}
             </div>
             <div class="modal" id="modalDetail">
@@ -198,7 +259,73 @@
         //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         //     }
         // });
+        $('#search').click(function () {
+            // $('#example').empty();
+            // $('#pagina').empty();
+            var uname2 = $('#uname2').val();
+            var codeorder2 = $('#codeorder2').val();
+            var container2 = $('#container2').val();
+            var invoice2 = $('#invoice2').val();
+            var quantity2 = $('#quantity2').val();
+            if (((uname2 == "") && (codeorder2 == "")) && ((container2 == "") && (invoice2 == "")) && (
+                    quantity2 == "")) {
+                toastr.error('Chưa nhập dữ liệu tìm kiếm', 'Notifacation', {
+                    timeOut: 1000
+                });
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    url: './productReality/search',
+                    cache: false,
+                    data: {
+                        uname2: uname2,
+                        codeorder2: codeorder2,
+                        container2: container2,
+                        invoice2: invoice2,
+                        quantity2: quantity2
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        // if (data.data.length == 0) {
+                        //     toastr.error('Không có dữ liệu', '', {
+                        //         timeOut: 1000
+                        //     })
+                        // } else {
+                        $('#myTable').empty();
+                        $('#pagina').empty();
+                        $.each(data, function (index, value) {
+                            $.each(value.data, function (index, value) {
+                                $('#example').append(
+                                    '<tr>' +
+                                    '<td>' + value.id + '</td>' +
+                                    '<td>' + value.coderorder +
+                                    '</td>' +
+                                    '<td>' + value.uname + '</td>' +
+                                    '<td>' + value.invoice + '</td>' +
+                                    '<td>' + value.container + '</td>' +
+                                    '<td>' + value.quantity + '</td>' +
+                                    '<td>' + value.address + '</td>' +
+                                    '<td class="modalImage"><a id="image" data-img="' +
+                                    value.imghoadongiaohang + '"' +
+                                    'data-id=' + value.id +
+                                    ' href="javascript:"><img alt src=' +
+                                    location.protocol + '//' + window
+                                    .location
+                                    .host + '/thumnails/' + value
+                                    .imghoadongiaohang + '></a>' +
+                                    '<td>' + value.delivery_time +
+                                    '</td>' +
+                                    +'</tr>'
+                                )
+                            })
+                        })
+                        $('#pagina').append(data.paginate.links)
+                        // }
 
+                    }
+                })
+            }
+        })
         $('#Image').change(function () {
 
             let reader = new FileReader();
