@@ -34,6 +34,40 @@ class productRealityController extends Controller
         return view('warehouses.productReality', compact('product_reality', 'unames'));
     }
 
+    public function dataTable(Request $request)
+    {
+        $uname = $request->uname;
+        $codeorder = $request->codeorder;
+        $container = $request->container;
+        $invoice = $request->invoice;
+        $quantity = $request->quantity;
+
+        $product_reality = productReality::query();
+
+        if ($uname) {
+            $product_reality = $product_reality->where('uname', $uname);
+        }
+
+        if ($codeorder) {
+            $product_reality = $product_reality->where('codeorder', $codeorder);
+        }
+
+        if ($container) {
+            $product_reality = $product_reality->where('container', $container);
+        }
+
+        if ($invoice) {
+            $product_reality = $product_reality->where('invoice', $invoice);
+        }
+
+        if ($quantity) {
+            $product_reality = $product_reality->where('quantity', $quantity);
+        }
+
+        $product_reality = $product_reality->paginate(2);
+        return view('warehouses.includes.tableProductReality', compact('product_reality'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *

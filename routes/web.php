@@ -175,8 +175,9 @@ Route::prefix('/')->middleware('auth')->group(function () {
     Route::prefix('warehouses/productReality')->middleware('role')->name('warehouses.productReality.')->group(function () {
         Route::resource('', productRealityController::class);
         Route::get('getAddres/{uname}', [productRealityController::class, 'getAddress'])->name('getAdress');
-        Route::get('img/{img}',[productRealityController::class,'getImage'])->name('getImage');
-        Route::get('search',[productRealityController::class,'getSearch'])->name('getSearch');
+        Route::get('img/{img}', [productRealityController::class, 'getImage'])->name('getImage');
+        Route::get('search', [productRealityController::class, 'getSearch'])->name('getSearch');
+        Route::get('get-table', [productRealityController::class, 'dataTable'])->name('get-table');
     });
 
 
@@ -223,7 +224,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::resource('index', addressBookController::class);
         Route::get('/{idTP}', [addressBookController::class, 'getDistrict'])->name('getDistrict');
         Route::get('/district/{idQH}', [addressBookController::class, 'getWard'])->name('getWard');
-        Route::get('/modal/address/{id}',[addressBookController::class,'getAddress'])->name('getAddress');
+        Route::get('/modal/address/{id}', [addressBookController::class, 'getAddress'])->name('getAddress');
         // Route::get('/search')
     });
 });
