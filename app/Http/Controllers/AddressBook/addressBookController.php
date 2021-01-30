@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\devvn_District;
 use App\Models\devv_xaphuongthitran;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use App\Exports\AddressBook\addressBookExport;
 
 class addressBookController extends Controller
 {
@@ -20,6 +21,47 @@ class addressBookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    protected $addBookExport;
+    public function __construct(addressBookExport $addBookExport)
+    {
+        $this->addBookExport = $addBookExport;
+    }
+    public function search(Request $request)
+    {
+        $uname = $request->uname;
+        $addcode = $request->addcode;
+        $address = $request->address;
+        $phone = $request->phone;
+        $export  = $request->checkbox;
+        // dd($request->all());
+        // return response()->json($request->all());
+        $addressBookSearch = addressCustomer::query();
+
+        if ($uname != "") {
+            $addressBookSearch = $addressBookSearch->where('uname', $uname);
+        }
+
+        if ($addcode != "") {
+            $addressBookSearch = $addressBookSearch->where('addcode', $addcode);
+        }
+
+        if ($address != "") {
+            $addressBookSearch = $addressBookSearch->where('address', 'like', '%' . $address . '%');
+        }
+
+        if ($phone != "") {
+            $addressBookSearch = $addressBookSearch->where('phonenumber', $phone);
+        }
+        // return response()->json($addressBookSearch->get());
+        if ($export == true) {
+            $addressBookExport = $addressBookSearch->orderBy('uname', 'ASC')->get();
+            // dd($addressBookExport);
+            return $this->addBookExport->ExportAddressBook($addressBookExport);
+        }
+        $list = $addressBookSearch->paginate(10);
+        // return response()->json($list);
+        return view('addressBook.modals.search', compact('list'));
+    }
     public function getWard($id) //ajax select Ward by District
     {
         if ($id < 10) {
@@ -47,7 +89,7 @@ class addressBookController extends Controller
         $citys = devvn_City::all();
         $list = addressCustomer::paginate(10);
         $unames = addressCustomer::all('id', 'uname')->unique('uname');
-        return view('addressBook.index', compact('citys', 'users', 'list','unames'));
+        return view('addressBook.index', compact('citys', 'users', 'list', 'unames'));
     }
 
     /**

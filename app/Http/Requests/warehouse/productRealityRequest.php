@@ -24,7 +24,7 @@ class productRealityRequest extends FormRequest
     public function rules()
     {
         return [
-            'CodeOrder'=>'required',
+            'CodeOrder'=>'required|exists:oder,codeorder',
             'selectUname'=>'required',
             'Invoice'=>'required',
             'Container'=>'required',

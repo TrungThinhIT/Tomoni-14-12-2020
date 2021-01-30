@@ -42,22 +42,22 @@
         var page = $(this).attr('href').split('page=')[1];
         getPosts(page);
     });
-    
+
     function getPosts(page) {
         var uname = $('#uname2').val();
         var codeorder = $('#codeorder2').val();
         var container = $('#container2').val();
         var invoice = $('#invoice2').val();
         var quantity = $('#quantity2').val();
-    $.ajax({
+        $.ajax({
             type: "GET",
             url: 'productReality/get-table/' + '?page=' + page,
             data: {
-            uname: uname,
-            codeorder: codeorder,
-            container: container,
-            invoice: invoice,
-            quantity: quantity
+                uname: uname,
+                codeorder: codeorder,
+                container: container,
+                invoice: invoice,
+                quantity: quantity
             },
             success: function (data) {
                 $('#data-table').html('').append(data);
@@ -65,20 +65,21 @@
         })
     }
     $('.modalImage').click(function (e) {
-    console.log(e);
-    const img = $(this).find('a').data('img');
-    $.ajax({
-    headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
-    .attr('content')
-    },
-    type: 'GET',
-    url: "./productReality/img" + '/' + img,
-    
-    success: function (data) {
-    $('#modalDetail').modal('show');
-    $('.modal-content').html('').append(data);
-    }
+        console.log(e);
+        const img = $(this).find('a').data('img');
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                    .attr('content')
+            },
+            type: 'GET',
+            url: "./productReality/img" + '/' + img,
+
+            success: function (data) {
+                $('#modalDetail').modal('show');
+                $('.modal-content').html('').append(data);
+            }
+        });
     });
-    });
+
 </script>
