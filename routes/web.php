@@ -179,6 +179,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::get('img/{img}', [productRealityController::class, 'getImage'])->name('getImage');
         Route::get('search', [productRealityController::class, 'getSearch'])->name('getSearch');
         Route::get('get-table', [productRealityController::class, 'dataTable'])->name('get-table');
+        Route::get('getCodeOrder',[productRealityController::class,'getCodeOrder'])->name('getCodeOrder');
     });
     Route::prefix('commons')->middleware('role')->name('commons.')->group(function () {
         Route::get('/search-user', [LedgerController::class, 'searchUser'])->name('search-user');

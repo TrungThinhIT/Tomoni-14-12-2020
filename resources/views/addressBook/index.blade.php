@@ -135,10 +135,11 @@
                         <hr>
                         <div>
                             <div>
-                                <form id="filterForm" class="form-group" method="GET">
+                                <form id="filterForm" class="form-group" method="GET" name="filterForm"
+                                    action="{{route('addressbook.getsearch')}}">
                                     <div class="form-row">
                                         <div class="col-md-2">
-                                            <input class="btn btn-primary" type="submit" name="submit" value="SEARCH">
+                                            <input class="btn btn-primary" type="submit" value="SEARCH">
                                         </div>
                                         <div class="col-md-2">
                                             <input id="uname" class="form-control customBtn" type="text" name="uname"
@@ -160,8 +161,8 @@
                                             <input type="checkbox" name="checkbox" checked hidden>
                                         </div>
                                         <div class="col-md-2">
-                                            <input class="btn btn-success customBtn" type="button" name="excel"
-                                                value="EXCEL">
+                                            <input class="btn btn-success customBtn" id="excel" type="button"
+                                                name="excel" value="EXCEL">
                                         </div>
                                     </div>
                                 </form>
@@ -220,7 +221,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 <script>
-  
     $(document).ready(function () {
         $.ajaxSetup({
             headers: {
@@ -233,7 +233,6 @@
             var address = $('#address').val();
             var phone = $('#phone3').val();
             var addcode = $('#addcode').val();
-            console.log(uname + '-' + address + '-' + phone + '-' + addcode)
             $('#example').remove();
             $('#pagina').remove();
             $.ajax({
@@ -246,12 +245,17 @@
                     addcode: addcode
                 },
                 success: function (data) {
-                    console.log(data)
                     $('#data-table').html('').append(data)
                 }
             })
         })
+        $('#excel').click(function () {
+            // console.log(document.forms["filterForm"])
+            document.forms["filterForm"].submit();
+            // $('#filterForm').submit();
+        })
     })
+
     $('#Image').change(function () {
 
         let reader = new FileReader();
@@ -272,7 +276,6 @@
             cache: false,
             url: id,
             success: function (res) {
-                console.log(res)
                 $('#selectDistrict').append(new Option("Chọn quận/huyện", ""))
                 $.each(res, function (index, value) {
                     $('#selectDistrict').append(new Option(value.name, value
@@ -289,7 +292,6 @@
             cache: false,
             url: "district/" + id,
             success: function (res) {
-                console.log(res)
                 $("#Ward").append(new Option("Chọn xã/phường/", ""))
                 $.each(res, function (index, value) {
                     $('#Ward').append(new Option(value.name, value
@@ -309,7 +311,6 @@
             type: 'GET',
             url: "index/" + id,
             success: function (data) {
-                console.log(data)
                 $('#modalDetail').modal('show');
                 $('.modal-content').html('').append(data);
             }

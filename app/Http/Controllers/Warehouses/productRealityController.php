@@ -8,6 +8,7 @@ use App\Http\Requests\warehouse\productRealityRequest;
 use App\Models\productReality;
 use Illuminate\Http\Request;
 use App\Models\addressCustomer;
+use App\Models\Order;
 use finfo;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -25,7 +26,11 @@ class productRealityController extends Controller
     {
         $this->productRealityExport = $productRealityExport;
     }
-
+    public function getCodeOrder(Request $request)
+    {
+        $codeorder  = Order::where('codeorder', 'like', '%' . $request->search_ordercode . '%')->limit(10)->get();
+        return response()->json($codeorder);
+    }
     public function getAddress($id)
     {
         $uname = addressCustomer::find($id)->uname;
@@ -53,29 +58,29 @@ class productRealityController extends Controller
         // dd($request->all());
         $product_reality = productReality::query();
 
-        if ($uname != "") {
+        if ($uname ) {
             $product_reality = $product_reality->where('uname', $uname);
         }
 
-        if ($codeorder != "") {
-            $product_reality = $product_reality->where('codeorder', $codeorder);
+        if ($codeorder ) {
+            $product_reality = $product_reality->where('codeorder','like','%'. $codeorder.'%');
         }
 
-        if ($container != "") {
+        if ($container ) {
             $product_reality = $product_reality->where('container', $container);
         }
 
-        if ($invoice != "") {
+        if ($invoice ) {
             $product_reality = $product_reality->where('invoice', $invoice);
         }
 
-        if ($quantity != "") {
+        if ($quantity ) {
             $product_reality = $product_reality->where('quantity', $quantity);
         }
 
         if ($export == "true") {
             $products = $product_reality->get();
-            // dd($products);
+            // dd($product_reality);
             return $this->productRealityExport->ExportProduct($products);
         }
 
@@ -194,39 +199,39 @@ class productRealityController extends Controller
     {
         //
     }
-    public function getSearch(Request $request)
-    {
-        // return response()->json($request->all());
-        $uname = $request->uname2;
-        $codeorder = $request->codeorder2;
-        $container =  $request->container2;
-        $invoice = $request->invoice2;
-        $quantity = $request->quantity2;
-        $search = productReality::select();
-        if ($uname != "") {
-            $search = $search->where('uname', $uname);
-        }
-        if ($codeorder != "") {
-            $search = $search->where('codeorder', $codeorder);
-        }
-        if ($container != "") {
-            $search = $search->where('container', $container);
-        }
-        if ($invoice != "") {
-            $search = $search->where('invoice', $invoice);
-        }
-        if ($quantity != "") {
-            $search = $search->where('quantity', $quantity);
-        }
+    // public function getSearch(Request $request)
+    // {
+    //     // return response()->json($request->all());
+    //     $uname = $request->uname2;
+    //     $codeorder = $request->codeorder2;
+    //     $container =  $request->container2;
+    //     $invoice = $request->invoice2;
+    //     $quantity = $request->quantity2;
+    //     $search = productReality::select();
+    //     if ($uname != "") {
+    //         $search = $search->where('uname', $uname);
+    //     }
+    //     if ($codeorder != "") {
+    //         $search = $search->where('codeorder', 'like', '%' . $codeorder . '%');
+    //     }
+    //     if ($container != "") {
+    //         $search = $search->where('container', $container);
+    //     }
+    //     if ($invoice != "") {
+    //         $search = $search->where('invoice', $invoice);
+    //     }
+    //     if ($quantity != "") {
+    //         $search = $search->where('quantity', $quantity);
+    //     }
 
-        $data = $search->get()->toArray();
-        // if (!empty($data)) {
-        //     return response()->json($data);
-        // }
-        $search = $search->paginate(2);
-        return view('warehouses.includes.searchProductReality', compact('search'));
-        // $search->withQueryString()->links('commons.paginate');
-        $data = ['paginate' => $search];
-        return response()->json($data);
-    }
+    //     $data = $search->get()->toArray();
+    //     // if (!empty($data)) {
+    //     //     return response()->json($data);
+    //     // }
+    //     $search = $search->paginate(2);
+    //     return view('warehouses.includes.searchProductReality', compact('search'));
+    //     // $search->withQueryString()->links('commons.paginate');
+    //     $data = ['paginate' => $search];
+    //     return response()->json($data);
+    // }
 }

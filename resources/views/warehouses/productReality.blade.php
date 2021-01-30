@@ -45,7 +45,7 @@
                     </div>
                     @endif --}}
                     @if (session('wrong'))
-                    <div class="alert alert-danger">{{session('wrong')}}</div>v
+                    <div class="alert alert-danger">{{session('wrong')}}</div>
                     @endif
                     <form runat="server" action="{{route('warehouses.productReality.store')}}" method="POST"
                         enctype="multipart/form-data">
@@ -54,8 +54,12 @@
                             <div class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">
                                 <div class="col-md-2 mb-2">
                                     <label for="validationDefault01">CodeOrder</label>
-                                    <input id="CodeOrder" value="{{old('CodeOrder')}}" type="text" class="form-control"
-                                        name="CodeOrder" id="uinvoice" placeholder="Nhập CodeOrder">
+                                    <input id="CodeOrder" value="{{old('CodeOrder')}}" type="text" list="listcodeOrders"
+                                        class="form-control" name="CodeOrder" id="invoice"
+                                        onkeyup="searchCodeOrder(this)" placeholder="Nhập CodeOrder">
+                                    <datalist id="listcodeOrders">
+
+                                    </datalist>
                                     @error('CodeOrder')
                                     <div style="color: red">{{$message}}</div>
                                     @enderror
@@ -109,87 +113,69 @@
                                     <div style="color: red">{{$message}}</div>
                                     @enderror
                                 </div>
-                                {{-- <div class="col-md-2 mb-2">
-                                        <label for="validationDefault01">Delivery Date</label>
-                                        <input type="date" id="DeliveryDate" name="DeliveryDate" class="form-control"
-                                            value="{{old('DeliveryDate')}}">
-                                @error('DeliveryDate')
-                                <div style="color: red">{{$message}}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-2 mb-2">
-                                <label for="validationDefault01">Delivery time</label>
-                                <input id="DeliveryTime" type="time" min="1" name="DeliveryTime" class="form-control"
-                                    value="{{old('DeliveryTime')}}">
-                                @error('DeliveryTime')
-                                <div style="color: red">{{$message}}</div>
-                                @enderror
-                            </div> --}}
-                            <div class="col-md-4 mb-2">
-                                <label for="validationDefault01">Image</label>
-                                <input id="Image" type="file" name="Image" class="form-control"
-                                    placeholder="Choose image">
-                                @error('Image')
-                                <div style=" color: red">{{$message}}</div>
-                                @enderror
-                            </div>
-                            <div class="col-md-2 mb-2">
-                                <img id="img" width="150px" height="150px" src="" hidden>
-                            </div>
-                            <div class="col-md-2 mb-2">
-                                <input style="margin-top:13%" type="submit" id="BtnSubmit" name="submit"
-                                    class="btn btn-primary" value="submit">
-                            </div>
+                                <div class="col-md-4 mb-2">
+                                    <label for="validationDefault01">Image</label>
+                                    <input id="Image" type="file" name="Image" class="form-control"
+                                        placeholder="Choose image">
+                                    @error('Image')
+                                    <div style=" color: red">{{$message}}</div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <img id="img" width="150px" height="150px" src="" hidden>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <input style="margin-top:13%" type="submit" id="BtnSubmit" name="submit"
+                                        class="btn btn-primary" value="submit">
+                                </div>
+                        </fieldset>
                 </div>
-            </div>
-            </fieldset>
-
-            </form>
-            <hr>
-            <div>
-                <form id="submit" action="{{ route('warehouses.productReality.get-table') }}" method="GET">
-                    <div class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">
-                        <div class="col-md-2" id="custom">
-                            <input id="search" type="submit" class="btn btn-primary" value="SEARCH">
-                        </div>
-                        <div class="col-md-2">
-                            <input id="uname2" class="form-control inputCustom" type="text" name="uname"
-                                placeholder="Uname.....................">
-                        </div>
-                        <div class="col-md-2">
-                            <input id="codeorder2" class="form-control inputCustom" type="text" name=" coderorder"
-                                placeholder="CoderOrder.....................">
-                        </div>
-                        <div class="col-md-2">
-                            <input id="container2" class="form-control inputCustom" type="text" name="container"
-                                placeholder="Container.......................">
-                        </div>
-                        <div class="col-md-2">
-                            <input id="invoice2" class="form-control inputCustom" type="text" name="invoice"
-                                placeholder="Invoice.............................">
-                        </div>
-                        <div class="col-md-1">
-                            <input id="quantity2" class="form-control inputCustom" type="text" name="quantity"
-                                placeholder="Quantity">
-                        </div>
-                        <input type="text" name="export" value="true" hidden>
-                        <div class="col-md-1">
-                            <button id="excel" type="submit" class="btn btn-success">EXCEL</button>
-                        </div>
-                    </div>
                 </form>
-            </div>
-            <div id="data-table"></div>
-            <div class="modal" id="modalDetail">
-                <div class="modal-dialog modal-lg" style="min-width: 90%;">
-                    <div class="modal-content">
+                <hr>
+                <div>
+                    <form id="submit" action="{{ route('warehouses.productReality.get-table') }}" method="GET">
+                        <div class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">
+                            <div class="col-md-2" id="custom">
+                                <input id="search" type="submit" class="btn btn-primary" value="SEARCH">
+                            </div>
+                            <div class="col-md-2">
+                                <input id="uname2" class="form-control inputCustom" type="text" name="uname"
+                                    placeholder="Uname.....................">
+                            </div>
+                            <div class="col-md-2">
+                                <input id="codeorder2" class="form-control inputCustom" type="text" name=" codeorder"
+                                    placeholder="CoderOrder.....................">
+                            </div>
+                            <div class="col-md-2">
+                                <input id="container2" class="form-control inputCustom" type="text" name="container"
+                                    placeholder="Container.......................">
+                            </div>
+                            <div class="col-md-2">
+                                <input id="invoice2" class="form-control inputCustom" type="text" name="invoice"
+                                    placeholder="Invoice.............................">
+                            </div>
+                            <div class="col-md-1">
+                                <input id="quantity2" class="form-control inputCustom" type="text" name="quantity"
+                                    placeholder="Quantity">
+                            </div>
+                            <input type="text" name="export" value="true" hidden>
+                            <div class="col-md-1">
+                                <button id="excel" type="button" class="btn btn-success">EXCEL</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="data-table"></div>
+                <div class="modal" id="modalDetail">
+                    <div class="modal-dialog modal-lg" style="min-width: 90%;">
+                        <div class="modal-content">
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 </div>
 
@@ -208,6 +194,27 @@
     $('#excel').click(function () {
         document.forms["submit"].submit();
     })
+
+    function searchCodeOrder(obj) {
+        var text = $(obj).val();
+        if (text.length >= 3) {
+            $.ajax({
+                type: 'GET',
+                url: "./productReality/getCodeOrder",
+                data: {
+                    search_ordercode: text
+                },
+                success: function (response) {
+                    // console.log(response.anhmv)
+                    $('#listcodeOrders').empty()
+                    $.each(response, function (index, value) {
+                        $('#listcodeOrders').append(new Option("Quantity: " + value.quantity + ' ' +
+                            "Total: " + value.total, value.codeorder))
+                    })
+                }
+            });
+        }
+    }
     $("#submit").submit(function (e) {
         e.preventDefault();
         var uname = $('#uname2').val();
@@ -264,11 +271,13 @@
                     }
                     $.each(res.data, function (index, value) {
                         if (value.add_default == 1) {
-                            $('#selectedAddress').append(new Option(value.address,
+                            $('#selectedAddress').append(new Option(value
+                                .address,
                                 value.id, true, true))
                         } else {
                             $('#hidden').removeAttr('hidden')
-                            $('#selectedAddress').append(new Option(value.address,
+                            $('#selectedAddress').append(new Option(value
+                                .address,
                                 value.id))
                         }
                     })
