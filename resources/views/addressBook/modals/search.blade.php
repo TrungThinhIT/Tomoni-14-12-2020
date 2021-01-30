@@ -1,0 +1,50 @@
+<table id="example" class="table table-bordered table-striped" style="margin-top: 1%; margin-right: 1%;">
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>AddCode</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Uname</th>
+            <th>DeliveryTime</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody id="myTable">
+        @foreach ($list as $item)
+        <tr>
+            <td>{{$item->id}}</td>
+            <td>{{$item->addcode}}</td>
+            <td id="address{{$item->id}}">{{$item->address}}</td>
+            <td id="phone{{$item->id}}">{{$item->phonenumber}}</td>
+            <td>{{$item->uname}}</td>
+            <td id="time{{$item->id}}">{{$item->delivery_time}}</td>
+            <td><a href="javascript:"><i id="{{$item->id}}" class="fas fa-edit view_addressBook"></i></a></td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
+<div id="pagina" style="float: right" class="mt-3">
+    {!! $list->withQueryString()->links('commons.paginate') !!}
+</div>
+<script>
+    $('.view_addressBook').click(function () {
+        var id = $(this).attr('id');
+        $.ajax({
+            // headers: {
+            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+            //         .attr('content')
+            // },
+            type: 'GET',
+            url: "index/" + id,
+            success: function (data) {
+                console.log(data)
+                $('#modalDetail').modal('show');
+                $('.modal-content').html('').append(data);
+            }
+        });
+    });
+
+</script>

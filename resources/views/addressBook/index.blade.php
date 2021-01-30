@@ -135,7 +135,7 @@
                         <hr>
                         <div>
                             <div>
-                                <form id="submit" class="form-group" action="{{route('addressBook.getSearch')}}">
+                                <form id="filterForm" class="form-group" method="GET">
                                     <div class="form-row">
                                         <div class="col-md-2">
                                             <input class="btn btn-primary" type="submit" name="submit" value="SEARCH">
@@ -145,18 +145,20 @@
                                                 placeholder="Uname................">
                                         </div>
                                         <div class="col-md-2">
-                                            <input id="addcode" class="form-control customBtn" type="text" name="addcode"
-                                                placeholder="AddCode................">
+                                            <input id="addcode" class="form-control customBtn" type="text"
+                                                name="addcode" placeholder="AddCode................">
                                         </div>
                                         <div class="col-md-2">
-                                            <input id="address" class="form-control customBtn" type="text" name="address"
-                                                placeholder="Address.....................">
+                                            <input id="address" class="form-control customBtn" type="text"
+                                                name="address" placeholder="Address.....................">
                                         </div>
                                         <div class="col-md-2">
                                             <input id="phone3" class="form-control customBtn" type="text" name="phone3"
                                                 placeholder="Phone................">
                                         </div>
-                                       
+                                        <div>
+                                            <input type="checkbox" name="checkbox" checked hidden>
+                                        </div>
                                         <div class="col-md-2">
                                             <input class="btn btn-success customBtn" type="button" name="excel"
                                                 value="EXCEL">
@@ -176,7 +178,6 @@
                                     <th>Phone</th>
                                     <th>Uname</th>
                                     <th>DeliveryTime</th>
-
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -201,6 +202,7 @@
                         <div id="pagina" style="float: right" class="mt-3">
                             {!! $list->withQueryString()->links('commons.paginate') !!}
                         </div>
+                        <div id="data-table"></div>
                         <div class="modal" id="modalDetail">
                             <div class="modal-dialog modal-lg" style="min-width: 90%;">
                                 <div class="modal-content">
@@ -215,89 +217,104 @@
     </div>
 
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 <script>
+  
     $(document).ready(function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        $('#submit').click(function (e) {
+        $('#filterForm').submit(function (e) {
             e.preventDefault();
-            var uname = $('#addcode').val();
-            var codeorder = $('#address').val();
-            var container = $('#phone2').val();
-            var invoice = $('#uname').val();
-
-        })
-        $('#Image').change(function () {
-
-            let reader = new FileReader();
-
-            reader.onload = (e) => {
-                $('img').removeAttr('hidden');
-                $('#img').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(this.files[0]);
-        });
-        $('#selectCity').change(function () {
-            $('#selectDistrict').find('option').remove().end();
-            $('#Ward').find('option').remove().end();
-            var id = $(this).val();
+            var uname = $('#uname').val();
+            var address = $('#address').val();
+            var phone = $('#phone3').val();
+            var addcode = $('#addcode').val();
+            console.log(uname + '-' + address + '-' + phone + '-' + addcode)
+            $('#example').remove();
+            $('#pagina').remove();
             $.ajax({
-                type: "GET",
-                cache: false,
-                url: id,
-                success: function (res) {
-                    console.log(res)
-                    $('#selectDistrict').append(new Option("Chọn quận/huyện", ""))
-                    $.each(res, function (index, value) {
-                        $('#selectDistrict').append(new Option(value.name, value
-                            .maqh))
-                    })
-                }
-            })
-        })
-        $('#selectDistrict').change(function () {
-            $('#Ward').find('option').remove().end();
-            var id = $(this).val();
-            $.ajax({
-                type: "GET",
-                cache: false,
-                url: "district/" + id,
-                success: function (res) {
-                    console.log(res)
-                    $("#Ward").append(new Option("Chọn xã/phường/", ""))
-                    $.each(res, function (index, value) {
-                        $('#Ward').append(new Option(value.name, value
-                            .xaid))
-                    })
-                }
-            })
-        })
-
-        $('.view_addressBook').click(function () {
-            var id = $(this).attr('id');
-            $.ajax({
-                // headers: {
-                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
-                //         .attr('content')
-                // },
                 type: 'GET',
-                url: "index/" + id,
+                url: '/addressbook/search',
+                data: {
+                    uname: uname,
+                    address: address,
+                    phone: phone,
+                    addcode: addcode
+                },
                 success: function (data) {
                     console.log(data)
-                    $('#modalDetail').modal('show');
-                    $('.modal-content').html('').append(data);
+                    $('#data-table').html('').append(data)
                 }
-            });
+            })
+        })
+    })
+    $('#Image').change(function () {
+
+        let reader = new FileReader();
+
+        reader.onload = (e) => {
+            $('img').removeAttr('hidden');
+            $('#img').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(this.files[0]);
+    });
+    $('#selectCity').change(function () {
+        $('#selectDistrict').find('option').remove().end();
+        $('#Ward').find('option').remove().end();
+        var id = $(this).val();
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: id,
+            success: function (res) {
+                console.log(res)
+                $('#selectDistrict').append(new Option("Chọn quận/huyện", ""))
+                $.each(res, function (index, value) {
+                    $('#selectDistrict').append(new Option(value.name, value
+                        .maqh))
+                })
+            }
+        })
+    })
+    $('#selectDistrict').change(function () {
+        $('#Ward').find('option').remove().end();
+        var id = $(this).val();
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: "district/" + id,
+            success: function (res) {
+                console.log(res)
+                $("#Ward").append(new Option("Chọn xã/phường/", ""))
+                $.each(res, function (index, value) {
+                    $('#Ward').append(new Option(value.name, value
+                        .xaid))
+                })
+            }
+        })
+    })
+
+    $('.view_addressBook').click(function () {
+        var id = $(this).attr('id');
+        $.ajax({
+            // headers: {
+            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+            //         .attr('content')
+            // },
+            type: 'GET',
+            url: "index/" + id,
+            success: function (data) {
+                console.log(data)
+                $('#modalDetail').modal('show');
+                $('.modal-content').html('').append(data);
+            }
         });
-
-
     });
 
 </script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 @endsection

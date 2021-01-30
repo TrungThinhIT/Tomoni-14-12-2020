@@ -20,6 +20,42 @@ class addressBookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function search(Request $request)
+    {
+        $uname = $request->uname;
+        $addcode = $request->addcode;
+        $address = $request->address;
+        $phone = $request->phone;
+        $export  = $request->checkbox;
+        // return response()->json($request->all());
+        $addressBookSearch = addressCustomer::query();
+
+        if ($uname != "") {
+            $addressBookSearch = $addressBookSearch->where('uname', $uname);
+        }
+
+        if ($addcode != "") {
+            $addressBookSearch = $addressBookSearch->where('addcode', $addcode);
+        }
+
+        if ($address != "") {
+            $addressBookSearch = $addressBookSearch->where('address', $address);
+        }
+
+        if ($phone != "") {
+            $addressBookSearch = $addressBookSearch->where('phonenumber', $phone);
+        }
+        // return response()->json($addressBookSearch->get());
+        // if ($export == true) {
+        //     $list = $addressBookSearch->get();
+        //     // dd($products);
+        //     return $this->productRealityExport->ExportProduct($list);
+        // }
+
+        $list = $addressBookSearch->paginate(10);
+        // return response()->json($list);
+        return view('addressBook.modals.search', compact('list'));
+    }
     public function getWard($id) //ajax select Ward by District
     {
         if ($id < 10) {
@@ -47,7 +83,7 @@ class addressBookController extends Controller
         $citys = devvn_City::all();
         $list = addressCustomer::paginate(10);
         $unames = addressCustomer::all('id', 'uname')->unique('uname');
-        return view('addressBook.index', compact('citys', 'users', 'list','unames'));
+        return view('addressBook.index', compact('citys', 'users', 'list', 'unames'));
     }
 
     /**
