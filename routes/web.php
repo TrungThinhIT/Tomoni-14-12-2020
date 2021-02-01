@@ -225,6 +225,6 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::get('/{idTP}', [addressBookController::class, 'getDistrict'])->name('getDistrict');
         Route::get('/district/{idQH}', [addressBookController::class, 'getWard'])->name('getWard');
         Route::get('/modal/address/{id}', [addressBookController::class, 'getAddress'])->name('getAddress');
+        Route::get('addressbook/search', [addressBookController::class, 'search'])->name('addressbook.getsearch');
     });
-    Route::get('addressbook/search', [addressBookController::class, 'search'])->middleware('role')->name('addressbook.getsearch');
 });
