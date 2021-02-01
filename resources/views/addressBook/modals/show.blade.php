@@ -100,7 +100,7 @@
                     cache: false,
                     url: id,
                     success: function (res) {
-                        console.log(res)
+                        // console.log(res)
                         $('#selectDistrict2').append(new Option("Chọn quận/huyện", ""))
                         $.each(res, function (index, value) {
                             $('#selectDistrict2').append(new Option(value.name,
@@ -119,7 +119,7 @@
                     cache: false,
                     url: "district/" + id,
                     success: function (res) {
-                        console.log(res)
+                        // console.log(res)
                         $("#Ward2").append(new Option("Chọn xã/phường/", ""))
                         $.each(res, function (index, value) {
                             $('#Ward2').append(new Option(value.name, value
@@ -161,7 +161,7 @@
                     time: time
                 },
                 success: function (response) {
-                    console.log(response);
+                    // console.log(response);
                     $("#address" + idAddress).text(response.address)
                     $("#phone" + idAddress).text(response.phone)
                     $("#time" + idAddress).text(response.time)
