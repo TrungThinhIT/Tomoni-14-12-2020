@@ -179,7 +179,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::get('img/{img}', [productRealityController::class, 'getImage'])->name('getImage');
         Route::get('search', [productRealityController::class, 'getSearch'])->name('getSearch');
         Route::get('get-table', [productRealityController::class, 'dataTable'])->name('get-table');
-        Route::get('getCodeOrder',[productRealityController::class,'getCodeOrder'])->name('getCodeOrder');
+        Route::get('getCodeOrder', [productRealityController::class, 'getCodeOrder'])->name('getCodeOrder');
     });
     Route::prefix('commons')->middleware('role')->name('commons.')->group(function () {
         Route::get('/search-user', [LedgerController::class, 'searchUser'])->name('search-user');
@@ -220,7 +220,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::get('/{jancode}', [ExportedCustomerController::class, 'detail'])->name('detail');
         });
     });
-    Route::prefix('addressBook')->middleware('role')->name('addressBook.')->group(function () {
+    Route::prefix('addressbook')->middleware('role')->name('addressBook.')->group(function () {
         Route::resource('index', addressBookController::class);
         Route::get('/{idTP}', [addressBookController::class, 'getDistrict'])->name('getDistrict');
         Route::get('/district/{idQH}', [addressBookController::class, 'getWard'])->name('getWard');

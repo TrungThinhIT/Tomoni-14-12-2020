@@ -42,7 +42,7 @@ class addressBookController extends Controller
         }
 
         if ($addcode != "") {
-            $addressBookSearch = $addressBookSearch->where('addcode', $addcode);
+            $addressBookSearch = $addressBookSearch->where('addcode', 'like','%'.$addcode.'%');
         }
 
         if ($address != "") {
@@ -58,8 +58,9 @@ class addressBookController extends Controller
             // dd($addressBookExport);
             return $this->addBookExport->ExportAddressBook($addressBookExport);
         }
-        $list = $addressBookSearch->paginate(10);
+        $list = $addressBookSearch->paginate(4);
         // return response()->json($list);
+        // dd($list);
         return view('addressBook.modals.search', compact('list'));
     }
     public function getWard($id) //ajax select Ward by District
@@ -87,7 +88,7 @@ class addressBookController extends Controller
         //
         $users = User::all();
         $citys = devvn_City::all();
-        $list = addressCustomer::paginate(10);
+        $list = addressCustomer::paginate(3);
         $unames = addressCustomer::all('id', 'uname')->unique('uname');
         return view('addressBook.index', compact('citys', 'users', 'list', 'unames'));
     }

@@ -249,6 +249,7 @@
                 }
             })
         })
+
         $('#excel').click(function () {
             // console.log(document.forms["filterForm"])
             document.forms["filterForm"].submit();
