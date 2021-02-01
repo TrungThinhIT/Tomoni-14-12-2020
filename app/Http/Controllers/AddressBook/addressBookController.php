@@ -37,19 +37,19 @@ class addressBookController extends Controller
         // return response()->json($request->all());
         $addressBookSearch = addressCustomer::query();
 
-        if ($uname != "") {
-            $addressBookSearch = $addressBookSearch->where('uname', $uname);
+        if ($uname) {
+            $addressBookSearch = $addressBookSearch->where('uname', 'like', '%' . $uname . '%');
         }
 
-        if ($addcode != "") {
-            $addressBookSearch = $addressBookSearch->where('addcode', 'like','%'.$addcode.'%');
+        if ($addcode) {
+            $addressBookSearch = $addressBookSearch->where('addcode', 'like', '%' . $addcode . '%');
         }
 
-        if ($address != "") {
+        if ($address) {
             $addressBookSearch = $addressBookSearch->where('address', 'like', '%' . $address . '%');
         }
 
-        if ($phone != "") {
+        if ($phone) {
             $addressBookSearch = $addressBookSearch->where('phonenumber', $phone);
         }
         // return response()->json($addressBookSearch->get());
@@ -58,7 +58,7 @@ class addressBookController extends Controller
             // dd($addressBookExport);
             return $this->addBookExport->ExportAddressBook($addressBookExport);
         }
-        $list = $addressBookSearch->paginate(4);
+        $list = $addressBookSearch->paginate(10);
         // return response()->json($list);
         // dd($list);
         return view('addressBook.modals.search', compact('list'));
@@ -88,7 +88,7 @@ class addressBookController extends Controller
         //
         $users = User::all();
         $citys = devvn_City::all();
-        $list = addressCustomer::paginate(3);
+        $list = addressCustomer::paginate(10);
         $unames = addressCustomer::all('id', 'uname')->unique('uname');
         return view('addressBook.index', compact('citys', 'users', 'list', 'unames'));
     }
@@ -120,7 +120,7 @@ class addressBookController extends Controller
         }
 
         $city = devvn_City::find($idCity)->name;
-        //lấy tên quận 
+        //lấy tên quận
         $idDistrict = $request->District;
         if ($request->District < 10) {
             $idDistrict = '00' . $request->District;
@@ -129,7 +129,7 @@ class addressBookController extends Controller
             $idDistrict = '0' . $request->District;
         }
         $district = devvn_District::find($idDistrict)->name;
-        //lấy tên xã 
+        //lấy tên xã
         $idWard = $request->Ward;
         if ($request->Ward < 10) {
             $idWard = '0000' . $request->Ward;
@@ -236,7 +236,7 @@ class addressBookController extends Controller
         }
 
         $city = devvn_City::find($idCity)->name;
-        //lấy tên quận 
+        //lấy tên quận
         $idDistrict = $request->selectDistrict;
         if ($request->selectDistrict < 10) {
             $idDistrict = '00' . $request->selectDistrict;
@@ -245,7 +245,7 @@ class addressBookController extends Controller
             $idDistrict = '0' . $request->selectDistrict;
         }
         $district = devvn_District::find($idDistrict)->name;
-        //lấy tên xã 
+        //lấy tên xã
         $idWard = $request->ward;
         if ($request->ward < 10) {
             $idWard = '0000' . $request->ward;

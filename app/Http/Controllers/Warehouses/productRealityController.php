@@ -84,7 +84,7 @@ class productRealityController extends Controller
             return $this->productRealityExport->ExportProduct($products);
         }
 
-        $product_reality = $product_reality->paginate(3);
+        $product_reality = $product_reality->paginate(10);
         return view('warehouses.includes.tableProductReality', compact('product_reality'));
     }
 
