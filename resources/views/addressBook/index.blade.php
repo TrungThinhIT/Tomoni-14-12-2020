@@ -13,7 +13,6 @@
     .customBtn {
         margin-left: -40% !important;
     }
-
 </style>
 @section('title', 'Sổ địa chỉ')
 @section('content')
@@ -136,7 +135,7 @@
                         <div>
                             <div>
                                 <form id="filterForm" class="form-group" method="GET" name="filterForm"
-                                    action="{{route('addressbook.getsearch')}}">
+                                    action="{{route('addressBook.getSearch')}}">
                                     <div class="form-row">
                                         <div class="col-md-2">
                                             <input class="btn btn-primary" type="submit" value="SEARCH">
@@ -237,7 +236,7 @@
             $('#pagina').remove();
             $.ajax({
                 type: 'GET',
-                url: '/addressbook/search',
+                url: '/addressbook',
                 data: {
                     uname: uname,
                     address: address,

@@ -30,32 +30,31 @@
     {!! $list->withQueryString()->links('commons.paginate') !!}
 </div>
 <script>
-    // $('.pagination a').unbind('click').on('click', function (e) {
-    //     e.preventDefault();
-    //     var page = $(this).attr('href').split('page=')[1];
-    //     getPosts(page);
-    // });
+    $('.pagination a').unbind('click').on('click', function (e) {
+        e.preventDefault();
+        var page = $(this).attr('href').split('page=')[1];
+        getPosts(page);
+    });
 
-    // function getPosts(page) {
-    //     var uname = $('#uname').val();
-    //     var codeorder = $('#addcode').val();
-    //     var address = $('#address').val();
-    //     var phone3 = $('#phone3').val();
-    //     console.log(uname+''+codeorder+''+address+''+phone3)
-    //     $.ajax({
-    //         type: "GET",
-    //         url: './search/' + '?page=' + page,
-    //         data: {
-    //             uname: uname,
-    //             codeorder: codeorder,
-    //             address: address,
-    //             phone: phone3,
-    //         },
-    //         success: function (data) {
-    //             $('#data-table').html('').append(data);
-    //         }
-    //     })
-    // }
+    function getPosts(page) {
+        var uname = $('#uname').val();
+        var codeorder = $('#addcode').val();
+        var address = $('#address').val();
+        var phone3 = $('#phone3').val();
+        $.ajax({
+            type: "GET",
+            url: '/addressbook' + '?page=' + page,
+            data: {
+                uname: uname,
+                codeorder: codeorder,
+                address: address,
+                phone: phone3,
+            },
+            success: function (data) {
+                $('#data-table').html('').append(data);
+            }
+        })
+    }
     $('.view_addressBook').click(function () {
         var id = $(this).attr('id');
         $.ajax({
