@@ -12,9 +12,10 @@
     </thead>
 
     <tbody id="myTable">
+        <?php $index =1?>
         @foreach ($list as $item)
         <tr>
-            <td>{{$item->id}}</td>
+            <td>{{$list->perPage()*($list->currentPage()-1)+$index}}
             <td>{{$item->addcode}}</td>
             <td id="address{{$item->id}}">{{$item->address}}</td>
             <td id="phone{{$item->id}}">{{$item->phonenumber}}</td>
@@ -22,6 +23,7 @@
             <td id="time{{$item->id}}">{{$item->delivery_time}}</td>
             <td><a href="javascript:"><i id="{{$item->id}}" class="fas fa-edit view_addressBook"></i></a></td>
         </tr>
+        <?php $index++?>
         @endforeach
     </tbody>
 </table>

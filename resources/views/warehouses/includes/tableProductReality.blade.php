@@ -14,10 +14,10 @@
     </thead>
 
     <tbody id="myTable">
+        <?php $index=1 ?>
         @foreach ($product_reality as $item)
-
         <tr>
-            <td>{{$item->id}}</td>
+            <td>{{$product_reality->perPage()*($product_reality->currentPage()-1)+$index}}
             <td>{{$item->codeorder}}</td>
             <td>{{$item->uname}}</td>
             <td>{{$item->invoice}}</td>
@@ -29,6 +29,7 @@
             </td>
             <td>{{$item->delivery_time}}</td>
         </tr>
+        <?php $index++?>
         @endforeach
 
     </tbody>

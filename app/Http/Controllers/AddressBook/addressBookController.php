@@ -54,7 +54,7 @@ class addressBookController extends Controller
         }
         // return response()->json($addressBookSearch->get());
         if ($export == true) {
-            $addressBookExport = $addressBookSearch->orderBy('uname', 'ASC')->get();
+            $addressBookExport = $addressBookSearch->get();
             // dd($addressBookExport);
             return $this->addBookExport->ExportAddressBook($addressBookExport);
         }
