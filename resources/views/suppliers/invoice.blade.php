@@ -113,18 +113,28 @@
                     </fieldset>
 
                 </form>
-            </fieldset>
-                <div class="card" id="ItemInvoice" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd1" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd2" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd3" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd4" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd5" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd6" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd7" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd8" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd9" style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-            </fieldset>
+                </fieldset>
+                <div class="card" id="ItemInvoice"
+                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd1"
+                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd2"
+                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd3"
+                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd4"
+                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd5"
+                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd6"
+                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd7"
+                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd8"
+                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <div class="card" id="ItemInvoiceAdd9"
+                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                </fieldset>
                 <div>
                     <div style="margin: 1% 1% 1% 1%;">
                         <form action="{{route('supplier.invoice.index')}}" method="GET">
@@ -220,27 +230,34 @@
                                     <th>Tổng tiền hoá đơn</th>
                                     <th>Ngày giao hàng</th>
                                     <th>Hạn thanh toán</th>
-                                    <td>Chức năng</td>
+                                    <th>Tiền</th>
+                                    <th>Chức năng</th>
+
                                 </tr>
                             </thead>
 
                             <tbody id="myTable">
+
                                 @foreach ($data['invoices'] as $invoice => $value)
+                                
+                                <?php 
+                                $sum =0;
+                                $total = $value->TotalPrice+ $value->PurchaseCosts;
+                                 ?>
                                 @php
-                                    $checkStatus = 1;    
+                                $checkStatus = 1;
                                 @endphp
                                 @foreach ($value['detail'] as $item)
-                                         @if ($item->checkStatus == 0)
-                                            @php
-                                                $checkStatus = 0
-                                            @endphp
-                                        @endif
-                                        @endforeach
-                                <tr @if ($checkStatus == 0)
-                                class="table-danger"
-                                @endif>
+                                @if ($item->checkStatus == 0)
+                                @php
+                                $checkStatus = 0
+                                @endphp
+                                @endif
+                                @endforeach
+                                <tr @if ($checkStatus==0) class="table-danger" @endif>
                                     <th>{{$value->DateInvoice}}</th>
-                                    <td><a href="{{route('supplier.invoice.showByIdInvoice', $value->Id)}}">{{$value->Invoice}}</a>
+                                    <td><a
+                                            href="{{route('supplier.invoice.showByIdInvoice', $value->Id)}}">{{$value->Invoice}}</a>
                                     </td>
                                     <td>{{$value->TypeInvoice}}</td>
                                     <td>{{$value->Supplier}}</td>
@@ -248,15 +265,15 @@
                                         {{$item->Codeorder}}
                                         @endforeach</td>
                                     <td>@foreach ($value['detail'] as $item)
-                                            {{$item->Jancode}}
+                                        {{$item->Jancode}}
                                         @endforeach</td>
-                                        <td style="min-width: 300px">
-                                            @foreach ($value['detail'] as $detail => $name)
+                                    <td style="min-width: 300px">
+                                        @foreach ($value['detail'] as $detail => $name)
 
-                                            {{$name->name}} <br>
+                                        {{$name->name}} <br>
 
                                         @endforeach
-                                        </td>
+                                    </td>
                                     <td>@foreach ($value['detail'] as $item)
                                         {{$item->Quantity}} <br>
                                         @endforeach</td>
@@ -266,27 +283,42 @@
                                     <td>{{$value->TotalPrice}}</td>
                                     <td>{{$value->PaymentDate}}</td>
                                     <td>{{$value->StockDate}}</td>
-                                    <td><a href="{{route('supplier.invoice.deleteInvoice', $value->Invoice)}}" type="button" onclick="return confirm('are you sure?')" class="btn btn-danger">Xoá</a></td>
+                                    <td>
+                                        @php
+                                        foreach ($value->detail as $key => $value) {
+                                        $sum+=$value->Quantity *$value->Price;
+                                        }
+                                        if($sum==$total){
+                                            echo "Bằng tiền";
+                                        }else{
+                                            echo "không bằng tiền";
+                                        } 
+                                        @endphp
+                                    </td>
+                                    <td><a href="{{route('supplier.invoice.deleteInvoice', $value->Invoice)}}"
+                                            type="button" onclick="return confirm('are you sure?')"
+                                            class="btn btn-danger">Xoá</a></td>
+                                    td
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
                         <div class="modal" id="modalDetail">
-                            <div class="modal-dialog modal-lg" style="min-width: 80%;" >
-                              <div class="modal-content">
+                            <div class="modal-dialog modal-lg" style="min-width: 80%;">
+                                <div class="modal-content">
 
-                                <!-- Modal Header -->
+                                    <!-- Modal Header -->
 
 
-                              </div>
+                                </div>
                             </div>
-                          </div>
-                      </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 </div>
@@ -295,29 +327,29 @@
     var HTML = "";
     var JanCount = 1;
     var TotalPrice = 0;
-    $(document).ready(function() {
-                                $('.view_transaction').click(function() {
-                                    const id = $(this).data('id');
-                                    $.ajax({
-                                        headers: {
-                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
-                                                .attr('content')
-                                        },
-                                        type: 'GET',
-                                        url: "invoice" + '/' + id,
+    $(document).ready(function () {
+        $('.view_transaction').click(function () {
+            const id = $(this).data('id');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                        .attr('content')
+                },
+                type: 'GET',
+                url: "invoice" + '/' + id,
 
-                                        success: function(data) {
-                                            $('#modalDetail').modal('show');
-                                            $('.modal-content').html('').append(data);
-                                        }
-                                    });
-                                });
-                            });
+                success: function (data) {
+                    $('#modalDetail').modal('show');
+                    $('.modal-content').html('').append(data);
+                }
+            });
+        });
+    });
 
     function Insert_Invoice() {
         var errors = ['uinvoice'];
-    errors.forEach(function(item, index){
-            $('span[id^="'+item+'"]').remove();
+        errors.forEach(function (item, index) {
+            $('span[id^="' + item + '"]').remove();
         });
         var Invoice = $("#uinvoice").val();
         var TotalPrice = $("#uTotalPrice").val().replace(",", "").replace(",", "");
@@ -355,9 +387,12 @@
                     Buyer: Buyer,
                     Dateinvoice: Dateinvoice,
                     Trackingnumber: Trackingnumber
-                },                    error:function (response){
-                    $.each(response.responseJSON.errors,function(field_name,error){
-                        $(document).find('[name='+field_name+']').after('<span class="alert-danger-custom" id="'+field_name+'">' +error+ '</span>');
+                },
+                error: function (response) {
+                    $.each(response.responseJSON.errors, function (field_name, error) {
+                        $(document).find('[name=' + field_name + ']').after(
+                            '<span class="alert-danger-custom" id="' + field_name + '">' +
+                            error + '</span>');
                         fields.push(field_name);
                     })
                 },
@@ -366,67 +401,69 @@
                     if (response == 1) {
                         $("#ItemInvoice").html(
                             "<fieldset >" +
-				"<div class='form-row' style='margin-left: 2%;margin-right: 1%;'>" +
-					"<div class='col-md-2 mb-2' >" +
-						"<label for='validationDefault01'>Codeorde*</label>" +
-						"<input type='text' class='form-control' id='codeorder_" + JanCount + "'" +
-                            "list='listcodeorder"+ JanCount + "'" +
+                            "<div class='form-row' style='margin-left: 2%;margin-right: 1%;'>" +
+                            "<div class='col-md-2 mb-2' >" +
+                            "<label for='validationDefault01'>Codeorde*</label>" +
+                            "<input type='text' class='form-control' id='codeorder_" + JanCount + "'" +
+                            "list='listcodeorder" + JanCount + "'" +
                             " onkeyup='search_ordercode(this)' required>" +
                             "<datalist id='listcodeorder" + JanCount + "'" + "></datalist>" +
-					"</div>" +
-					"<div class='col-md-2 mb-2'>" +
-						"<label for='validationDefault01'>Jancode*</label>" +
-						"<input type='text' class='form-control' id='Jancode_" + JanCount + "'" +
+                            "</div>" +
+                            "<div class='col-md-2 mb-2'>" +
+                            "<label for='validationDefault01'>Jancode*</label>" +
+                            "<input type='text' class='form-control' id='Jancode_" + JanCount + "'" +
                             "class='input'  onkeyup='search_jancode()' list='ujan_wh" + JanCount + "'" +
                             " required>" +
                             "<datalist id='ujan_wh" + JanCount + "'" + "></datalist>" +
-					"</div>" +
-					"<div class='col-md-1 mb-1'>" +
-						"<label for='validationDefault01'>Số lượng*</label>" +
-						"<input type='text' class='form-control' id='so_luong_" +
+                            "</div>" +
+                            "<div class='col-md-1 mb-1'>" +
+                            "<label for='validationDefault01'>Số lượng*</label>" +
+                            "<input type='text' class='form-control' id='so_luong_" +
                             JanCount + "'" + "required>" +
-					"</div>" +
-					"<div class='col-md-1 mb-1'>" +
-						"<label for='validationDefault01'>Đơn giá*</label>" +
-						"<input type='text' class='form-control' id='don_gia_" +
+                            "</div>" +
+                            "<div class='col-md-1 mb-1'>" +
+                            "<label for='validationDefault01'>Đơn giá*</label>" +
+                            "<input type='text' class='form-control' id='don_gia_" +
                             JanCount + "'" + "required>" +
-					"</div>" +
-					"<div class='col-md-2 mb-2'>" +
-					"<label for='validationDefault01'>% Thuế*</label>" +
-						"<select type='text' class='form-control' id='thue_jancode_" + JanCount + "'" +
+                            "</div>" +
+                            "<div class='col-md-2 mb-2'>" +
+                            "<label for='validationDefault01'>% Thuế*</label>" +
+                            "<select type='text' class='form-control' id='thue_jancode_" + JanCount +
+                            "'" +
                             "required>" +
                             "   <option value='10'>10%</option>" +
                             "<option value='8'>8%</option>" +
                             "<option value='5'>5%</option>" +
-						"</select>" +
-					"</div>" +
-					"<div class='col-md-1 paddbtm20'>"+
+                            "</select>" +
+                            "</div>" +
+                            "<div class='col-md-1 paddbtm20'>" +
 
-                        "<label>Thêm<span class='require'>*</span></label>" +
-                                "<div>" +
-                                    "<button name='add-hd' id='InsertJan_"+JanCount+"' class='btn btn-danger fh-btn' onclick='Insert_JancodeToInvoice()'>Add</button>"+
-                            "</div>"+
-				"</div>" +
+                            "<label>Thêm<span class='require'>*</span></label>" +
+                            "<div>" +
+                            "<button name='add-hd' id='InsertJan_" + JanCount +
+                            "' class='btn btn-danger fh-btn' onclick='Insert_JancodeToInvoice()'>Add</button>" +
+                            "</div>" +
+                            "</div>" +
 
-                "<div class='col-md-1 paddbtm20' id='Add_Jancode_"+JanCount+"'>"+
-                            "</div>"+
-			"</fieldset>"
+                            "<div class='col-md-1 paddbtm20' id='Add_Jancode_" + JanCount + "'>" +
+                            "</div>" +
+                            "</fieldset>"
                         );
                     }
-                    
-        document.getElementById("BtnSubmit").disabled = true;
-        document.getElementById("unamesupplier").disabled = true;
-        document.getElementById("uTotalPrice").disabled = true;
-        document.getElementById("uinvoice").disabled = true;
-        document.getElementById("uPurchaseCosts").disabled = true;
-        document.getElementById("TaxPurchaseCosts").disabled = true;
-        document.getElementById("PaymentDate").disabled = true;
-        document.getElementById("StockDate").disabled = true;
-        document.getElementById("PaidInvoice").disabled = true;
-        document.getElementById("Typehoadon").disabled = true;
-        document.getElementById("Buyer").disabled = true;
-        document.getElementById("Dateinvoice").disabled = true;
-        document.getElementById("uTracking").disabled = true;
+
+                    document.getElementById("BtnSubmit").disabled = true;
+                    document.getElementById("unamesupplier").disabled = true;
+                    document.getElementById("uTotalPrice").disabled = true;
+                    document.getElementById("uinvoice").disabled = true;
+                    document.getElementById("uPurchaseCosts").disabled = true;
+                    document.getElementById("TaxPurchaseCosts").disabled = true;
+                    document.getElementById("PaymentDate").disabled = true;
+                    document.getElementById("StockDate").disabled = true;
+                    document.getElementById("PaidInvoice").disabled = true;
+                    document.getElementById("Typehoadon").disabled = true;
+                    document.getElementById("Buyer").disabled = true;
+                    document.getElementById("Dateinvoice").disabled = true;
+                    document.getElementById("uTracking").disabled = true;
                 }
             });
         } else
@@ -450,7 +487,7 @@
 
     function Insert_JancodeToInvoice() {
         var uTotalPrice = $("#uTotalPrice").val().replace(",", "").replace(",", "");;
-        var PurchaseCosts = $('#uPurchaseCosts').val().replace(",", "").replace(",", "");;        
+        var PurchaseCosts = $('#uPurchaseCosts').val().replace(",", "").replace(",", "");;
         var uTotalPrice = parseInt(uTotalPrice);
         var PurchaseCosts = parseInt(PurchaseCosts);
         var allTotalPrice = (uTotalPrice + PurchaseCosts);
@@ -460,74 +497,81 @@
         var Price = $("#don_gia_" + JanCount).val().replace(",", "");
         var PriceTax = $("#thue_jancode_" + JanCount).val();
         var Invoice = $("#uinvoice").val();
-        
-        $('span[id^="Jancode_'+JanCount+'"]').remove();
+
+        $('span[id^="Jancode_' + JanCount + '"]').remove();
 
         if (allTotalPrice < (Quantity * Price) + TotalPrice) {
             alert('Tổng giá cao hơn tổng tiền hóa đơn')
         } else if (allTotalPrice == (Quantity * Price) + TotalPrice) {
             $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    type: 'POST',
-                    url: "invoice/invoice-detail",
-                    data: {
-                        CodeorderItem: CodeorderItem,
-                        Jancode: Jancode,
-                        Quantity: Quantity,
-                        Price: Price,
-                        Invoice: Invoice,
-                        PriceTax: PriceTax
-                    },
-                    success: function (response) {
-                        if (response == 1) {                            
-                             alert('Chúc mừng bạn nhập thành công')
-                            location.reload();
-                        }
-                    },error:function (response){
-                var message = response.responseJSON.errors.Jancode;
-                        $(document).find('[name=Jancode_'+JanCount+']').after('<span class="alert-danger-custom" id="Jancode_'+JanCount+'">' +message+ '</span>');
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: "invoice/invoice-detail",
+                data: {
+                    CodeorderItem: CodeorderItem,
+                    Jancode: Jancode,
+                    Quantity: Quantity,
+                    Price: Price,
+                    Invoice: Invoice,
+                    PriceTax: PriceTax
+                },
+                success: function (response) {
+                    if (response == 1) {
+                        alert('Chúc mừng bạn nhập thành công')
+                        location.reload();
+                    }
+                },
+                error: function (response) {
+                    var message = response.responseJSON.errors.Jancode;
+                    $(document).find('[name=Jancode_' + JanCount + ']').after(
+                        '<span class="alert-danger-custom" id="Jancode_' + JanCount + '">' + message +
+                        '</span>');
                 }
-                });
+            });
         } else {
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    type: 'POST',
-                    url: "invoice/invoice-detail",
-                    data: {
-                        CodeorderItem: CodeorderItem,
-                        Jancode: Jancode,
-                        Quantity: Quantity,
-                        Price: Price,
-                        Invoice: Invoice,
-                        PriceTax: PriceTax
-                    },
-                    success: function (response) {
-                        if (response == 1) {
-                            $("#Add_Jancode_" + JanCount).html(
-                                "<label>Nữa<span class='require'>*</span></label>" +
-                                "<div>" +
-                                    "<button name='add-hd' id='MoreJan_"+JanCount+"' class='btn btn-primary fh-btn' onclick='AddJancode()'>More</button>"+
-                                "</div>"
-                            );
-                            document.getElementById("InsertJan_" + JanCount).disabled = true;
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: 'POST',
+                url: "invoice/invoice-detail",
+                data: {
+                    CodeorderItem: CodeorderItem,
+                    Jancode: Jancode,
+                    Quantity: Quantity,
+                    Price: Price,
+                    Invoice: Invoice,
+                    PriceTax: PriceTax
+                },
+                success: function (response) {
+                    if (response == 1) {
+                        $("#Add_Jancode_" + JanCount).html(
+                            "<label>Nữa<span class='require'>*</span></label>" +
+                            "<div>" +
+                            "<button name='add-hd' id='MoreJan_" + JanCount +
+                            "' class='btn btn-primary fh-btn' onclick='AddJancode()'>More</button>" +
+                            "</div>"
+                        );
+                        document.getElementById("InsertJan_" + JanCount).disabled = true;
 
-                            document.getElementById("codeorder_"+JanCount).disabled = true;
-                            document.getElementById("Jancode_"+JanCount).disabled = true;
-                            document.getElementById("so_luong_"+JanCount).disabled = true;
-                            document.getElementById("don_gia_"+JanCount).disabled = true;
-                            document.getElementById("thue_jancode_"+JanCount).disabled = true;
+                        document.getElementById("codeorder_" + JanCount).disabled = true;
+                        document.getElementById("Jancode_" + JanCount).disabled = true;
+                        document.getElementById("so_luong_" + JanCount).disabled = true;
+                        document.getElementById("don_gia_" + JanCount).disabled = true;
+                        document.getElementById("thue_jancode_" + JanCount).disabled = true;
 
-                            TotalPrice = TotalPrice + (Quantity * Price)
-                        }
-                    },error:function (response){
-                var message = response.responseJSON.errors.Jancode;
-                        $(document).find('[name=Jancode_'+JanCount+']').after('<span class="alert-danger-custom" id="Jancode_'+JanCount+'">' +message+ '</span>');
+                        TotalPrice = TotalPrice + (Quantity * Price)
+                    }
+                },
+                error: function (response) {
+                    var message = response.responseJSON.errors.Jancode;
+                    $(document).find('[name=Jancode_' + JanCount + ']').after(
+                        '<span class="alert-danger-custom" id="Jancode_' + JanCount + '">' + message +
+                        '</span>');
                 }
-                });
+            });
         }
     }
 
@@ -535,53 +579,54 @@
         document.getElementById("MoreJan_" + JanCount).disabled = true;
         JanCount = JanCount + 1;
         var ItemJancode =
-        "<fieldset >" +
-				"<div class='form-row' style='margin-left: 2%;margin-right: 1%;'>" +
-					"<div class='col-md-2 mb-2' >" +
-						"<label for='validationDefault01'>Codeorde*</label>" +
-						"<input type='text' class='form-control' id='codeorder_" + JanCount + "'" +
-                            "list='listcodeorder"+ JanCount + "'" +
-                            " onkeyup='search_ordercode(this)' required>" +
-                            "<datalist id='listcodeorder" + JanCount + "'" + "></datalist>" +
-					"</div>" +
-					"<div class='col-md-2 mb-2'>" +
-						"<label for='validationDefault01'>Jancode*</label>" +
-                        "<input type='text' class='form-control' id='Jancode_" + JanCount + "'" +
-                        "name='Jancode_" + JanCount + "'" +
-                            "class='input'  onkeyup='search_jancode()' list='ujan_wh" + JanCount + "'" +
-                            " required>" +
-                            "<datalist id='ujan_wh" + JanCount + "'" + "></datalist>" +
-					"</div>" +
-					"<div class='col-md-1 mb-1'>" +
-						"<label for='validationDefault01'>Số lượng*</label>" +
-						"<input type='text' class='form-control' id='so_luong_" +
-                            JanCount + "'" + "required>" +
-					"</div>" +
-					"<div class='col-md-1 mb-1'>" +
-						"<label for='validationDefault01'>Đơn giá*</label>" +
-						"<input type='text' class='form-control' id='don_gia_" +
-                            JanCount + "'" + "required>" +
-					"</div>" +
-					"<div class='col-md-2 mb-2'>" +
-					"<label for='validationDefault01'>% Thuế*</label>" +
-						"<select type='text' class='form-control' id='thue_jancode_" + JanCount + "'" +
-                            "required>" +
-                            "   <option value='10'>10%</option>" +
-                            "<option value='8'>8%</option>" +
-                            "<option value='5'>5%</option>" +
-						"</select>" +
-					"</div>" +
-					"<div class='col-md-1 paddbtm20'>"+
+            "<fieldset >" +
+            "<div class='form-row' style='margin-left: 2%;margin-right: 1%;'>" +
+            "<div class='col-md-2 mb-2' >" +
+            "<label for='validationDefault01'>Codeorde*</label>" +
+            "<input type='text' class='form-control' id='codeorder_" + JanCount + "'" +
+            "list='listcodeorder" + JanCount + "'" +
+            " onkeyup='search_ordercode(this)' required>" +
+            "<datalist id='listcodeorder" + JanCount + "'" + "></datalist>" +
+            "</div>" +
+            "<div class='col-md-2 mb-2'>" +
+            "<label for='validationDefault01'>Jancode*</label>" +
+            "<input type='text' class='form-control' id='Jancode_" + JanCount + "'" +
+            "name='Jancode_" + JanCount + "'" +
+            "class='input'  onkeyup='search_jancode()' list='ujan_wh" + JanCount + "'" +
+            " required>" +
+            "<datalist id='ujan_wh" + JanCount + "'" + "></datalist>" +
+            "</div>" +
+            "<div class='col-md-1 mb-1'>" +
+            "<label for='validationDefault01'>Số lượng*</label>" +
+            "<input type='text' class='form-control' id='so_luong_" +
+            JanCount + "'" + "required>" +
+            "</div>" +
+            "<div class='col-md-1 mb-1'>" +
+            "<label for='validationDefault01'>Đơn giá*</label>" +
+            "<input type='text' class='form-control' id='don_gia_" +
+            JanCount + "'" + "required>" +
+            "</div>" +
+            "<div class='col-md-2 mb-2'>" +
+            "<label for='validationDefault01'>% Thuế*</label>" +
+            "<select type='text' class='form-control' id='thue_jancode_" + JanCount + "'" +
+            "required>" +
+            "   <option value='10'>10%</option>" +
+            "<option value='8'>8%</option>" +
+            "<option value='5'>5%</option>" +
+            "</select>" +
+            "</div>" +
+            "<div class='col-md-1 paddbtm20'>" +
 
-                        "<label>Thêm<span class='require'>*</span></label>" +
-                                "<div>" +
-                                    "<button name='add-hd' id='InsertJan_"+JanCount+"' class='btn btn-danger fh-btn' onclick='Insert_JancodeToInvoice()'>Add</button>"+
-                            "</div>"+
-				"</div>" +
+            "<label>Thêm<span class='require'>*</span></label>" +
+            "<div>" +
+            "<button name='add-hd' id='InsertJan_" + JanCount +
+            "' class='btn btn-danger fh-btn' onclick='Insert_JancodeToInvoice()'>Add</button>" +
+            "</div>" +
+            "</div>" +
 
-                "<div class='col-md-1 paddbtm20' id='Add_Jancode_"+JanCount+"'>"+
-                            "</div>"+
-			"</fieldset>";
+            "<div class='col-md-1 paddbtm20' id='Add_Jancode_" + JanCount + "'>" +
+            "</div>" +
+            "</fieldset>";
         HTML = ItemJancode;
 
         document.getElementById("ItemInvoiceAdd" + JanCount).innerHTML = HTML;
@@ -589,8 +634,8 @@
 
     function search_ordercode(obj) {
         var text = $(obj).val();
-            if(text.length >3){
-                $.ajax({
+        if (text.length > 3) {
+            $.ajax({
                 type: 'GET',
                 url: "{{route('commons.searchCodeOrder')}}",
                 data: {
@@ -598,44 +643,46 @@
                 },
                 success: function (response) {
                     var len = response.length;
-                    $("#listcodeorder"+JanCount).empty();
+                    $("#listcodeorder" + JanCount).empty();
                     for (var i = 0; i < len; i++) {
                         var name = response[i]['codeorder'];
                         var name1 = response[i]['quantity'];
                         var name2 = response[i]['total'];
 
-                        $("#listcodeorder"+JanCount).append("<option value='" + name + "'>" + "Quantity: " + name1 + " Total: " + name2 +
+                        $("#listcodeorder" + JanCount).append("<option value='" + name + "'>" +
+                            "Quantity: " + name1 + " Total: " + name2 +
                             "</option>");
 
                     }
                 }
             });
-            };
+        };
     }
 
     function search_jancode(obj) {
-            var text = $("#Jancode_"+JanCount).val();
-                if(text.length >3){
-                    $.ajax({
-				type: 'GET',
-				url: "{{route('commons.searchCodeJan')}}",
-				data: {
+        var text = $("#Jancode_" + JanCount).val();
+        if (text.length > 3) {
+            $.ajax({
+                type: 'GET',
+                url: "{{route('commons.searchCodeJan')}}",
+                data: {
                     search_jancode: text
-				},
-				success: function(response) {
+                },
+                success: function (response) {
                     var len = response.length;
-                    $("#ujan_wh"+JanCount).empty();
-                for( var i = 0; i<len; i++){
-                    var name = response[i]['jan_code'];
-                    var name2 = response[i]['name'];
+                    $("#ujan_wh" + JanCount).empty();
+                    for (var i = 0; i < len; i++) {
+                        var name = response[i]['jan_code'];
+                        var name2 = response[i]['name'];
 
-                    $("#ujan_wh"+JanCount).append("<option value='"+name+"'>"+name2+"</option>");
+                        $("#ujan_wh" + JanCount).append("<option value='" + name + "'>" + name2 +
+                            "</option>");
 
+                    }
                 }
-				}
-			    });
-                }
+            });
         }
+    }
 
 </script>
 @endsection

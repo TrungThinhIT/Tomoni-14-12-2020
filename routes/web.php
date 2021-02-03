@@ -220,6 +220,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::get('/{jancode}', [ExportedCustomerController::class, 'detail'])->name('detail');
         });
     });
+
     Route::prefix('addressbook')->middleware('role')->name('addressBook.')->group(function () {
         Route::resource('index', addressBookController::class);
         Route::get('/{idTP}', [addressBookController::class, 'getDistrict'])->name('getDistrict');

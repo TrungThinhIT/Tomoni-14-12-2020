@@ -28,7 +28,7 @@ class addressBookExport
             mkdir(public_path('excels/exports'));
         }
 
-        $nameFileExcel = 'Sổ địa chỉ' . Str::random(3) . time() . 'export.xlsx';
+        $nameFileExcel = 'Sổ địa chỉ' . 'export.xlsx';
 
         $path = 'excels/exports/' . $nameFileExcel;
         $objWriter->save(public_path($path));

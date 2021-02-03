@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\AddressBook;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\devvn_City;
@@ -26,6 +27,7 @@ class addressBookController extends Controller
     {
         $this->addBookExport = $addBookExport;
     }
+    
     public function search(Request $request)
     {
         $uname = $request->uname;
