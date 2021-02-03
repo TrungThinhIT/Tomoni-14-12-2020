@@ -230,7 +230,7 @@
                                     <th>Tổng tiền hoá đơn</th>
                                     <th>Ngày giao hàng</th>
                                     <th>Hạn thanh toán</th>
-                                    <th>Tiền</th>
+                                    <th>Tổng</th>
                                     <th>Chức năng</th>
 
                                 </tr>
@@ -269,7 +269,6 @@
                                         @endforeach</td>
                                     <td style="min-width: 300px">
                                         @foreach ($value['detail'] as $detail => $name)
-
                                         {{$name->name}} <br>
 
                                         @endforeach
