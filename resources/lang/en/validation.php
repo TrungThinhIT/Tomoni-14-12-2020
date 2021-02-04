@@ -134,6 +134,13 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'uname.*' => [
+            'exists' => 'The selected :attribute is invalid ',
+        ],
+        'hoadon.*'=>[
+            'required'=> 'The :attribute field is required'
+        ]
+
     ],
 
     /*
