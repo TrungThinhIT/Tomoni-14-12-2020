@@ -228,8 +228,10 @@
                                         @endif</td>
                                         <td>
                                             <div 
-                                                @if (count($item)>=2)
-                                                    {{"id=changeUname"}}
+                                                 @if ((count($item)>=2))
+                                                    @foreach ($item as $ite)
+                                                         {{"id=changeUname".$ite->depositID}}
+                                                     @endforeach
                                                 @endif
                                             >
                                                 @if (count($item)>=2)
@@ -269,7 +271,9 @@
                                         <td>
                                             <div
                                                 @if ((count($item)>=2))
-                                                    {{"id=changeHoadon"}}
+                                                   @foreach ($item as $ite)
+                                                        {{"id=changeHoadon".$ite->depositID}}
+                                                    @endforeach
                                                 @endif
                                             >
                                                 @if (count($item)>=2)
@@ -302,7 +306,6 @@
                                                     sohoadon: shd
                                                 },
                                                 success: function (response) {
-                                                    console.log(response)
                                                     if(response=="ErrorUname"){
                                                         toastr.warning(us+' không tồn tại','Notifycation',{timeOut:1000})
                                                     }else if(response=="ErrorSHD"){

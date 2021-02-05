@@ -63,12 +63,14 @@
                                 if(response.length>1){
                                     var text = "";
                                     var hoadon = ""
+                                    var deposit=""
                                     $.each(response,function(index,value){
                                         text+= value.uname+',';
-                                        hoadon+=value.Sohoadon+','
+                                        hoadon+=value.Sohoadon+',';
+                                        deposit = value.depositID
                                     })
-                                    $("#changeUname").text(text)
-                                    $("#changeHoadon").text(hoadon)
+                                    $("#changeUname"+deposit).text(text)
+                                    $("#changeHoadon"+deposit).text(hoadon)
                                 }
                                 toastr.success('Cập nhập thành công.', 'Notifycation', {
                                 timeOut: 1000
