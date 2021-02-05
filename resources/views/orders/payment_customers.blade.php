@@ -110,7 +110,7 @@
                                     </tr>
                                 </div>
                                 <hr>
-                                <div id="errors" class="col-12 h-50 overflow:auto">
+                                <div id="errors" style="height:90px;overflow: auto">
                                    
                                 </div>
                                 <div style="overflow: auto">
@@ -123,7 +123,6 @@
                                                     <th >Note</th>
                                                     <th >Price In</th>
                                                     <th >Sohoadon</th>
-                                                    
                                                 </tr>
                                             </thead>
                                             <tbody id="bodyForm">
@@ -203,35 +202,75 @@
                                 </thead>
                                 <tbody id="myTable">
                                     @foreach ($data['PCustomers'] as $item)
+                                    @php
+                                        $sum = 0;
+                                    @endphp
                                     <tr>
-                                        <td>{{$item->depositID}}</td>
+                                        <td>@if (count($item)>=2)
+                                            @foreach ($item as $ite)
+                                                {{$ite->depositID}}
+                                                @break
+                                            @endforeach
+                                        @else
+                                            {{$item[0]->depositID}}
+                                        @endif</td>
                                         <td>
                                             <div>
-                                                <input type="text" class="form-control" id="us{{$item->Id}}"
-                                                    value="{{$item->uname}}" onchange="update{{$item->Id}}()"
+                                                @if (count($item)>=2)
+                                                @foreach ($item as $ite)
+                                                {{$ite->uname.','}}
+                                                @endforeach
+                                                @else
+                                                    <input type="text" class="form-control" id="us{{$item[0]->Id}}"
+                                                    value="{{$item[0]->uname}}" onchange="update{{$item[0]->Id}}()"
                                                     placeholder="User name" list="litsusername"
                                                     onkeyup='searchUser(this)'> <datalist id='litsusername'></datalist>
+                                                @endif
                                             </div>
                                         </td>
-                                        <td>{{$item->note}}</td>
-                                        <td>{{$item->dateget}}</td>
-                                        <td>{{$item->date_insert}}</td>
-                                        <td>{{number_format($item->price_in, 0)}}</td>
+                                        <td>
+                                            @if (count($item)>=2)
+                                                @foreach ($item as $ite)
+                                                    {{$ite->note.','}}
+                                                @endforeach
+                                            @else
+                                            {{$item[0]->note}}
+                                            @endif
+                                        </td>
+                                        <td>{{$item[0]->dateget}}</td>
+                                        <td>{{$item[0]->date_insert}}</td>
+                                        <td> @if (count($item)>=2)
+                                            @foreach ($item as $ite)
+                                               @php
+                                                   $sum +=$ite->price_in
+                                               @endphp
+                                            @endforeach
+                                            {{number_format($sum)}}
+                                        @else
+                                        {{number_format($item[0]->price_in, 0)}}
+                                        @endif
+                                           </td>
                                         <td>
                                             <div>
-                                                <input type="text" class="form-control" id="shd{{$item->Id}}"
-                                                    value="{{$item->Sohoadon}}" onchange="update{{$item->Id}}()"
-                                                    placeholder="So hoa don" list="listbillcode"
-                                                    onkeyup='searchMaHoaDon(this)'> <datalist
-                                                    id='listbillcode'></datalist>
+                                                @if (count($item)>=2)
+                                                    @foreach ($item as $ite)
+                                                    {{$ite->Sohoadon.','}}
+                                                    @endforeach
+                                                @else
+                                                    <input type="text" class="form-control" id="shd{{$item[0]->Id}}"
+                                                        value="{{$item[0]->Sohoadon}}" onchange="update{{$item[0]->Id}}()"
+                                                        placeholder="So hoa don" list="listbillcode"
+                                                        onkeyup='searchMaHoaDon(this)'> <datalist
+                                                        id='listbillcode'></datalist>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
                                     <script>
-                                        function update{{$item->Id}}() {
-                                            var id = {{$item -> Id}};
-                                            var us = $("#us{{$item->Id}}").val();
-                                            var shd = $("#shd{{$item->Id}}").val();
+                                        function update{{$item[0]->Id}}() {
+                                            var id = {{$item[0]-> Id}};
+                                            var us = $("#us{{$item[0]->Id}}").val();
+                                            var shd = $("#shd{{$item[0]->Id}}").val();
                                             $.ajax({
                                                 headers: {
                                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -243,9 +282,16 @@
                                                     sohoadon: shd
                                                 },
                                                 success: function (response) {
-                                                    toastr.success('Cập nhập thành công.', 'Notifycation', {
+                                                    console.log(response)
+                                                    if(response=="ErrorUname"){
+                                                        toastr.warning(us+' không tồn tại','Notifycation',{timeOut:1000})
+                                                    }else if(response=="ErrorSHD"){
+                                                        toastr.warning('Số hóa đơn '+shd+' không tồn tại','Notifycation',{timeOut:1000})
+                                                    }else{
+                                                        toastr.success('Cập nhập thành công.', 'Notifycation', {
                                                         timeOut: 1000
-                                                    })
+                                                        })
+                                                    }
                                                 }
                                             });
                                         }
@@ -310,7 +356,10 @@
             return false
         }
     })
-    $("#deleteRow").click(function(){
+    function deleteRow(row){
+        $(row).parent().parent().remove()
+    }
+    $("#delete").click(function(){
         console.log("aaa")
         $(this).parent().parent().remove()
     })
@@ -321,6 +370,7 @@
         $('#deposit').val(value)
     }
     function bodyEmpty(){
+        $("#errors").empty();
         $("#litsusername").empty();
         $("#depositID").val('');
         $("#setDate").val('');
@@ -334,6 +384,7 @@
                 '<td> <input name="note[]" type="text" > </td>'+
                 '<td> <input name="price[]" type="number" min="1" ></td>'+
                 '<td> <input name="hoadon[]" type="text" > </td>'+
+                '<td> <button type="button" onclick=deleteRow(this)>Xóa</button> </td>'+
             '</tr>'
             )
     }

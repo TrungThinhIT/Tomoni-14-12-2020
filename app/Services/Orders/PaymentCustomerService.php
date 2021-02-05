@@ -3,7 +3,9 @@
 namespace App\Services\Orders;
 
 use App\Http\Requests\Orders\PaymentCustomerRequest;
+use App\Models\Bill;
 use App\Models\PaymentCustomer;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PaymentCustomerService
@@ -21,7 +23,7 @@ class PaymentCustomerService
             $PCustomers = $PCustomers->where('uname', 'like', '%' . $Uname . '%');
         }
 
-        if($date_inprice && $date_insert){
+        if ($date_inprice && $date_insert) {
             $PCustomers = $PCustomers->whereBetween('dateget', [$date_inprice, $date_insert]);
         }
 
@@ -29,11 +31,14 @@ class PaymentCustomerService
             $PCustomers = $PCustomers->where('Sohoadon', 'like', '%' . $Sohoadon . '%');
         }
 
-        $PCustomers = $PCustomers->orderByDesc('date_insert')->paginate(10);
+        $PCustomers = $PCustomers->orderByDesc('date_insert')->get();
+        $PCustomers = $PCustomers->groupBy('depositID')->paginate(10);
+        // dd($PCustomers);
         return ['PCustomers' => $PCustomers, 'Uname' => $Uname, 'date_inprice' => $date_inprice, 'date_insert' => $date_insert, 'Sohoadon' => $Sohoadon];
     }
 
-    public function insert(PaymentCustomerRequest $request){
+    public function insert(PaymentCustomerRequest $request)
+    {
         PaymentCustomer::create([
             'uname' => $request->uname,
             'depositID' => $request->depositId,
@@ -49,15 +54,22 @@ class PaymentCustomerService
 
     public function updateById(Request $request, $Id)
     {
-        $paymentCustomer = PaymentCustomer::where("Id", $Id)->update([
-            'uname' => $request->uname,
-            'Sohoadon' => $request->sohoadon
-        ]);
-
-        if ($paymentCustomer) {
-            return 1;
+        $checkUser = User::where('uname', $request->uname)->first();
+        $check = Bill::where('So_Hoadon', $request->sohoadon)->first();
+        if ((!empty($check)) && (!empty($checkUser))) {
+            $paymentCustomer = PaymentCustomer::where("Id", $Id)->update([
+                'uname' => $request->uname,
+                'Sohoadon' => $request->sohoadon
+            ]);
+            if ($paymentCustomer) {
+                return 1;
+            } else {
+                return 2;
+            }
+        } elseif (empty($checkUser)) {
+            return "ErrorUname";
         } else {
-            return 2;
+            return "ErrorSHD";
         }
     }
 }
