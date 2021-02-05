@@ -63,4 +63,10 @@ class PaymentCustomerController extends Controller
             return "false";
         }
     }
+    public function depositDetails($id)
+    {
+        $lists  =  PaymentCustomer::where('depositID', $id)->get();
+        return view('orders.includes.modalDepositIDDetails', compact('lists', 'id'));
+        return response()->json($lists);
+    }
 }

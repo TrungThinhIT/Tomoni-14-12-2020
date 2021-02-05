@@ -76,6 +76,7 @@
                         </div>
                     </fieldset>
                 </form>
+                {{-- modal --}}
                 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
                     aria-labelledby="myLargeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
@@ -206,7 +207,18 @@
                                         $sum = 0;
                                     @endphp
                                     <tr>
-                                        <td>@if (count($item)>=2)
+                                        <td data-deposit=@if (count($item)>=2)
+                                            @foreach ($item as $ite)
+                                                {{$ite->depositID}}
+                                                @break
+                                            @endforeach
+                                        @else
+                                            {{$item[0]->depositID}}
+                                        @endif 
+                                        @if(count($item)>=2)
+                                        {{"class=showDepositID"}}
+                                        @endif >
+                                        @if (count($item)>=2)
                                             @foreach ($item as $ite)
                                                 {{$ite->depositID}}
                                                 @break
@@ -215,7 +227,11 @@
                                             {{$item[0]->depositID}}
                                         @endif</td>
                                         <td>
-                                            <div>
+                                            <div 
+                                                @if (count($item)>=2)
+                                                    {{"id=changeUname"}}
+                                                @endif
+                                            >
                                                 @if (count($item)>=2)
                                                 @foreach ($item as $ite)
                                                 {{$ite->uname.','}}
@@ -251,7 +267,11 @@
                                         @endif
                                            </td>
                                         <td>
-                                            <div>
+                                            <div
+                                                @if ((count($item)>=2))
+                                                    {{"id=changeHoadon"}}
+                                                @endif
+                                            >
                                                 @if (count($item)>=2)
                                                     @foreach ($item as $ite)
                                                     {{$ite->Sohoadon.','}}
@@ -302,6 +322,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal" id="modalDetail">
+                    <div class="modal-dialog modal-lg" style="min-width: 40%;" >
+                      <div class="modal-content" id="modal-details-deposit">
+
+                        <!-- Modal Header -->
+
+
+                      </div>
+                    </div>
+                  </div>
             </div>
         </div>
     </div>
@@ -437,6 +467,21 @@
             });
         };
     }
-
+    $(".showDepositID").click(function(){
+        var deposit = $(this).data('deposit');
+        $.ajax({
+            type:"GET",
+            url:"./payment-customers/deposit/"+deposit,
+            success:function(data){
+                // console.log(data)
+                $('#modalDetail').modal('show');
+                $("#modal-details-deposit").html('').append(data);
+            },error:function(error){
+                console.log(error)
+            }
+          
+        })
+       
+    })
 </script>
 @endsection

@@ -145,6 +145,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::post('/', [PaymentCustomerController::class, 'insert'])->name('insert');
             Route::put('/{Id}', [PaymentCustomerController::class, 'update'])->name('update');
             Route::post('add-unames',[PaymentCustomerController::class,'addUnames'])->name('addUname');
+            Route::get('/deposit/{id}',[PaymentCustomerController::class,'depositDetails'])->name('depositDetails');
         });
 
         Route::get('/customer-debt', [CustomerController::class, 'index'])->name('customer-debt');

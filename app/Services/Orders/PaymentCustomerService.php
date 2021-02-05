@@ -62,6 +62,11 @@ class PaymentCustomerService
                 'Sohoadon' => $request->sohoadon
             ]);
             if ($paymentCustomer) {
+                $item = PaymentCustomer::where("Id", $Id)->first();
+                $list = PaymentCustomer::where("depositID", $item->depositID)->get()->toArray();
+                if (count($list) > 1) {
+                    return response()->json($list);
+                }
                 return 1;
             } else {
                 return 2;
