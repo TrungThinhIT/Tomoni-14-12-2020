@@ -39,16 +39,21 @@ class ProductRealityExcel
         $index = 1;
         $row = 26;
         foreach ($products as $key => $item) {
-
+            if ($item->InvoiceBill) {
+                $bill =  $item->InvoiceBill->So_Hoadon;
+            } else {
+                $bill = "";
+            }
             $setCell
                 ->setCellValue('A' . $row, $index)
                 ->setCellValue('B' . $row, $item->codeorder)
                 ->setCellValue('C' . $row, $item->uname)
                 ->setCellValue('D' . $row, $item->invoice)
-                ->setCellValue('E' . $row, $item->container)
-                ->setCellValue('F' . $row, $item->quantity)
-                ->setCellValue('G' . $row, $item->address)
-                ->setCellValue('H' . $row, Carbon::parse($item->delivery_time)->format('d/m/Y h:m:i'));
+                ->setCellValue('E' . $row, $bill)
+                ->setCellValue('F' . $row, $item->container)
+                ->setCellValue('G' . $row, $item->quantity)
+                ->setCellValue('H' . $row, $item->address)
+                ->setCellValue('j' . $row, Carbon::parse($item->delivery_time)->format('d/m/Y h:m:i'));
 
             // ->setCellValue('G' . $row, $item->price)
             // ->setCellValue('H' . $row, '=F' . $row . '*G' . $row); //them dong text vao cot H, su dung ham tinh toan mac dinh trong excel de tinh gia tri

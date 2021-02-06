@@ -77,14 +77,13 @@ class productRealityController extends Controller
         if ($quantity ) {
             $product_reality = $product_reality->where('quantity', $quantity);
         }
-
         if ($export == "true") {
-            $products = $product_reality->get();
+            $products = $product_reality->with('InvoiceBill')->get();
             // dd($product_reality);
             return $this->productRealityExport->ExportProduct($products);
         }
 
-        $product_reality = $product_reality->paginate(10);
+        $product_reality = $product_reality->with('InvoiceBill')->paginate(10);
         return view('warehouses.includes.tableProductReality', compact('product_reality'));
     }
 

@@ -12,4 +12,8 @@ class productReality extends Model
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $guarded = [];
+
+    public function InvoiceBill(){
+        return $this->hasOne(Bill::class, 'Codeorder', 'codeorder');
+    }
 }

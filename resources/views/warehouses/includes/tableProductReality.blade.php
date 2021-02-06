@@ -5,6 +5,7 @@
             <th>CodeOrder</th>
             <th>Uname</th>
             <th>Invoice</th>
+            <th>Bill</th>
             <th>Container</th>
             <th>quantity</th>
             <th>Address</th>
@@ -21,6 +22,9 @@
             <td>{{$item->codeorder}}</td>
             <td>{{$item->uname}}</td>
             <td>{{$item->invoice}}</td>
+            <td>@if ($item->InvoiceBill)
+                {{$item->InvoiceBill->So_Hoadon}}
+                @endif</td>
             <td>{{$item->container}}</td>
             <td>{{$item->quantity}}</td>
             <td>{{$item->address}}</td>
