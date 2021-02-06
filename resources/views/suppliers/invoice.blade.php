@@ -108,32 +108,31 @@
                                     onclick="Insert_Invoice()">Submit</button>
                             </div>
                         </div>
-
-
                     </fieldset>
-
                 </form>
-                </fieldset>
-                <div class="card" id="ItemInvoice"
-                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd1"
-                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd2"
-                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd3"
-                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd4"
-                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd5"
-                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd6"
-                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd7"
-                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd8"
-                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
-                <div class="card" id="ItemInvoiceAdd9"
-                    style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                <fieldset>
+                    <div id="hiddenAll" style="display:none">
+                        {{-- <div class="card" id="ItemInvoice"
+                            style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div> --}}
+                        {{-- <div class="card" id="ItemInvoiceAdd1"
+                            style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                        <div class="card" id="ItemInvoiceAdd2"
+                            style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                        <div class="card" id="ItemInvoiceAdd3"
+                            style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                        <div class="card" id="ItemInvoiceAdd4"
+                            style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                        <div class="card" id="ItemInvoiceAdd5"
+                            style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                        <div class="card" id="ItemInvoiceAdd6"
+                            style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                        <div class="card" id="ItemInvoiceAdd7"
+                            style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                        <div class="card" id="ItemInvoiceAdd8"
+                            style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div>
+                        <div class="card" id="ItemInvoiceAdd9"
+                            style="background-color: aliceblue; margin-bottom: unset; margin-top:1%"></div> --}}
+                    </div>
                 </fieldset>
                 <div>
                     <div style="margin: 1% 1% 1% 1%;">
@@ -291,13 +290,12 @@
                                             echo "Bằng tiền";
                                         }else{
                                             echo "không bằng tiền";
-                                        } 
+                                        }
                                         @endphp
                                     </td>
                                     <td><a href="{{route('supplier.invoice.deleteInvoice', $value->Invoice)}}"
                                             type="button" onclick="return confirm('are you sure?')"
                                             class="btn btn-danger">Xoá</a></td>
-                                    td
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -326,6 +324,7 @@
     var HTML = "";
     var JanCount = 1;
     var TotalPrice = 0;
+   
     $(document).ready(function () {
         $('.view_transaction').click(function () {
             const id = $(this).data('id');
@@ -362,9 +361,6 @@
         var Buyer = $("#Buyer").val();
         var Dateinvoice = $("#Dateinvoice").val();
         var Trackingnumber = $("#uTracking").val();
-
-        console.log(Invoice, TotalPrice, PurchaseCosts, TaxPurchaseCosts, UnameSupplier, PaymentDate, StockDate,
-            Dateinvoice, PaidInvoice, Typehoadon);
         if ((Invoice.length > 3) && (TotalPrice.length > 3) && (Dateinvoice.length > 7) && (PaymentDate.length > 7) && (
                 StockDate.length > 7)) {
             $.ajax({
@@ -397,8 +393,11 @@
                 },
                 success: function (response) {
                     console.log(response)
+                    document.getElementById("hiddenAll").style.display="block";
                     if (response == 1) {
-                        $("#ItemInvoice").html(
+                        $("#hiddenAll").html(
+                            '<div class="card" id="ItemInvoice"'+
+                            'style="background-color: aliceblue; margin-bottom: unset; margin-top:1%">'+
                             "<fieldset >" +
                             "<div class='form-row' style='margin-left: 2%;margin-right: 1%;'>" +
                             "<div class='col-md-2 mb-2' >" +
@@ -446,7 +445,7 @@
 
                             "<div class='col-md-1 paddbtm20' id='Add_Jancode_" + JanCount + "'>" +
                             "</div>" +
-                            "</fieldset>"
+                            "</fieldset>"+'</div>'
                         );
                     }
 
@@ -575,9 +574,13 @@
     }
 
     function AddJancode() {
+        var parent = document.getElementById("hiddenAll");
+        var clas = parent.getElementsByClassName("card");
         document.getElementById("MoreJan_" + JanCount).disabled = true;
         JanCount = JanCount + 1;
         var ItemJancode =
+            '<div class="card" id="ItemInvoiceAdd"'+JanCount+
+            'style="background-color: aliceblue; margin-bottom: unset; margin-top:1%">'+
             "<fieldset >" +
             "<div class='form-row' style='margin-left: 2%;margin-right: 1%;'>" +
             "<div class='col-md-2 mb-2' >" +
@@ -625,10 +628,10 @@
 
             "<div class='col-md-1 paddbtm20' id='Add_Jancode_" + JanCount + "'>" +
             "</div>" +
-            "</fieldset>";
-        HTML = ItemJancode;
-
-        document.getElementById("ItemInvoiceAdd" + JanCount).innerHTML = HTML;
+            "</fieldset>"+'</div>';
+            HTML = ItemJancode;
+            $("#hiddenAll").append(HTML)
+        // document.getElementById("hiddenAll").innerHTML = HTML;
     }
 
     function search_ordercode(obj) {
