@@ -405,6 +405,7 @@
         $('#deposit').val(value)
     }
     function bodyEmpty(){
+        $("#errors").css("display","none");
         $("#errors").empty();
         $("#litsusername").empty();
         $("#depositID").val('');
