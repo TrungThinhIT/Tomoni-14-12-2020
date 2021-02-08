@@ -111,7 +111,7 @@
                                     </tr>
                                 </div>
                                 <hr>
-                                <div id="errors" style="height:90px;overflow: auto">
+                                <div id="errors" style="height:90px;overflow: auto;display:none">
                                    
                                 </div>
                                 <div style="overflow: auto">
@@ -369,8 +369,10 @@
                     success:function(data){
                         $("#errors").empty()
                         if(data=="oke"){
+                            toastr.success("Cập nhật thành công","Notifications",{timeOut:900})
                             window.location.reload()
                         }else{
+                            $("#errors").css("display","block");
                             $.each(data,function(index,obj){
                                 $.each(obj,function(index,value){
                                     console.log(value)
