@@ -224,7 +224,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
     });
 
     Route::prefix('addressbook')->middleware('role')->name('addressBook.')->group(function () {
-        Route::resource('index', addressBookController::class);
+        Route::resource('index', App\Http\Controllers\AddressBook::class);
         Route::get('/{idTP}', [addressBookController::class, 'getDistrict'])->name('getDistrict');
         Route::get('/district/{idQH}', [addressBookController::class, 'getWard'])->name('getWard');
         Route::get('/modal/address/{id}', [addressBookController::class, 'getAddress'])->name('getAddress');
