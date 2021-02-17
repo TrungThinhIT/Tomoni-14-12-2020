@@ -345,7 +345,6 @@
     });
 
     function Insert_Invoice() {
-        alert("ádass")
         var errors = ['uinvoice'];
         errors.forEach(function (item, index) {
             $('span[id^="' + item + '"]').remove();

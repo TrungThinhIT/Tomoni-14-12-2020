@@ -29,7 +29,7 @@ class CreateBillRequest extends FormRequest
             'Codeorder' => Rule::unique('accoutant_order')->where(function ($query) {
                 return $query->where('deleted_at', null);
             }),
-            'note' => 'required'
+            // 'note' => 'required'
         ];
     }
 }
