@@ -83,7 +83,7 @@ class productRealityController extends Controller
             return $this->productRealityExport->ExportProduct($products);
         }
 
-        $product_reality = $product_reality->with('InvoiceBill')->paginate(10);
+        $product_reality = $product_reality->with('InvoiceBill')->orderBy('delivery_time','DESC')->paginate(10);
         return view('warehouses.includes.tableProductReality', compact('product_reality'));
     }
 
@@ -118,8 +118,8 @@ class productRealityController extends Controller
                 $str = Str::random(40);
             }
             // 
-            // dd($img->storeAs('images', $str . '.' . $ext));
-            $image = Image::make($img->storeAs('images', $str . '.' . $ext));
+            $img->storeAs('images', $str . '.' . $ext);
+            $image = Image::make($img);
 
             // dd($image);
             $image->resize(80, 80);
