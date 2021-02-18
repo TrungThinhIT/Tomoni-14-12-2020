@@ -58,23 +58,23 @@ class productRealityController extends Controller
         // dd($request->all());
         $product_reality = productReality::query();
 
-        if ($uname ) {
+        if ($uname) {
             $product_reality = $product_reality->where('uname', $uname);
         }
 
-        if ($codeorder ) {
-            $product_reality = $product_reality->where('codeorder','like','%'. $codeorder.'%');
+        if ($codeorder) {
+            $product_reality = $product_reality->where('codeorder', 'like', '%' . $codeorder . '%');
         }
 
-        if ($container ) {
+        if ($container) {
             $product_reality = $product_reality->where('container', $container);
         }
 
-        if ($invoice ) {
+        if ($invoice) {
             $product_reality = $product_reality->where('invoice', $invoice);
         }
 
-        if ($quantity ) {
+        if ($quantity) {
             $product_reality = $product_reality->where('quantity', $quantity);
         }
         if ($export == "true") {
@@ -83,7 +83,7 @@ class productRealityController extends Controller
             return $this->productRealityExport->ExportProduct($products);
         }
 
-        $product_reality = $product_reality->with('InvoiceBill')->orderBy('delivery_time','DESC')->paginate(10);
+        $product_reality = $product_reality->with('InvoiceBill')->orderBy('delivery_time', 'DESC')->paginate(10);
         return view('warehouses.includes.tableProductReality', compact('product_reality'));
     }
 
@@ -105,27 +105,20 @@ class productRealityController extends Controller
      */
     public function store(productRealityRequest $request)
     {
-        // $imgPath = $request->Image->store('images');
         $address = addressCustomer::find($request->selectedAddress);
         //resize img & change name img
-        if ($img = $request->Image) {
-            // dd($img);
+        if ($img = $request->file('Image')) {
             $ext = $img->getClientOriginalExtension();
             $name =  $img->getClientOriginalName();
-            // dd($name);
             $str = Str::random(40);
             while (file_exists('images/' . $str . '.' . $ext)) {
                 $str = Str::random(40);
             }
-            // 
-            $img->storeAs('images', $str . '.' . $ext);
+            $img->storeAs('images/', $str . '.' . $ext);
             $image = Image::make($img);
-
             // dd($image);
             $image->resize(80, 80);
             $image->save(public_path('thumnails/' . $str . '.' . $ext));
-            // dd($image);
-
         }
         if (productReality::create([
             'codeorder' => $request->CodeOrder,
