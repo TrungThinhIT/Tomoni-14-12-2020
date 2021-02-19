@@ -188,8 +188,8 @@
                     </table>
 
                     <div class="col-md-2 mb-2">
-                        <button class="btn btn-primary" id="btnAddMore" type="button" data-toggle="modal"
-                            data-target="#modalAddMore">Add More</button>
+                        <button  class="btn btn-primary" id="btnAddMore" type="button" data-toggle="modal"
+                            data-target="#modalAddMore" >Add More</button>
                     </div>
                 </div>
             </div>
@@ -271,10 +271,15 @@
 <script>
     var priceInvoice  = {{$data['priceInvoice']}};
     var priceDetail = {{$data['priceDetail']}};
-
+    var cost = {{$data['object']->PurchaseCosts}};
+    var totalBill = $("#sumBillUpdate").val();
     document.getElementById('totalPriceAll').value = priceInvoice;
     document.getElementById('totalPriceDetail').value = priceDetail;
-    
+    if(priceInvoice < totalBill){
+        document.getElementById("btnAddMore").disabled = false;
+    }else{
+        document.getElementById("btnAddMore").disabled = true;
+    }
     function AddMore(){
         var errors = ['Jancode', 'Quantity', 'Price', 'Tax'];
     errors.forEach(function(item, index){
@@ -287,7 +292,10 @@
         var price = $('#aprice').val();
         var tax = $('#atax').val();
         var totalPrice = quantity * price;
-        if(priceInvoice >= (priceDetail + totalPrice)){
+        var total = $("#sumBillUpdate").val();
+        var totalMoney = $("#totalPriceAll").val();
+        var sum = parseInt(totalMoney) + parseInt(price*quantity);
+        if(total >= sum){
             $.ajax({
                 headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -319,6 +327,8 @@
                     }
                     document.getElementById('totalPriceAll').value = response.totalPriceInvoice;
                     document.getElementById('totalPriceDetail').value = response.totalPriceInvoiceDetail;
+                    var checkTotal = $("#sumBillUpdate").val();
+                    var checkSum  = $("#totalPriceAll").val();
                     $('#TableDetaillBill tbody').append("<tr id='" +Id + "'>" +
                                 "<td>" +
                                     "<div>" +
@@ -377,6 +387,11 @@
                     document.getElementById('aquantity').value = '';
                     document.getElementById('aprice').value = '';
                     document.getElementById('atax').value = '10';
+                    if(checkTotal>checkSum){
+                        document.getElementById("btnAddMore").disabled=false
+                    }else{
+                        document.getElementById("btnAddMore").disabled=true
+                    }
                     },800); 
                 },
                 error:function (response){
@@ -391,11 +406,11 @@
         }
     }
 
-    if(priceInvoice > priceDetail){
-        document.getElementById("btnAddMore").disabled = false;
-    }else{
-        document.getElementById("btnAddMore").disabled = true;
-    }
+    // if(priceInvoice > priceDetail){
+    //     document.getElementById("btnAddMore").disabled = false;
+    // }else{
+    //     document.getElementById("btnAddMore").disabled = true;
+    // }
     function update() {
         var id = $('#idBillUpdate').val();
         var invoice = $('#numBillUpdate').val();
@@ -434,6 +449,10 @@
                 if (response[0] == 1) {
                     priceInvoice = response[1];
                     priceDetail = response[2];
+                    if(priceInvoice > sum){
+                        alert("Không được lớn hơn tổng tiền hóa đơn")
+                        return false
+                    }
                     if(priceInvoice > priceDetail){
         document.getElementById("btnAddMore").disabled = false;
     }else{
@@ -464,6 +483,9 @@
         var price = $("#price_" + id).val();
         var tax = $('#taxco_' + id).val();
         var invoice = $('#numBillUpdate').val();
+        var total = $("#sumBillUpdate").val();
+        var cost = $("#totalPriceBillUpdate").val();
+        var totalPrice = document.getElementById("totalPriceAll").value;
         $('span[id^="janco_'+id+'"]').remove();
         $.ajax({
             headers: {
@@ -483,12 +505,17 @@
             success: function (response) {
                 if (response[0] == 1) {
                     priceDetail = response[1];
-                    if(priceInvoice > priceDetail){
+                    if(total >  (parseInt(priceDetail) +parseInt(cost))){
                     document.getElementById("btnAddMore").disabled = false;
                     }else{
                         document.getElementById("btnAddMore").disabled = true;
                     }
-                    document.getElementById('totalPriceAll').value = priceInvoice;
+                    // document.getElementById('totalPriceAll').value = priceInvoice;
+                    if((parseInt(priceDetail) + parseInt(cost)) > total){
+                        alert("Tổng tiền lớn hơn hoá đơn, vui lòng xem lại!")
+                        return false
+                    }
+                    document.getElementById('totalPriceAll').value = parseInt(priceDetail) +parseInt(cost);
                     document.getElementById('totalPriceDetail').value = priceDetail;
                     toastr.success('Cập nhập thành công.', 'Notifycation', {
                         timeOut: 500

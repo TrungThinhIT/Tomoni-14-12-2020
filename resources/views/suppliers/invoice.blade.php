@@ -241,8 +241,9 @@
                                 
                                 <?php 
                                 $sum =0;
-                                $total = $value->TotalPrice+ $value->PurchaseCosts;
-                                 ?>
+                                $cost = $value->PurchaseCosts;
+                                $total = $value->TotalPrice;
+                                ?>
                                 @php
                                 $checkStatus = 1;
                                 @endphp
@@ -286,6 +287,7 @@
                                         foreach ($value->detail as $key => $value) {
                                         $sum+=$value->Quantity *$value->Price;
                                         }
+                                        $sum+= $cost;
                                         if($sum==$total){
                                             echo "Bằng tiền";
                                         }else{
@@ -488,7 +490,7 @@
         var PurchaseCosts = $('#uPurchaseCosts').val().replace(",", "").replace(",", "");;
         var uTotalPrice = parseInt(uTotalPrice);
         var PurchaseCosts = parseInt(PurchaseCosts);
-        var allTotalPrice = (uTotalPrice + PurchaseCosts);
+        var allTotalPrice = uTotalPrice;
         var CodeorderItem = $("#codeorder_" + JanCount).val();
         var Jancode = $("#Jancode_" + JanCount).val();
         var Quantity = $("#so_luong_" + JanCount).val().replace(",", "");
@@ -497,10 +499,9 @@
         var Invoice = $("#uinvoice").val();
 
         $('span[id^="Jancode_' + JanCount + '"]').remove();
-
-        if (allTotalPrice < (Quantity * Price) + TotalPrice) {
+        if (allTotalPrice < (Quantity * Price) + TotalPrice + PurchaseCosts) {
             alert('Tổng giá cao hơn tổng tiền hóa đơn')
-        } else if (allTotalPrice == (Quantity * Price) + TotalPrice) {
+        } else if (allTotalPrice == (Quantity * Price) + TotalPrice + PurchaseCosts) {
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

@@ -96,7 +96,7 @@ class InventoryService
 
         $inventories = $inventories->groupBy('Jancode');
 
-        $inventories = $inventories->sortBy('Dateinsert')->paginate(1);
+        $inventories = $inventories->sortBy('Dateinsert')->paginate(10);
         return ['inventories' => $inventories, 'jan_code' => $janCode, 'status' => $status];
     }
 
