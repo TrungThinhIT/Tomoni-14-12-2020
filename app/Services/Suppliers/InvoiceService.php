@@ -42,7 +42,7 @@ class InvoiceService
         if (isset($productName)) {
             $invoices = InvoiceSupplier::whereHas('detail.product', function ($query) use ($productName) {
                 return $query->where('name', 'like', $productName . '%');
-                
+
             });
         }
         if (isset($webOrder)) {
@@ -77,7 +77,7 @@ class InvoiceService
                 }
             }
         }
-        
+
         $invoices = $invoices->paginate($record);
         return ['invoices' => $invoices, 'accounts' => $accounts, 'suppliers' => $suppliers, 'record' => $record,
          'productName' => $productName, 'sinvoice' => $sinvoice, 'supplier'=> $supplier,
@@ -88,14 +88,12 @@ class InvoiceService
         $priceInvoice = 0;
         $suppliers = DB::table('supplier')->get();
         $object = InvoiceSupplier::where('Id', $Id)->with('detail.product')->first();
-        $priceInvoice = ($object->TotalPrice + $object->PurchaseCosts);
-        $priceDetail = 0;
+        $priceInvoice = $object->TotalPrice;
+        $priceDetail = $object->PurchaseCosts;
 
         foreach ($object['detail'] as $key => $value) {
             $priceDetail +=  $value->Quantity * $value->Price;
         }
-
-        
 
         return ['object'=> $object, 'suppliers' => $suppliers, 'priceInvoice'=> $priceInvoice, 'priceDetail' => $priceDetail];
     }
@@ -122,7 +120,7 @@ class InvoiceService
         ]);
 
         $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $Invoice)->get();
-        
+
         InvoiceSupplier::where('Invoice', $Invoice)->delete();
         InvoiceDetailSupplier::where('Invoice', $Invoice)->delete();
 
@@ -142,7 +140,7 @@ class InvoiceService
 
     public function deleteInvoiceDetail($Id){
         $invoiceDetails = InvoiceDetailSupplier::where('Id', $Id)->first();
-        
+        $invoice = InvoiceSupplier::where('Invoice', $invoiceDetails->Invoice)->first();
         LogInvoiceDetailSupplier::create([
             'Invoice' => $invoiceDetails->Invoice,
             'action' => 'delete',
@@ -150,11 +148,11 @@ class InvoiceService
             'Codeorder' => $invoiceDetails->Codeorder,
             'uname' => Auth::user()->uname
         ]);
-        
+
         try {
             InvoiceDetailSupplier::where('Id', $Id)->delete();
             $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $invoiceDetails->Invoice)->get();
-            $totalPriceInvoiceDetails = 0;
+            $totalPriceInvoiceDetails = $invoice->PurchaseCosts;
         foreach ($invoiceDetails as $value) {
             $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
         }
@@ -230,9 +228,9 @@ class InvoiceService
     }
 
     public function updateInvoice(Request $request, $Id){
-        $totalPriceCurrentInvoice = $request->TotalPrice + $request->PurchaseCosts;
+        $totalPriceCurrentInvoice = $request->TotalPrice;
         $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $request->Invoice)->get();
-        $totalPriceInvoiceDetails = 0;
+        $totalPriceInvoiceDetails = $request->PurchaseCosts;
         foreach ($invoiceDetails as $value) {
             $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
         }
@@ -266,8 +264,8 @@ class InvoiceService
     public function updateInvoiceDetail(UpdateInvoiceDetailRequest $request, $Id){
         $currentInvoiceDetail = InvoiceDetailSupplier::where('Id', $Id)->first();
         $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->where('Id', '!=', $currentInvoiceDetail->Id)->get();
-        $totalPriceInvoice = InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->TotalPrice + InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->PurchaseCosts;
-        $totalPriceInvoiceDetails = 0;
+        $totalPriceInvoice = InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->TotalPrice;
+        $totalPriceInvoiceDetails = InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->PurchaseCosts;
         foreach ($invoiceDetails as $value) {
             $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
         }
@@ -316,11 +314,11 @@ class InvoiceService
 
         $Invoice = InvoiceSupplier::where('Invoice', $Invoice)->first();
 
-        $totalPriceInvoice = $Invoice->TotalPrice + $Invoice->PurchaseCosts;
+        $totalPriceInvoice = $Invoice->TotalPrice;
 
         $invoiceDetails =  InvoiceDetailSupplier::where('Invoice', $request->Invoice)->get();
 
-        $totalPriceInvoiceDetail = 0;
+        $totalPriceInvoiceDetail = $Invoice->PurchaseCosts;
         foreach($invoiceDetails as $value){
             $totalPriceInvoiceDetail += $value->Price * $value->Quantity;
         }

@@ -238,8 +238,8 @@
                             <tbody id="myTable">
 
                                 @foreach ($data['invoices'] as $invoice => $value)
-                                
-                                <?php 
+
+                                <?php
                                 $sum =0;
                                 $total = $value->TotalPrice+ $value->PurchaseCosts;
                                  ?>
@@ -324,7 +324,7 @@
     var HTML = "";
     var JanCount = 1;
     var TotalPrice = 0;
-   
+
     $(document).ready(function () {
         $('.view_transaction').click(function () {
             const id = $(this).data('id');
@@ -488,7 +488,7 @@
         var PurchaseCosts = $('#uPurchaseCosts').val().replace(",", "").replace(",", "");;
         var uTotalPrice = parseInt(uTotalPrice);
         var PurchaseCosts = parseInt(PurchaseCosts);
-        var allTotalPrice = (uTotalPrice + PurchaseCosts);
+        var allTotalPrice = uTotalPrice;
         var CodeorderItem = $("#codeorder_" + JanCount).val();
         var Jancode = $("#Jancode_" + JanCount).val();
         var Quantity = $("#so_luong_" + JanCount).val().replace(",", "");
@@ -498,9 +498,9 @@
 
         $('span[id^="Jancode_' + JanCount + '"]').remove();
 
-        if (allTotalPrice < (Quantity * Price) + TotalPrice) {
+        if (allTotalPrice < (Quantity * Price) + TotalPrice + PurchaseCosts) {
             alert('Tổng giá cao hơn tổng tiền hóa đơn')
-        } else if (allTotalPrice == (Quantity * Price) + TotalPrice) {
+        } else if (allTotalPrice == (Quantity * Price) + TotalPrice + PurchaseCosts) {
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

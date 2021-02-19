@@ -274,7 +274,7 @@
 
     document.getElementById('totalPriceAll').value = priceInvoice;
     document.getElementById('totalPriceDetail').value = priceDetail;
-    
+
     function AddMore(){
         var errors = ['Jancode', 'Quantity', 'Price', 'Tax'];
     errors.forEach(function(item, index){
@@ -304,7 +304,7 @@
                 },
                 success: function (response) {
                     console.log(response);
-                    var Id = response.invoiceAdd.Id;               
+                    var Id = response.invoiceAdd.Id;
                     var Codeorder = '';
                     response.invoiceAdd.Codeorder != null ? Codeorder = response.invoiceAdd.Codeorder:'';
                     var Jancode = response.invoiceAdd.Jancode;
@@ -325,7 +325,7 @@
                                         "<input type='text' class='form-control' value='"+ Codeorder +"'" +
                                             "id='order_" + Id + "' onchange='updateDetail(this);'" +
                                             "placeholder='Code order' list='listcodeorder'" +
-                                            "onkeyup='search_ordercode(this)'>" + 
+                                            "onkeyup='search_ordercode(this)'>" +
                                             "<datalist id='listcodeorder'></datalist>" +
                                     "</div>" +
                                 "</td>" +
@@ -377,7 +377,7 @@
                     document.getElementById('aquantity').value = '';
                     document.getElementById('aprice').value = '';
                     document.getElementById('atax').value = '10';
-                    },800); 
+                    },800);
                 },
                 error:function (response){
                     console.log(response)
@@ -535,7 +535,7 @@
         BillDetailCount = BillDetailCount - 1;
     };
 
-       
+
 
 function modalConfirmDelete(event){
     const Id = $(event).data('id');
@@ -631,6 +631,6 @@ function modalConfirmDelete(event){
             });
         }
     }
-    
+
 </script>
 @endsection

@@ -24,7 +24,7 @@ class InvoiceController extends Controller
     public function list(Request $request)
     {
         $data = $this->invoiceService->showList($request);
-        
+
         return view('suppliers.invoice', compact('data'));
     }
 
