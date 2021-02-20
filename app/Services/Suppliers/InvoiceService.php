@@ -90,12 +90,12 @@ class InvoiceService
         $priceInvoice = 0;
         $suppliers = DB::table('supplier')->get();
         $object = InvoiceSupplier::where('Id', $Id)->with('detail.product')->first();
-        // $priceInvoice = ($object->TotalPrice + $object->PurchaseCosts);
+        $priceInvoice = ($object->TotalPrice );
         $priceDetail = 0;
         foreach ($object['detail'] as $key => $value) {
             $priceDetail +=  $value->Quantity * $value->Price;
         }
-        $priceInvoice = $object->PurchaseCosts + $priceDetail;
+        // $priceInvoice = $object->PurchaseCosts + $priceDetail;
         return ['object' => $object, 'suppliers' => $suppliers, 'priceInvoice' => $priceInvoice, 'priceDetail' => $priceDetail];
     }
 
@@ -235,13 +235,13 @@ class InvoiceService
 
     public function updateInvoice(Request $request, $Id)
     {
-        // $totalPriceCurrentInvoice = $request->TotalPrice + $request->PurchaseCosts;
+        $totalPriceCurrentInvoice = $request->TotalPrice ;
         $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $request->Invoice)->get();
         $totalPriceInvoiceDetails = 0;
         foreach ($invoiceDetails as $value) {
             $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
         }
-        $totalPriceCurrentInvoice = $request->PurchaseCosts + $totalPriceInvoiceDetails;
+        // $totalPriceCurrentInvoice = $request->PurchaseCosts + $totalPriceInvoiceDetails;
         if ($totalPriceCurrentInvoice >= $totalPriceInvoiceDetails) {
             InvoiceSupplier::where('Id', $Id)->update([
                 'Invoice' => $request->Invoice,
@@ -273,12 +273,14 @@ class InvoiceService
     {
         $currentInvoiceDetail = InvoiceDetailSupplier::where('Id', $Id)->first();
         $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->where('Id', '!=', $currentInvoiceDetail->Id)->get();
-        $totalPriceInvoice = InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->TotalPrice + InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->PurchaseCosts;
+        // $totalPriceInvoice = InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->TotalPrice + InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->PurchaseCosts;
+        $totalPriceInvoice = InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->TotalPrice;
         $totalPriceInvoiceDetails = 0;
         foreach ($invoiceDetails as $value) {
             $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
         }
-        $currentTotalPrice = $totalPriceInvoiceDetails + ($request->quantity * $request->price);
+        $currentTotalPrice = $totalPriceInvoiceDetails + ($request->quantity * $request->price) + InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->PurchaseCosts;
+        // dd($totalPriceInvoice,$currentTotalPrice);
         if ($currentTotalPrice <= $totalPriceInvoice) {
             InvoiceDetailSupplier::where('Id', $Id)->update([
                 'Codeorder' => $request->codeorder,
@@ -294,6 +296,7 @@ class InvoiceService
                 'Jancode' => $request->Jancode,
                 'Codeorder' => $request->codeorder
             ]);
+            $currentTotalPrice = $totalPriceInvoiceDetails + ($request->quantity * $request->price);
             return [1, $currentTotalPrice];
         } else {
             return 2;
