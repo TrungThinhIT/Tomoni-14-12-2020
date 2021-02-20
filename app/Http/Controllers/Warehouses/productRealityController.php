@@ -114,11 +114,12 @@ class productRealityController extends Controller
             while (file_exists('images/' . $str . '.' . $ext)) {
                 $str = Str::random(40);
             }
-            $img->storeAs('images/', $str . '.' . $ext);
-            $image = Image::make($img);
+            // $img->move('images/', $str . '.' . $ext);
+            ($img->move('images/', $str . '.' . $ext));
+            $image = Image::make(public_path('images/'.$str.'.'.$ext));
             // dd($image);
-            $image->resize(80, 80);
-            $image->save(public_path('thumnails/' . $str . '.' . $ext));
+            // $image->resize(80, 80);
+            // $image->save(public_path('thumnails/' . $str . '.' . $ext));
         }
         if (productReality::create([
             'codeorder' => $request->CodeOrder,

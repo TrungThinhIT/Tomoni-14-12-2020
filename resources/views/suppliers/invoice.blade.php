@@ -1,6 +1,11 @@
 @extends('layout')
 @section('title', 'Hóa đơn nhà cung cấp')
 @section('content')
+<style>
+    #color{
+        background-color:peachpuff !important;
+    }
+</style>
 <div class="main-panel">
     <div class="content content-documentation">
         <div class="container-fluid">
@@ -261,9 +266,11 @@
                                     </td>
                                     <td>{{$value->TypeInvoice}}</td>
                                     <td>{{$value->Supplier}}</td>
-                                    <td>@foreach ($value['detail'] as $item)
-                                        {{$item->Codeorder}}
-                                        @endforeach</td>
+                                    <td>
+                                        @foreach ($value['detail'] as $item)
+                                            {{$item->Codeorder}}
+                                        @endforeach
+                                    </td>
                                     <td>@foreach ($value['detail'] as $item)
                                         {{$item->Jancode}}
                                         @endforeach</td>
@@ -282,7 +289,7 @@
                                     <td>{{$value->TotalPrice}}</td>
                                     <td>{{$value->PaymentDate}}</td>
                                     <td>{{$value->StockDate}}</td>
-                                    <td>
+                                    <td id="hihi">
                                         @php
                                         foreach ($value->detail as $key => $value) {
                                         $sum+=$value->Quantity *$value->Price;
@@ -326,7 +333,15 @@
     var HTML = "";
     var JanCount = 1;
     var TotalPrice = 0;
-   
+    var td =$("[id=hihi]");
+    $.each(td,function(index,value){
+    // console.log(value.innerText)
+    if(value.innerText=="không bằng tiền"){
+       var a = $(this).parent()
+       a.attr("id","color")
+    }
+    })
+    console.log(td)
     $(document).ready(function () {
         $('.view_transaction').click(function () {
             const id = $(this).data('id');
