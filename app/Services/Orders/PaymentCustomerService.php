@@ -32,8 +32,7 @@ class PaymentCustomerService
         }
 
         $PCustomers = $PCustomers->orderByDesc('date_insert')->get();
-        $PCustomers = $PCustomers->groupBy('depositID')->paginate(10);
-        // dd($PCustomers);
+        $PCustomers = $PCustomers->groupBy('depositID')->paginate(50);
         return ['PCustomers' => $PCustomers, 'Uname' => $Uname, 'date_inprice' => $date_inprice, 'date_insert' => $date_insert, 'Sohoadon' => $Sohoadon];
     }
 

@@ -118,8 +118,8 @@ class productRealityController extends Controller
             ($img->move('images/', $str . '.' . $ext));
             $image = Image::make(public_path('images/'.$str.'.'.$ext));
             // dd($image);
-            // $image->resize(80, 80);
-            // $image->save(public_path('thumnails/' . $str . '.' . $ext));
+            $image->resize(80, 80);
+            $image->save(public_path('thumnails/' . $str . '.' . $ext));
         }
         if (productReality::create([
             'codeorder' => $request->CodeOrder,

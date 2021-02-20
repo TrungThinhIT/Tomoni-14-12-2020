@@ -395,7 +395,6 @@
         $(row).parent().parent().remove()
     }
     $("#delete").click(function(){
-        console.log("aaa")
         $(this).parent().parent().remove()
     })
     function setDate(date){
@@ -479,7 +478,6 @@
             type:"GET",
             url:"./payment-customers/deposit/"+deposit,
             success:function(data){
-                // console.log(data)
                 $('#modalDetail').modal('show');
                 $("#modal-details-deposit").html('').append(data);
             },error:function(error){

@@ -73,7 +73,8 @@
                             </div>
                             <div class="col-md-2 mb-2">
                               <label for="validationDefault01">Sohoadon</label>
-                              <input type="text" value="{{ old('Sohoadon') }}" class="form-control" id="Sohoadon" name="Sohoadon" placeholder="Sohoadon"  >
+                              <input type="text" value="{{ old('Sohoadon') }}" class="form-control" id="Sohoadon" name="Sohoadon" placeholder="Sohoadon" list="abcxyz" onkeyup="findBillCode(this)">
+                                <datalist id="abcxyz"></datalist>
                               <span class="alert-danger-custom">{{$errors->first('Sohoadon')}}</span>
                           </div>
                             <div class="col-md-2 mb-2" style="margin-top: 1%;">
@@ -218,6 +219,25 @@
 				}
 			    });
                 }
+        }
+        function findBillCode(obj){
+            var billcode = obj.value;
+            // console.log(billcode)
+            if(billcode >=2){
+                $.ajax({
+                    type:"GET",
+                    url:"{{route('commons.searchBillCode')}}",
+                    data:{  
+                        billcode:billcode
+                    },
+                    success:function(list){
+                        console.log(list)
+                    },error:function(a){
+                        console.log(a)
+                    }
+                })
+            }
+
         }
     function searchInvoice(obj) {
                 var invoice = obj.value;
