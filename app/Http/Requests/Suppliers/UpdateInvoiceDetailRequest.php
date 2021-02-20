@@ -28,7 +28,8 @@ class UpdateInvoiceDetailRequest extends FormRequest
         return [
             'Jancode' => ['required', Rule::unique('acountant_jancodeitem')->ignore($this->Id)->where(function ($query) use($request) {
                 $query->where('Invoice', $request->Invoice);
-            })]
+            }),
+            ]
         ];
     }
 }

@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-md-2 mb-2">
                             <label for="validationDefault01">Tổng tiền hoá đơn</label>
-                            <input type="text" class="form-control" value="{{$data['object']->TotalPrice}}"
+                            <input type="number" name="sum" class="form-control" value="{{$data['object']->TotalPrice}}"
                                 id="sumBillUpdate" placeholder="First name" onchange="update()">
                         </div>
                         <div class="col-md-2 mb-2">
@@ -272,11 +272,10 @@
     var priceDetail = {{$data['priceDetail']}};
     var cost = {{$data['object']->PurchaseCosts}};
     var totalBill = $("#sumBillUpdate").val();
+    var i = priceDetail + parseInt(cost);
     document.getElementById('totalPriceAll').value = priceInvoice;
     document.getElementById('totalPriceDetail').value = priceDetail;
-    if(priceInvoice < totalBill){
-        document.getElementById("btnAddMore").disabled = false;
-    }else{
+    if(priceInvoice <= i ){
         document.getElementById("btnAddMore").disabled = true;
     }
     function AddMore(){
@@ -292,7 +291,7 @@
         var tax = $('#atax').val();
         var totalPrice = quantity * price;
         var total = $("#sumBillUpdate").val();
-        var totalMoney = $("#totalPriceAll").val();
+        var totalMoney = $("#totalPriceDetail").val();
         var sum = parseInt(totalMoney) + parseInt(price*quantity);
         if(total >= sum){
             $.ajax({
@@ -446,23 +445,21 @@
                 TrackingNumber: trackingNumber
             },
             success: function (response) {
-                console.log(response)
                 if (response[0] == 1) {
                     priceInvoice = response[1];
                     priceDetail = response[2];
                     var i = parseInt(totalPrice) +priceDetail;
-                    console.log(i)
                     if(priceInvoice < i){
                         alert("Tổng tiền bé hơn hoá đơn chi tiết, vui lòng xem lại!")
                         return false
                     }
                     if(priceInvoice <= i){
-        document.getElementById("btnAddMore").disabled = true;
-    }else{
-        document.getElementById("btnAddMore").disabled = false;
-    }
-    document.getElementById('totalPriceAll').value = priceInvoice;
-    document.getElementById('totalPriceDetail').value = priceDetail;
+                        document.getElementById("btnAddMore").disabled = true;
+                    }else{
+                        document.getElementById("btnAddMore").disabled = false;
+                    }
+                    document.getElementById('totalPriceAll').value = priceInvoice;
+                    document.getElementById('totalPriceDetail').value = priceDetail;
                     toastr.success('Cập nhập thành công.', 'Notifycation', {
                         timeOut: 500
                     })
@@ -470,7 +467,6 @@
                     alert('Tổng tiền bé hơn hoá đơn chi tiết, vui lòng xem lại!');
                 }
             },error:function (response){
-                    console.log(response)
                     $.each(response.responseJSON.errors,function(field_name,error){
                         $(document).find('[name='+field_name+']').after('<span class="alert-danger-custom" id="'+field_name+'">' +error+ '</span>');
                     })
@@ -506,7 +502,6 @@
                 tax: tax
             },
             success: function (response) {
-                console.log(response)
                 if (response[0] == 1) {
                     priceDetail = response[1];
                     if(total >  (parseInt(priceDetail) +parseInt(cost))){
@@ -516,7 +511,7 @@
                     }
                     // document.getElementById('totalPriceAll').value = priceInvoice;
                     if((parseInt(priceDetail) + parseInt(cost)) > total){
-                        alert("Tổng tiền lớn hơn hoá đơn 2, vui lòng xem lại!")
+                        alert("Tổng tiền lớn hơn hoá đơn , vui lòng xem lại!")
                         return false
                     }
                     // document.getElementById('totalPriceAll').value = ;
@@ -524,8 +519,8 @@
                     toastr.success('Cập nhập thành công.', 'Notifycation', {
                         timeOut: 500
                     })
-                } else if(response[0] == 2){
-                    alert('Tổng tiền lớn hơn hoá đơn, vui lòng xem lại!');
+                } else if(response == 2){
+                    alert('Tổng tiền lớn hơn hoá đơn , vui lòng xem lại!');
                 }
             },error:function (response){
                 var message = response.responseJSON.errors.Jancode;
@@ -570,6 +565,7 @@
 
 function modalConfirmDelete(event){
     const Id = $(event).data('id');
+    var cost = $("#totalPriceBillUpdate").val();
     Swal.fire({
         title: 'Bạn có chắc không?',
         text: "Thao tác này không thể hoàn lại!",

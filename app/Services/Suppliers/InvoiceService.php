@@ -90,7 +90,7 @@ class InvoiceService
         $priceInvoice = 0;
         $suppliers = DB::table('supplier')->get();
         $object = InvoiceSupplier::where('Id', $Id)->with('detail.product')->first();
-        $priceInvoice = ($object->TotalPrice );
+        $priceInvoice = ($object->TotalPrice);
         $priceDetail = 0;
         foreach ($object['detail'] as $key => $value) {
             $priceDetail +=  $value->Quantity * $value->Price;
@@ -235,14 +235,15 @@ class InvoiceService
 
     public function updateInvoice(Request $request, $Id)
     {
-        $totalPriceCurrentInvoice = $request->TotalPrice ;
+        $totalPriceCurrentInvoice = $request->TotalPrice;
         $invoiceDetails = InvoiceDetailSupplier::where('Invoice', $request->Invoice)->get();
         $totalPriceInvoiceDetails = 0;
         foreach ($invoiceDetails as $value) {
             $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
         }
-        // $totalPriceCurrentInvoice = $request->PurchaseCosts + $totalPriceInvoiceDetails;
-        if ($totalPriceCurrentInvoice >= $totalPriceInvoiceDetails) {
+        $newTotal = $request->PurchaseCosts + $totalPriceInvoiceDetails;
+        // dd($totalPriceCurrentInvoice,$totalPriceInvoiceDetails);
+        if ($totalPriceCurrentInvoice >= $newTotal) {
             InvoiceSupplier::where('Id', $Id)->update([
                 'Invoice' => $request->Invoice,
                 'TypeInvoice' => $request->TypeInvoice,
@@ -280,7 +281,6 @@ class InvoiceService
             $totalPriceInvoiceDetails += ($value->Price * $value->Quantity);
         }
         $currentTotalPrice = $totalPriceInvoiceDetails + ($request->quantity * $request->price) + InvoiceSupplier::where('Invoice', $currentInvoiceDetail->Invoice)->first()->PurchaseCosts;
-        // dd($totalPriceInvoice,$currentTotalPrice);
         if ($currentTotalPrice <= $totalPriceInvoice) {
             InvoiceDetailSupplier::where('Id', $Id)->update([
                 'Codeorder' => $request->codeorder,
