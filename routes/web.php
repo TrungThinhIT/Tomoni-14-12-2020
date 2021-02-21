@@ -190,6 +190,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::get('/search-ma-hoa-don', [BillController::class, 'searchBillCode'])->name('searchBillCode');
         Route::get('/search-supplier', [PaymentSupplierController::class, 'searchSupplier'])->name('searchSupplier');
         Route::get('/search-invoice', [PaymentSupplierController::class, 'searchInvoice'])->name('searchInvoice');
+        Route::get('/search-billcode-suplier',[PaymentSupplierController::class,'searchBillCodeSuplier'])->name('searchBillCodeSuplier');
     });
 
     Route::prefix('customer')->name('customer.')->group(function () {

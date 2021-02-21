@@ -222,16 +222,18 @@
         }
         function findBillCode(obj){
             var billcode = obj.value;
-            // console.log(billcode)
-            if(billcode >=2){
+            if(billcode.length >=2){
                 $.ajax({
                     type:"GET",
-                    url:"{{route('commons.searchBillCode')}}",
+                    url:"{{route('commons.searchBillCodeSuplier')}}",
                     data:{  
-                        billcode:billcode
+                        BillCode:billcode
                     },
                     success:function(list){
-                        console.log(list)
+                        $("#abcxyz").empty()
+                        $.each(list,function(index,value){
+                            $("#abcxyz").append(new Option(value.Supplier,value.Invoice))
+                        })
                     },error:function(a){
                         console.log(a)
                     }

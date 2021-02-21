@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Suppliers\PaymentSupplierRequest;
 use App\Services\Suppliers\PaymentSupplierService;
 use Illuminate\Http\Request;
-
+use App\Models\InvoiceSupplier;
 class PaymentSupplierController extends Controller
 {
     protected $paymentSupplierService;
@@ -38,5 +38,10 @@ class PaymentSupplierController extends Controller
     
     public function searchSupplier(Request $request){
         return $this->paymentSupplierService->searchSupplier($request);
+    }
+    public function searchBillCodeSuplier(Request $request){
+        // dd($request->all());
+        $data = InvoiceSupplier::where('Invoice','like','%'.$request->BillCode.'%')->limit(10)->distinct()->get();
+        return response()->json($data);
     }
 }
