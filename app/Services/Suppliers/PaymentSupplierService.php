@@ -67,9 +67,6 @@ class PaymentSupplierService
         if (empty($suppliers) || empty($billCode)) {
             return response()->json(['error' => !empty($suppliers) ? "Số hóa đơn " . $request->Sohoadon . " Không tồn tại " : "ID nhà cung cấp " . $request->SupplierId . " Khồng tồn tại"]);
         }
-        if (!empty(PaymentSupplier::where('Sohoadon', $request->Sohoadon)->where('SupplierID', $request->SupplierId)->first())) {
-            return response()->json(['error' => "Số hóa đơn " . $request->Sohoadon . " của " . $request->SupplierId . " đã tồn tại"]);
-        }
         if (PaymentSupplier::where('Id', $Id)->update([
             'SupplierId' => $request->SupplierId,
             'Sohoadon' => $request->Sohoadon

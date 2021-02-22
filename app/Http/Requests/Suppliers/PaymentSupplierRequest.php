@@ -34,7 +34,7 @@ class PaymentSupplierRequest extends FormRequest
             'cardID' => 'required',
             'note' => 'required',
             'useradmin' => 'required|exists:users,uname',
-            'Sohoadon' => 'required|exists:acountant_hddv,Invoice|unique:payment_supplier,Sohoadon'
+            'Sohoadon' => 'required|exists:acountant_hddv,Invoice'
         ];
     }
 }
