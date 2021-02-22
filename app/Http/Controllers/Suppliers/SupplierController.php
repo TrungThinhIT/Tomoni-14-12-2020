@@ -16,24 +16,30 @@ class SupplierController extends Controller
     {
         $this->supplierService = $supplierService;
     }
-    public function list(){
+    public function list()
+    {
         $suppliers = $this->supplierService->showList();
         return view('suppliers.management', compact('suppliers'));
     }
 
-    public function create(SupplierRequest $request){
+    public function create(SupplierRequest $request)
+    {
         return $this->supplierService->createNew($request);
     }
 
-    public function show($code_name){
+    public function show($code_name)
+    {
         return $this->supplierService->showDetail($code_name);
     }
 
-    public function update(SupplierRequestUpdate $request, $code_name){
+    public function update(SupplierRequestUpdate $request, $code_name)
+    {
         return $this->supplierService->updateDetail($request, $code_name);
     }
-    public function index(Request $request){
-        
+    public function index(Request $request)
+    {
+        $records = $request->record ?: 25;
+        dd($records);
         return view('suppliers.debt');
     }
 }
