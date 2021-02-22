@@ -32,4 +32,8 @@ class SupplierController extends Controller
     public function update(SupplierRequestUpdate $request, $code_name){
         return $this->supplierService->updateDetail($request, $code_name);
     }
+    public function index(Request $request){
+        
+        return view('suppliers.debt');
+    }
 }

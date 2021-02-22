@@ -206,7 +206,6 @@
     function searchSupplier(obj) {
                 var supplier = obj.value;
                 if(supplier.length >= 1){
-                    console.log(supplier)
                     $.ajax({
                     type: 'GET',
                     url: "{{route('commons.searchSupplier')}}",

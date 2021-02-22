@@ -94,9 +94,8 @@ Route::prefix('/')->middleware('auth')->group(function () {
             return view('suppliers.payback');
         })->name('payback');
 
-        Route::get('/supplier-debt', function () {
-            return view('suppliers.debt');
-        })->name('debt');
+        Route::get('/supplier-debt',[SupplierController::class,'index'])->name('debt');
+        Route::post('supplier-debt',[SupplierController::class,'index'])->name('postDebt');
     });
 
     Route::prefix('orders')->middleware('role')->namespace('orders')->name('orders.')->group(function () {

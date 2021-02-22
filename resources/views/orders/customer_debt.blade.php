@@ -65,7 +65,6 @@
                                         <th>Price In</th>
                                         <th>Price Out</th>
                                         <th>Price Debt</th>
-                                        <th>Function</th>
                                     </tr>
                                 </thead>
                                 <tbody id="myTable">
@@ -90,7 +89,7 @@
                                         <td>@if ($item->depositID)
                                             {{$item->depositID}}
                                         @else
-                                            <a href="{{route('orders.bills.getBillDetailById', $item->codeorder)}}">{{$item->codeorder}}</a>
+                                            <a href="{{route('orders.bills.getBillDetailById', $item->Codeorder)}}">{{$item->Codeorder}}</a>
                                         @endif</td>
                                         <td>@if ($item->depositID)
                                             {{number_format($item->price_in)}}
