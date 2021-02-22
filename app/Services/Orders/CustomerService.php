@@ -28,28 +28,35 @@ class CustomerService
 
         $date = Carbon::parse($date_end);
         $date_end = $date->addDays(1);
-        $nap = PaymentCustomer::query()->where('uname', $uname)->get();
-        // dd($nap);
-        // $mua = Order::query()->where('uname', $uname)->get();
+        
+        $listBillCode = Bill::where('uname', $uname)->select('So_Hoadon')->distinct()->get()->toArray();
+
+        $nap = PaymentCustomer::query()->where('uname', $uname)->whereIn('Sohoadon', $listBillCode)->get();
         $mua = Bill::query()->where('uname',$uname)->get();
-        // dd($mua);
+
+        foreach ($mua as $item){
+            $item->setAttribute('dateget', $item->Date_Create);
+        }
+
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
-        // dd($customer);
+        $id_debt = 1;
         foreach ($customer as $value) {
             
             if ($value->depositID) {
                 $deDebt += $value->price_in;
             } else {
-                $deDebt -= $value->total;
+                $deDebt -= $value->PriceOut;
             }
             $value->setAttribute('deDebt', $deDebt);
+            $value->setAttribute('id_debt', $id_debt);
+            $id_debt ++;
         }
 
         if ($date_start && $date_end) {
             $customer = $customer->whereBetween('dateget', [$date_start, $date_end]);
         }
 
-        $customer = $customer->sortByDesc('dateget')->paginate($record);
+        $customer = $customer->sortByDesc('id_debt')->paginate($record);
         // dd($customer);
         return ['customer' => $customer, 'record' => $record, 'uname' => $uname, 'dateStart' => $date_start, 'dateEnd' => $date_end];
     }
