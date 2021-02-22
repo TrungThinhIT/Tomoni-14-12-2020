@@ -4,7 +4,7 @@
 /storage/*.key
 /vendor
 /public/excels/exports/
-/public/images
+/public/images/
 Tomoni-Project.zip
 .env
 .env.backup
