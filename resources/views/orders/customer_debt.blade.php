@@ -95,7 +95,7 @@
                                             {{number_format($item->price_in)}}
                                         @endif</td>
                                         <td>@if (!($item->depositID))
-                                            {{number_format($item->total_all)}}
+                                            {{number_format($item->PriceOut)}}
                                         @endif</td>
                                         <td>{{number_format($item->deDebt, 0)}}</td>
                                     </tr>
