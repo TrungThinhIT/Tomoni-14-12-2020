@@ -39,7 +39,7 @@ class SupplierController extends Controller
     public function index(Request $request)
     {
         $records = $request->record ?: 25;
-        dd($records);
+        // dd($records);
         return view('suppliers.debt');
     }
 }
