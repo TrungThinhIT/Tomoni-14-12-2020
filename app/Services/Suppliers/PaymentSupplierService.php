@@ -14,35 +14,37 @@ use Illuminate\Support\Facades\DB;
 class PaymentSupplierService
 {
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $suppliers = DB::table('supplier')->get();
-        $sSupplierId = $request->sSupplierId;   
+        $sSupplierId = $request->sSupplierId;
         $date_inprice = $request->date_inprice;
         $date_insert = $request->date_insert;
         $Sohoadon = $request->Sohoadon;
-        
+
         $payments = PaymentSupplier::query();
-        if($sSupplierId){
+        if ($sSupplierId) {
             $payments = $payments->where('SupplierId', $sSupplierId);
         }
 
-        if($date_inprice){
+        if ($date_inprice) {
             $payments = $payments->whereDate('dateget', $date_inprice);
         }
 
-        if($date_insert){
+        if ($date_insert) {
             $payments = $payments->whereDate('date_insert', $date_insert);
         }
 
-        if($Sohoadon){
-            $payments = $payments->where('Sohoadon', $Sohoadon);
+        if ($Sohoadon) {
+            $payments = $payments->where('Sohoadon', 'like', '%' . $Sohoadon . '%');
         }
 
         $payments = $payments->orderBy('Id', 'DESC')->paginate(10);
         return ['payments' => $payments, 'suppliers' => $suppliers, 'sSupplierId' => $sSupplierId, 'date_inprice' => $date_inprice, 'date_insert' => $date_insert, 'Sohoadon' => $Sohoadon];
     }
 
-    public function create(PaymentSupplierRequest $request){
+    public function create(PaymentSupplierRequest $request)
+    {
         $payment = PaymentSupplier::create(
             $request->all()
         );
@@ -58,7 +60,8 @@ class PaymentSupplierService
         return back();
     }
 
-    public function update(Request $request, $Id){
+    public function update(Request $request, $Id)
+    {
         PaymentSupplier::where('Id', $Id)->update([
             'SupplierId' => $request->SupplierId,
             'Sohoadon' => $request->Sohoadon
@@ -75,7 +78,8 @@ class PaymentSupplierService
         ]);
     }
 
-    public function delete($Id){
+    public function delete($Id)
+    {
         $payment = PaymentSupplier::where('Id', $Id)->first();
         LogPaymentSupplier::create([
             'PaymentSupplierId' => $payment->Id,
@@ -89,11 +93,13 @@ class PaymentSupplierService
         return back();
     }
 
-    public function searchInvoice(Request $request){
+    public function searchInvoice(Request $request)
+    {
         return InvoiceSupplier::where('Invoice', 'like', '%' . $request->invoice . '%')->limit(10)->get();
     }
 
-    public function searchSupplier(Request $request){
+    public function searchSupplier(Request $request)
+    {
         return Supplier::where('name', 'like', '%' . $request->supplier . '%')->limit(10)->get();
     }
 }

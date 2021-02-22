@@ -31,7 +31,7 @@ class SupplierRequest extends FormRequest
             'uphone' => 'required|numeric',
             'ubank' => 'required',
             'ubranch' => 'required',
-            'uAccountNumber' => 'required|numeric',
+            'uAccountNumber' => 'required|numeric|unique:supplier,AccountNumber',
             'uAccountName' => 'required',
             'unote' => 'required',
             'urank' => 'required'

@@ -68,8 +68,9 @@
                             </div>
                             <div class="col-md-2 mb-2">
                                 <label for="validationDefault01">useradmin</label>
-                                <input type="text" value="{{ old('useradmin') }}" class="form-control" id="useradmin" name="useradmin" placeholder="useradmin"  >
+                                <input type="text" value="{{ old('useradmin') }}" class="form-control" id="useradmin" list="listUser" onkeyup="searchUser(this)" name="useradmin" placeholder="useradmin"  >
                                 <span class="alert-danger-custom">{{$errors->first('useradmin')}}</span>
+                                <datalist id="listUser"></datalist>
                             </div>
                             <div class="col-md-2 mb-2">
                               <label for="validationDefault01">Sohoadon</label>
@@ -264,6 +265,26 @@
 				}
 			    });
                 }
+        }
+        function searchUser(obj){
+            var user = obj.value;
+            if(user.length>=2){
+                $.ajax({
+                    type:"GET",
+                    url:"{{route('commons.search-user')}}",
+                    data: {
+                        uname:user
+                    },
+                    success:function(response){
+                        $("#listUser").empty();
+                        $.each(response,function(index,value){
+                            $("#listUser").append(new Option(value.Id,value.uname))
+                        })
+                    },error:function(error){
+                        console.log(error)
+                    }
+                })
+            }
         }
 </script>
 @endsection
