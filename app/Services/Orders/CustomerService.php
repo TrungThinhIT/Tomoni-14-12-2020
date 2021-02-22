@@ -40,12 +40,15 @@ class CustomerService
 
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
         $id_debt = 1;
+        $price_in = 0;
+        $price_out = 0;
         foreach ($customer as $value) {
-            
             if ($value->depositID) {
                 $deDebt += $value->price_in;
+                $price_in += $value->price_in;
             } else {
                 $deDebt -= $value->PriceOut;
+                $price_out += $value->PriceOut;
             }
             $value->setAttribute('deDebt', $deDebt);
             $value->setAttribute('id_debt', $id_debt);
@@ -58,6 +61,6 @@ class CustomerService
 
         $customer = $customer->sortByDesc('id_debt')->paginate($record);
         // dd($customer);
-        return ['customer' => $customer, 'record' => $record, 'uname' => $uname, 'dateStart' => $date_start, 'dateEnd' => $date_end];
+        return ['customer' => $customer, 'record' => $record, 'uname' => $uname, 'dateStart' => $date_start, 'dateEnd' => $date_end , 'price_in' => $price_in, 'price_out'=> $price_out];
     }
 }

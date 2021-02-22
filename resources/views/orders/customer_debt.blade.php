@@ -52,6 +52,15 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div style="float: left;" class="mt-3">
+                                <p style="font-weight: bold">&ensp; Tổng tiền vào:  {{number_format($data['price_in'])}}&ensp;&ensp;</p>
+                            </div>
+                            <div style="float: left;" class="mt-3">
+                                <p style="font-weight: bold">&ensp; Tổng tiền ra:  {{number_format($data['price_out'])}}&ensp;&ensp;</p>
+                            </div>
+                            <div style="float: left;" class="mt-3">
+                                <p style="font-weight: bold">&ensp; Tổng công nợ:  {{number_format($data['price_in'] - $data['price_out'])}}&ensp;&ensp;</p>
+                            </div>
                             </form>
                             <div style="float: right" class="mt-3">
                                 {!! $data['customer']->withQueryString()->links('commons.paginate') !!}</div>
