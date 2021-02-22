@@ -181,7 +181,12 @@
                                                   Sohoadon: shd
                                               },
                                               success: function (response) {
-                                                  toastr.success('Cập nhập thành công.', 'Notifycation', {timeOut: 1000})
+                                                  console.log(response)
+                                                  if(response==true){
+                                                    toastr.success('Cập nhập thành công.', 'Notifycation', {timeOut: 1000})
+                                                  }else{
+                                                    toastr.warning(response.error,'Notifycation',{timeOut:1300})
+                                                  }
                                               }
                                           });
                                       }
@@ -200,13 +205,14 @@
 <script>
     function searchSupplier(obj) {
                 var supplier = obj.value;
-                if(supplier.length > 1){
+                if(supplier.length >= 1){
+                    console.log(supplier)
                     $.ajax({
-				type: 'GET',
-				url: "{{route('commons.searchSupplier')}}",
-				data: {
-                    supplier: supplier
-				},
+                    type: 'GET',
+                    url: "{{route('commons.searchSupplier')}}",
+                    data: {
+                        supplier: supplier
+                    },
 				success: function(response) {
                     var len = response.length;
                     $("#listsupplier").empty();

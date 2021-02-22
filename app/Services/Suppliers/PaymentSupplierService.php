@@ -62,20 +62,39 @@ class PaymentSupplierService
 
     public function update(Request $request, $Id)
     {
-        PaymentSupplier::where('Id', $Id)->update([
+        $suppliers = Supplier::where('code_name', $request->SupplierId)->first();
+        $billCode = InvoiceSupplier::where('Invoice', $request->Sohoadon)->first();
+        if (empty($suppliers) || empty($billCode)) {
+            return response()->json(['error' => !empty($suppliers) ? "Số hóa đơn " . $request->Sohoadon . " Không tồn tại " : "ID nhà cung cấp " . $request->SupplierId . " Khồng tồn tại"]);
+        }
+        if (!empty(PaymentSupplier::where('Sohoadon', $request->Sohoadon)->where('SupplierID', $request->SupplierId)->first())) {
+            return response()->json(['error' => "Số hóa đơn " . $request->Sohoadon . " của " . $request->SupplierId . " đã tồn tại"]);
+        }
+        if (PaymentSupplier::where('Id', $Id)->update([
             'SupplierId' => $request->SupplierId,
             'Sohoadon' => $request->Sohoadon
-        ]);
+        ])) {
+            $payment = PaymentSupplier::where('Id', $Id)->first();
 
-        $payment = PaymentSupplier::where('Id', $Id)->first();
+            LogPaymentSupplier::create([
+                'PaymentSupplierId' => $payment->Id,
+                'SupplierId' => $payment->SupplierId,
+                'Sohoadon' => $payment->Sohoadon,
+                'uname' => Auth::user()->uname,
+                'action' => 'insert'
+            ]);
+            return 1;
+        }
 
-        LogPaymentSupplier::create([
-            'PaymentSupplierId' => $payment->Id,
-            'SupplierId' => $payment->SupplierId,
-            'Sohoadon' => $payment->Sohoadon,
-            'uname' => Auth::user()->uname,
-            'action' => 'insert'
-        ]);
+        // $payment = PaymentSupplier::where('Id', $Id)->first();
+
+        // LogPaymentSupplier::create([
+        //     'PaymentSupplierId' => $payment->Id,
+        //     'SupplierId' => $payment->SupplierId,
+        //     'Sohoadon' => $payment->Sohoadon,
+        //     'uname' => Auth::user()->uname,
+        //     'action' => 'insert'
+        // ]);
     }
 
     public function delete($Id)
