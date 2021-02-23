@@ -54,7 +54,7 @@
                             sohoadon: shd
                         },
                         success: function (response) {
-                            if(response=="ErrorUname"){
+                            if(response==2){
                                 toastr.warning(us+' không tồn tại','Notifycation',{timeOut:1000})
                             }
                             if(response.length>1){

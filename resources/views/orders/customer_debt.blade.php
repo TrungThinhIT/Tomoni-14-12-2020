@@ -19,7 +19,8 @@
                                             <input class="form-control" type="date" value="{{$data['dateStart']}}" name="dateStart" id="dateStart" placeholder="Date Start">
                                         </div>
                                         <div>
-                                            <input class="form-control" type="date" value="{{$data['dateEnd']->format('Y-m-d')}}" name="dateEnd" id="dateEnd" placeholder="Date End">
+                                            <input class="form-control" type="date" value="{{$data['dateEnd']}}" 
+                                             name="dateEnd" id="dateEnd" placeholder="Date End">
                                         </div>
                                         @endif
                                         <div>
