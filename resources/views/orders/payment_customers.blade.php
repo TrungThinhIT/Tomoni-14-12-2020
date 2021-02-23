@@ -199,6 +199,7 @@
                                         <th>date_insert</th>
                                         <th>Price In</th>
                                         <th>Sohoadon</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="myTable">
@@ -249,7 +250,9 @@
                                         <td>
                                             @if (count($item)>=2)
                                                 @foreach ($item as $ite)
+                                                @if($ite->note!=null)
                                                     {{$ite->note.','}}
+                                                @endif
                                                 @endforeach
                                             @else
                                             {{$item[0]->note}}
@@ -278,7 +281,9 @@
                                             >
                                                 @if (count($item)>=2)
                                                     @foreach ($item as $ite)
-                                                    {{$ite->Sohoadon.','}}
+                                                    @if($ite->Sohoadon!="")
+                                                        {{$ite->Sohoadon.','}}
+                                                    @endif
                                                     @endforeach
                                                 @else
                                                     <input type="text" class="form-control" id="shd{{$item[0]->Id}}"
@@ -288,6 +293,13 @@
                                                         id='listbillcode'></datalist>
                                                 @endif
                                             </div>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary" data-despoit=" 
+                                            @foreach ($item as $ite)
+                                                {{$ite->depositID}}
+                                                @break
+                                            @endforeach">Edit</button>
                                         </td>
                                     </tr>
                                     <script>

@@ -68,4 +68,21 @@ class PaymentCustomerController extends Controller
         return view('orders.includes.modalDepositIDDetails', compact('lists', 'id'));
         return response()->json($lists);
     }
+    public function updateDeposit(Request $request, $Id)
+    {
+        $paymentCustomer = PaymentCustomer::where("Id", $Id)->update([
+            'uname' => $request->uname,
+            'Sohoadon' => $request->sohoadon
+        ]);
+        if ($paymentCustomer) {
+            $item = PaymentCustomer::where("Id", $Id)->first();
+            $list = PaymentCustomer::where("depositID", $item->depositID)->get()->toArray();
+            if (count($list) > 1) {
+                //             return response()->json($list);
+                return response()->json($list);
+            }
+        } else {
+            return 2;
+        }
+    }
 }

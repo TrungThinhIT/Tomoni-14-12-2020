@@ -47,35 +47,36 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        type: 'PUT',
-                        url: "payment-customers/" + id,
+                        type: 'POST',
+                        url: "payment-customers/deposit/" + id,
                         data: {
                             uname: us,
                             sohoadon: shd
                         },
                         success: function (response) {
-                            console.log(response)
                             if(response=="ErrorUname"){
                                 toastr.warning(us+' không tồn tại','Notifycation',{timeOut:1000})
-                            }else if(response=="ErrorSHD"){
-                                toastr.warning('Số hóa đơn '+shd+' không tồn tại','Notifycation',{timeOut:1000})
-                            }else{
-                                if(response.length>1){
-                                    var text = "";
-                                    var hoadon = ""
-                                    var deposit=""
-                                    $.each(response,function(index,value){
-                                        text+= value.uname+',';
-                                        hoadon+=value.Sohoadon+',';
-                                        deposit = value.depositID
-                                    })
-                                    $("#changeUname"+deposit).text(text)
-                                    $("#changeHoadon"+deposit).text(hoadon)
-                                }
-                                toastr.success('Cập nhập thành công.', 'Notifycation', {
-                                timeOut: 1000
-                                })
                             }
+                            if(response.length>1){
+                                console.log(response)
+                                var text = "";
+                                var hoadon = ""
+                                var deposit=""
+                                $.each(response,function(index,value){
+                                    text+= value.uname+',';
+                                    if(value.Sohoadon==null){
+                                        hoadon+="";
+                                    }else{
+                                        hoadon +=value.Sohoadon+',';
+                                    }
+                                    deposit = value.depositID
+                                })
+                                $("#changeUname"+deposit).text(text)
+                                $("#changeHoadon"+deposit).text(hoadon)
+                            }
+                            toastr.success('Cập nhập thành công.', 'Notifycation', {
+                            timeOut: 1000
+                            })
                         }
                     });
                 }
