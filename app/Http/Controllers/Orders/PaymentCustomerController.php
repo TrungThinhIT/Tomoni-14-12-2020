@@ -40,7 +40,6 @@ class PaymentCustomerController extends Controller
             "deposit" => "unique:quanlythe,depositID",
             "getDate" => "required|date",
             "uname.*" => "exists:users,uname",
-            "hoadon.*" => "required"
         ]);
 
         if ($validator->fails()) {

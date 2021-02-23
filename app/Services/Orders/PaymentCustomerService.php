@@ -53,27 +53,37 @@ class PaymentCustomerService
 
     public function updateById(Request $request, $Id)
     {
-        $checkUser = User::where('uname', $request->uname)->first();
-        $check = Bill::where('So_Hoadon', $request->sohoadon)->first();
-        if ((!empty($check)) && (!empty($checkUser))) {
-            $paymentCustomer = PaymentCustomer::where("Id", $Id)->update([
-                'uname' => $request->uname,
-                'Sohoadon' => $request->sohoadon
-            ]);
-            if ($paymentCustomer) {
-                $item = PaymentCustomer::where("Id", $Id)->first();
-                $list = PaymentCustomer::where("depositID", $item->depositID)->get()->toArray();
-                if (count($list) > 1) {
-                    return response()->json($list);
-                }
-                return 1;
-            } else {
-                return 2;
-            }
-        } elseif (empty($checkUser)) {
-            return "ErrorUname";
+        // $checkUser = User::where('uname', $request->uname)->first();
+        // $check = Bill::where('So_Hoadon', $request->sohoadon)->first();
+        // if ((!empty($check)) && (!empty($checkUser))) {
+        //     $paymentCustomer = PaymentCustomer::where("Id", $Id)->update([
+        //         'uname' => $request->uname,
+        //         'Sohoadon' => $request->sohoadon
+        //     ]);
+        //     if ($paymentCustomer) {
+        //         $item = PaymentCustomer::where("Id", $Id)->first();
+        //         $list = PaymentCustomer::where("depositID", $item->depositID)->get()->toArray();
+        //         if (count($list) > 1) {
+        //             return response()->json($list);
+        //         }
+        //         return 1;
+        //     } else {
+        //         return 2;
+        //     }
+        // } elseif (empty($checkUser)) {
+        //     return "ErrorUname";
+        // } else {
+        //     return "ErrorSHD";
+        // }
+        $paymentCustomer = PaymentCustomer::where("Id", $Id)->update([
+            'uname' => $request->uname,
+            'Sohoadon' => $request->sohoadon
+        ]);
+
+        if ($paymentCustomer) {
+            return 1;
         } else {
-            return "ErrorSHD";
+            return 2;
         }
     }
 }
