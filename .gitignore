@@ -3,8 +3,6 @@
 /public/storage
 /storage/*.key
 /vendor
-/public/excels/exports/
-/public/images/
 Tomoni-Project.zip
 .env
 .env.backup
