@@ -24,13 +24,13 @@ class productRealityRequest extends FormRequest
     public function rules()
     {
         return [
-            'CodeOrder'=>'required|exists:oder,codeorder',
-            'selectUname'=>'required',
-            'Invoice'=>'required',
-            'Container'=>'required',
-            'quantity'=>'required',
-            'Image'=>'required|image|mimes:png,jpg,jpeg,svg',
-            'selectedAddress'=>'required',
+            'CodeOrder' => 'required|exists:oder,codeorder',
+            'selectUname' => 'required',
+            'Invoice' => 'required',
+            'Container' => 'required',
+            'quantity' => 'required',
+            'Image' => 'required|image|mimes:png,jpg,jpeg,svg',
+            'selectedAddress' => 'required',
             // 'DeliveryDate' => 'required|date',
             // 'DeliveryTime' => 'required',
         ];
