@@ -152,7 +152,7 @@
                                         </div>
                                     </fieldset>
                                 </form>
-                                <div style="float: left" class="mt-3"><p style="font-weight: bold"> Số dư:  {{number_format($data['priceDebt'], 0)}}&ensp;&ensp;</p></div>
+                                <div style="float: left" class="mt-3"><p style="font-weight: bold"> Số dư:  {{number_format($data['priceIn'] + $data['moneyNeedToPay'], 0)}}&ensp;&ensp;</p></div>
                                 <div style="float: left" class="mt-3"><p style="font-weight: bold"> Số tiền cần thanh toán:  {{number_format($data['moneyNeedToPay'], 0)}}&ensp;&ensp;</p></div>
                                 <div style="float: left" class="mt-3"><p style="font-weight: bold"> Tổng khối lượng thực tế:  {{number_format($data['totalWeightReal'], 2)}} kg&ensp;&ensp;</p></div>
                                 <div style="float: left" class="mt-3"><p style="font-weight: bold"> Tổng khối lượng:  {{number_format($data['totalWeightKhoi'], 2)}} khối</p></div>

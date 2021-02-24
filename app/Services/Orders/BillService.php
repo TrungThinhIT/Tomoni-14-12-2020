@@ -211,7 +211,7 @@ class BillService
             $totalWeightReal += $value->Product->ProductStandard->weight * $value->Product->quantity;
         }
 
-        $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->get();
+        $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->where('uname', $bill->first()->uname)->get();
         $codeorders = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->get('Codeorder')->toArray();
         $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
@@ -273,7 +273,7 @@ class BillService
         } else {
             $hien_mau = $hien_mau->groupBy('dateget')->paginate(10);
             return [
-                'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
+                'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'priceIn' => $priceIn, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
                 'moneyNeedToPay' => $moneyNeedToPay, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi
             ];
         }
