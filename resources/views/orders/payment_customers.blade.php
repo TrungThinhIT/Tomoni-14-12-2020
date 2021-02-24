@@ -146,8 +146,8 @@
                 </div>
                 {{-- modal share money --}}
                 <div id="shareMoney" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                      <div class="modal-content" id="detailsShare">
+                    <div class="modal-dialog modal-lg" style="min-width: 55%">
+                      <div class="modal-content" id="detailsShare" >
                        
                       </div>
                     </div>
@@ -343,12 +343,9 @@
                 </div>
                 {{-- modal --}}
                 <div class="modal" id="modalDetail">
-                    <div class="modal-dialog modal-lg" style="min-width: 40%;" >
+                    <div class="modal-dialog modal-lg" style="min-width: 55%;" >
                       <div class="modal-content" id="modal-details-deposit">
-
                         <!-- Modal Header -->
-
-
                       </div>
                     </div>
                   </div>

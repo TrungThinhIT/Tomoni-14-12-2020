@@ -58,7 +58,6 @@
                                 toastr.warning(us+' không tồn tại','Notifycation',{timeOut:1000})
                             }
                             if(response.length>1){
-                                console.log(response)
                                 var text = "";
                                 var hoadon = ""
                                 var deposit=""
