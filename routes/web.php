@@ -146,6 +146,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::post('add-unames',[PaymentCustomerController::class,'addUnames'])->name('addUname');
             Route::get('/deposit/{id}',[PaymentCustomerController::class,'depositDetails'])->name('depositDetails');
             Route::post('deposit/{id}',[PaymentCustomerController::class,'updateDeposit'])->name('updateDeposit');
+            Route::get('/share-money/{deposit}',[PaymentCustomerController::class,'shareMoney'])->name('shareMoney');
         });
 
         Route::get('/customer-debt', [CustomerController::class, 'index'])->name('customer-debt');

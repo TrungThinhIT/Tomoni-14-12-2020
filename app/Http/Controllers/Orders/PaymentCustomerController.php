@@ -84,4 +84,8 @@ class PaymentCustomerController extends Controller
             return 2;
         }
     }
+    public function shareMoney(Request $request,$deposit){
+        $sum = $request->sum;
+        return view('orders.includes.modalShareMoney',compact('deposit','sum'));
+    }
 }

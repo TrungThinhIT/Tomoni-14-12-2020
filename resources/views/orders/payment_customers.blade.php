@@ -117,7 +117,7 @@
                                 <div style="overflow: auto">
                                     <form id="formSubmit" action="{{route('orders.payment-customers.addUname')}}" method="POST">
                                         @csrf
-                                        <table class="table">
+                                        <table class="table table-bordered table-striped">
                                             <thead>
                                                 <tr>
                                                     <th >Uname</th>
@@ -144,6 +144,14 @@
                         </div>
                     </div>
                 </div>
+                {{-- modal share money --}}
+                <div id="shareMoney" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content" id="detailsShare">
+                       
+                      </div>
+                    </div>
+                  </div>
                 <div class="card-body">
                     <div>
                         <div style="margin: 1% 1% 1% 1%;">
@@ -295,11 +303,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <button class="btn btn-primary" data-despoit=" 
-                                            @foreach ($item as $ite)
-                                                {{$ite->depositID}}
-                                                @break
-                                            @endforeach">Edit</button>
+                                            <button class="btn btn-primary shareMoney" data-sum={{$sum?:$item[0]->price_in}}  data-deposit="@foreach($item as $ite){{$ite->depositID}}@break @endforeach">Edit</button>
                                         </td>
                                     </tr>
                                     <script>
@@ -337,6 +341,7 @@
                         </div>
                     </div>
                 </div>
+                {{-- modal --}}
                 <div class="modal" id="modalDetail">
                     <div class="modal-dialog modal-lg" style="min-width: 40%;" >
                       <div class="modal-content" id="modal-details-deposit">
@@ -387,7 +392,6 @@
                             $("#errors").css("display","block");
                             $.each(data,function(index,obj){
                                 $.each(obj,function(index,value){
-                                    console.log(value)
                                     $("#errors").append('<td class="text-danger" style="display:block">'+value+'</td>')
                                 })
                             })
@@ -426,11 +430,11 @@
     }
     function addRow(){
         $('#bodyForm').append(
-            '<tr>'+
-                '<td> <input name="uname[]" type="text"  onkeyup="searchUser(this)"  list="litsusername" > </td>'+
-                '<td> <input name="note[]" type="text" > </td>'+
-                '<td> <input name="price[]" type="number" min="1" ></td>'+
-                '<td> <input name="hoadon[]" type="text" > </td>'+
+            '<tr class="table-secondary">'+
+                '<td> <input style="border:none" name="uname[]" type="text"  onkeyup="searchUser(this)"  list="litsusername" > </td>'+
+                '<td> <input style="border:none" name="note[]" type="text" > </td>'+
+                '<td> <input style="border:none" name="price[]" type="number" min="1" ></td>'+
+                '<td> <input style="border:none" name="hoadon[]" type="text" > </td>'+
                 '<td> <button type="button" onclick=deleteRow(this)>Xóa</button> </td>'+
             '</tr>'
             )
@@ -497,7 +501,21 @@
             }
           
         })
-       
+    })
+    $(".shareMoney").click(function(){
+        var deposit = $(this).data("deposit");
+        var sum = $(this).data("sum");
+        $.ajax({
+            type:"GET",
+            url:"./payment-customers/share-money/"+deposit,
+            data:{
+                sum:sum
+            },
+            success:function(response){
+                $("#shareMoney").modal("show");
+                $("#detailsShare").html("").append(response)
+            }
+        })    
     })
 </script>
 @endsection
