@@ -87,7 +87,7 @@ class BillService
         }
 
         $bills = $bills
-            ->paginate(5);
+            ->paginate(50);
         return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $Uname, 'Date_Create' => $Date_Create, 'sumDebt' => $sumDebt];
     }
 
@@ -198,8 +198,8 @@ class BillService
         $startDate = Carbon::create(2020, 10, 1);
         $endDate = $request->endDate;
         $date = Carbon::parse($endDate);
-        $endDate2 = $date->addDays(1);
-        $nowDate = now()->addDays(-2);
+        $endDate2 = $date->addDays(1)->toDateString();
+        $nowDate = now()->addDays(-2)->toDateString();
 
         $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
         $totalWeightReal = 0;
@@ -220,7 +220,7 @@ class BillService
         $moneyNeedToPay = 0;
 
         if ($startDate && $endDate) {
-            $customer = $customer->whereBetween('dateget', [$startDate, $endDate2]);
+            $customer = $customer->whereBetween('date_payment', [$startDate, $endDate2]);
             $checkScroll = 1;
             foreach ($customer as $value) {
                 if ($value->depositID) {
@@ -251,7 +251,7 @@ class BillService
                 $value->setAttribute('deDebt', $deDebt);
             }
         }
-        $hien_mau = PaymentCustomer::query()->where('Sohoadon', $billcode)->where('uname', $bill->first()->uname)->orderBy('dateget', 'ASC')->get();
+        $hien_mau = PaymentCustomer::where('uname', $bill->first()->uname)->where('Sohoadon', $billcode)->orderBy('dateget', 'ASC')->get();
         $priceIn = 0;
 
         foreach ($hien_mau as $value) {
