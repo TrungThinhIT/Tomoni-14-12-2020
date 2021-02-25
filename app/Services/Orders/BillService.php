@@ -251,7 +251,7 @@ class BillService
                 $value->setAttribute('deDebt', $deDebt);
             }
         }
-        $hien_mau = PaymentCustomer::query()->where('Sohoadon', $billcode)->where('uname', $mua->first()->uname)->orderBy('dateget', 'ASC')->get();
+        $hien_mau = PaymentCustomer::query()->where('Sohoadon', $billcode)->where('uname', $bill->first()->uname)->orderBy('dateget', 'ASC')->get();
         $priceIn = 0;
 
         foreach ($hien_mau as $value) {
