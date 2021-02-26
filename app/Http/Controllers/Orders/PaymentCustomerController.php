@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Orders;
 
+use App\Exports\PaymentCustomers\paymentCustomerExcel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Orders\addUnamesRequest;
 use App\Http\Requests\Orders\PaymentCustomerRequest;
@@ -14,9 +15,10 @@ class PaymentCustomerController extends Controller
 {
     protected $paymentCustomer;
 
-    public function __construct(PaymentCustomerService $paymentCustomer)
+    public function __construct(PaymentCustomerService $paymentCustomer, paymentCustomerExcel $paymentExcel)
     {
         $this->paymentCustomer = $paymentCustomer;
+        $this->paymentExcel = $paymentExcel;
     }
 
     public function index(Request $request)
@@ -26,7 +28,30 @@ class PaymentCustomerController extends Controller
     }
     public function exportExcel(Request $request)
     {
-        return  $this->paymentCustomer->indexAll($request);
+        $Uname = $request->Uname;
+        $date_inprice = $request->date_inprice;
+        $date_insert = $request->date_insert;
+        $Sohoadon = $request->Sohoadon;
+        $checkbox = $request->checkbox;
+        // dd($request->all());
+        $PCustomers = PaymentCustomer::query();
+
+        if (!empty($Uname)) {
+            $PCustomers = $PCustomers->where('uname', 'like', '%' . $Uname . '%');
+        }
+
+        if ($date_inprice && $date_insert) {
+            $PCustomers = $PCustomers->whereBetween('dateget', [$date_inprice, $date_insert]);
+        }
+
+        if (!empty($Sohoadon)) {
+            $PCustomers = $PCustomers->where('Sohoadon', 'like', '%' . $Sohoadon . '%');
+        }
+        if ($checkbox) {
+            $PCustomers = $PCustomers->orderByDesc('date_insert')->get();
+            return $this->paymentExcel->ExportProduct($PCustomers);
+        }
+        return  1;
     }
 
 
@@ -89,8 +114,9 @@ class PaymentCustomerController extends Controller
             return 2;
         }
     }
-    public function shareMoney(Request $request,$deposit){
+    public function shareMoney(Request $request, $deposit)
+    {
         $sum = $request->sum;
-        return view('orders.includes.modalShareMoney',compact('deposit','sum'));
+        return view('orders.includes.modalShareMoney', compact('deposit', 'sum'));
     }
 }

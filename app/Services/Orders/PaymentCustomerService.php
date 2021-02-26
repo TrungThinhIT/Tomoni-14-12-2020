@@ -37,12 +37,6 @@ class PaymentCustomerService
         if (!empty($Sohoadon)) {
             $PCustomers = $PCustomers->where('Sohoadon', 'like', '%' . $Sohoadon . '%');
         }
-        if ($checkbox) {
-            $PCustomers = $PCustomers->orderByDesc('date_insert')->get();
-            return $this->paymentExcel->ExportProduct($PCustomers);
-            // return response()->json(['anhmv' => 'anhmv']);
-            // return $this->paymentExcel->ExportProduct($PCustomers);
-        }
 
         $PCustomers = $PCustomers->orderByDesc('date_insert')->get();
         $PCustomers = $PCustomers->groupBy('depositID')->paginate(50);

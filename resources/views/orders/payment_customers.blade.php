@@ -161,7 +161,8 @@
                     <div class="card-body">
                         <div>
                             <div style="margin: 1% 1% 1% 1%;">
-                                <form id="exportForm" action="{{ route('orders.payment-customers.index') }}" method="GET">
+                                <form id="exportForm" action="{{ route('orders.payment-customers.index') }}"
+                                    method="GET">
                                     <fieldset>
                                         <div class="form-row" style=" margin-top: 1%;">
                                             <div>
@@ -169,18 +170,20 @@
                                                     name="Uname" id="Uname" placeholder="User name">
                                             </div>
                                             <div>
-                                                <input class="form-control" value="{{ $data['date_inprice'] }}" type="date"
-                                                    name="date_inprice" id="date_inprice">
+                                                <input class="form-control" value="{{ $data['date_inprice'] }}"
+                                                    type="date" name="date_inprice" id="date_inprice">
                                             </div>
                                             <div>
-                                                <input class="form-control" value="{{ $data['date_insert'] }}" type="date"
-                                                    name="date_insert" id="date_insert">
+                                                <input class="form-control" value="{{ $data['date_insert'] }}"
+                                                    type="date" name="date_insert" id="date_insert">
                                             </div>
                                             <div>
                                                 <input class="form-control" value="{{ $data['Sohoadon'] }}" type="text"
                                                     name="Sohoadon" id="Sohoadon2" placeholder="Số hóa đơn">
                                             </div>
-
+                                            <div hidden>
+                                                <input type="checkbox" checked name="checkbox">
+                                            </div>
                                             <div>
                                                 <button type="submit" class="btn btn-primary"
                                                     style="margin-left: 2%;">Search</button>
@@ -545,7 +548,6 @@
                 }
             })
         })
-
         $(document).ready(function() {
             $("#excel").click(function(e) {
                 var uname = $("#Uname").val();
@@ -553,7 +555,6 @@
                 var date_insert = $("#date_insert").val();
                 var Sohoadon = $("#Sohoadon2").val();
                 var checkbox = 1;
-                console.log(uname, date_inprice, date_insert, Sohoadon)
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
@@ -569,15 +570,12 @@
                         Sohoadon: Sohoadon
                     },
                     success: function(response) {
-                        window.location.reload();
+                        window.location = "payment-customers/export-excel?Uname=" + uname +
+                            "&date_inprice=" + date_inprice + "&date_insert=" + date_insert +
+                            "&checkbox=" + checkbox + "&Sohoadon=" + Sohoadon
                     }
                 })
             })
-            // $("#exportForm").on("submit", function(e){
-            //     var uname = $("#Uname").val();
-            //     console.log(uname);
-
-            // })
         });
 
     </script>

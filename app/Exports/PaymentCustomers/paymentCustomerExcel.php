@@ -11,9 +11,9 @@ class paymentCustomerExcel
 
     public function ExportProduct($PCustomers)
     {
-        $fileType = IOFactory::identify(public_path('excels/template/productReality.xlsx'));
+        $fileType = IOFactory::identify(public_path('excels/template/refundCustomer.xlsx'));
         $objReader = IOFactory::createReader($fileType);
-        $objPHPExcel = $objReader->load(public_path('excels/template/productReality.xlsx'));
+        $objPHPExcel = $objReader->load(public_path('excels/template/refundCustomer.xlsx'));
 
         $this->addDataToExcelFileCell1($objPHPExcel->setActiveSheetIndex(0), $PCustomers);
         // $this->addDataToExcelFileCell2($objPHPExcel->setActiveSheetIndex(1), $hien_mau);
@@ -26,7 +26,7 @@ class paymentCustomerExcel
         if (!is_dir(public_path('excels/exports'))) {
             mkdir(public_path('excels/exports'));
         }
-        $nameFileExcel = 'paymentCustomer-export.xlsx';
+        $nameFileExcel = 'refundCustomer-export.xlsx';
 
         $path = 'excels/exports/' . $nameFileExcel;
         $objWriter->save(public_path($path));
@@ -40,12 +40,17 @@ class paymentCustomerExcel
         foreach ($PCustomers as $key => $item) {
             $setCell
                 ->setCellValue('A' . $row, $index)
-                ->setCellValue('B' . $row, $item->deposit)
+                ->setCellValue('B' . $row, $item->depositID)
                 ->setCellValue('C' . $row, $item->uname)
-                ->setCellValue('D' . $row, $item->money)
-                ->setCellValue('E' . $row, $item->note)
-                ->setCellValue('F' . $row, $item->address)
-                ->setCellValue('G' . $row, Carbon::parse($item->date_in)->format('d/m/Y h:m:i'));
+                ->setCellValue('D' . $row, $item->Sohoadon)
+                ->setCellValue('E' . $row, Carbon::parse($item->dateget)->format('d/m/Y h:m:i'))
+                ->setCellValue('F' . $row, Carbon::parse($item->date_in)->format('d/m/Y h:m:i'))
+                ->setCellValue('G' . $row, $item->price_in)
+                ->setCellValue('H' . $row, $item->price_out)
+                ->setCellValue('I' . $row, $item->type_price)
+                ->setCellValue('J' . $row, $item->cardID)
+                ->setCellValue('K' . $row, $item->note)
+                ->setCellValue('H' . $row, $item->useradmin);
 
             // ->setCellValue('G' . $row, $item->price)
             // ->setCellValue('H' . $row, '=F' . $row . '*G' . $row); //them dong text vao cot H, su dung ham tinh toan mac dinh trong excel de tinh gia tri
