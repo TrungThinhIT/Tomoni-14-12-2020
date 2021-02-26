@@ -25,14 +25,15 @@
                     <ul class="dropdown-menu  departments" style="color:#44a5f1"
                         aria-labelledby="navbarDropdownMenuLink">
                         <li style="color:#44a5f1"><a class="dropdown-item"
-                                href="{{route('supplier.invoice.index')}}">Hoá đơn supplier</a></li>
+                                href="{{ route('supplier.invoice.index') }}">Hoá đơn supplier</a></li>
                         <li style="color:#44a5f1"><a class="dropdown-item"
-                                href="{{route('supplier.payment.index')}}">Tiền thanh toán supplier</a></li>
+                                href="{{ route('supplier.payment.index') }}">Tiền thanh toán supplier</a></li>
                         <li style="color:#44a5f1"><a class="dropdown-item"
-                                href="{{route('supplier.management.index')}}">Quản lý supplier</a></li>
-                        <li style="color:#44a5f1"><a class="dropdown-item" href="{{route('supplier.payback')}}">Supplier
+                                href="{{ route('supplier.management.index') }}">Quản lý supplier</a></li>
+                        <li style="color:#44a5f1"><a class="dropdown-item"
+                                href="{{ route('supplier.payback') }}">Supplier
                                 trả lại tiền</a></li>
-                        <li style="color:#44a5f1"><a class="dropdown-item" href="{{route('supplier.debt')}}">Công nợ
+                        <li style="color:#44a5f1"><a class="dropdown-item" href="{{ route('supplier.debt') }}">Công nợ
                                 NCCC</a></li>
                     </ul>
                 </li>
@@ -49,12 +50,16 @@
                         <p>Order</p>
                     </a>
                     <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{{route('orders.ledgers.index')}}">Sổ cái</a></li>
-                        <li><a class="dropdown-item" href="{{route('orders.bills.indexALl')}}">Hoá đơn</a></li>
-                        <li><a class="dropdown-item" href="{{route('orders.indexAll')}}">Web order</a></li>
-                        <li><a class="dropdown-item" href="{{route('orders.payment-customers.index')}}">Tiền khách thanh
+                        <li><a class="dropdown-item" href="{{ route('orders.ledgers.index') }}">Sổ cái</a></li>
+                        <li><a class="dropdown-item" href="{{ route('orders.bills.indexALl') }}">Hoá đơn</a></li>
+                        <li><a class="dropdown-item" href="{{ route('orders.indexAll') }}">Web order</a></li>
+                        <li><a class="dropdown-item" href="{{ route('orders.payment-customers.index') }}">Tiền khách
+                                thanh
                                 toán</a></li>
-                        <li><a class="dropdown-item" href="{{route('orders.customer-debt')}}">Công nợ khách hàng</a>
+                        <li><a class="dropdown-item" href="{{ route('orders.customer-debt') }}">Công nợ khách hàng</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('orders.refund-customer.index') }}">Hoàn tiền khách
+                                hàng</a>
                         </li>
                     </ul>
                 </li>
@@ -66,16 +71,18 @@
                         <p>Warehouses</p>
                     </a>
                     <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{{route('warehouses.imported.index')}}">Hàng Nhập </a></li>
-                        <li><a class="dropdown-item" href="{{route('warehouses.exported.index')}}">Hàng xuất</a></li>
-                        <li><a class="dropdown-item" href="{{route('warehouses.inventory.index')}}">Tồn kho</a></li>
-                        <li><a class="dropdown-item" href="{{route('warehouses.productReality.index')}}">Hàng thực
+                        <li><a class="dropdown-item" href="{{ route('warehouses.imported.index') }}">Hàng Nhập </a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('warehouses.exported.index') }}">Hàng xuất</a></li>
+                        <li><a class="dropdown-item" href="{{ route('warehouses.inventory.index') }}">Tồn kho</a></li>
+                        <li><a class="dropdown-item" href="{{ route('warehouses.productReality.index') }}">Hàng thực
                                 tế</a></li>
 
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link " href="{{route('addressBook.index.index')}}" id="navbarDropdownMenuLink" aria-expanded="false">
+                    <a class="nav-link " href="{{ route('addressBook.index.index') }}" id="navbarDropdownMenuLink"
+                        aria-expanded="false">
 
                         <span class="letter-icon">A</span>
                         <p>Address Book</p>
@@ -93,10 +100,10 @@
                         aria-haspopup="true" aria-expanded="false">
 
                         <span class="letter-icon">Hi: </span>
-                        <p>{{Auth::user()->fname}}</p>
+                        <p>{{ Auth::user()->fname }}</p>
                     </a>
                     <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{{route('auth.logout')}}">Đăng xuất</a></li>
+                        <li><a class="dropdown-item" href="{{ route('auth.logout') }}">Đăng xuất</a></li>
 
                     </ul>
                 </li>

@@ -11,6 +11,7 @@ use App\Http\Controllers\Orders\BillController;
 use App\Http\Controllers\Orders\CustomerController;
 use App\Http\Controllers\Orders\LedgerController;
 use App\Http\Controllers\Orders\PaymentCustomerController;
+use App\Http\Controllers\Orders\refundCustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Suppliers\InvoiceController;
 use App\Http\Controllers\Suppliers\PaymentSupplierController;
@@ -94,10 +95,12 @@ Route::prefix('/')->middleware('auth')->group(function () {
             return view('suppliers.payback');
         })->name('payback');
 
-        Route::get('/supplier-debt',[SupplierController::class,'index'])->name('debt');
-        Route::post('supplier-debt',[SupplierController::class,'index'])->name('postDebt');
+        Route::get('/supplier-debt', [SupplierController::class, 'index'])->name('debt');
+        Route::post('supplier-debt', [SupplierController::class, 'index'])->name('postDebt');
     });
-
+    Route::prefix('orders')->middleware('role')->name('orders.')->group(function () {
+        Route::resource('refund-customer', refundCustomerController::class);
+    });
     Route::prefix('orders')->middleware('role')->namespace('orders')->name('orders.')->group(function () {
         Route::prefix('bills')->name('bills.')->group(function () {
             Route::get('/', [BillController::class, 'indexAll'])->name('indexALl');
@@ -117,7 +120,6 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::put('/update-tracking/{codeorder}', [BillController::class, 'updateShipId'])->name('updateShipId');
             Route::post('/comment/{codeorder}', [BillController::class, 'comment'])->name('comment');
         });
-
         Route::get('/order', function () {
             return view('orders.order');
         })->name('order');
@@ -143,10 +145,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::get('/', [PaymentCustomerController::class, 'index'])->name('index');
             Route::post('/', [PaymentCustomerController::class, 'insert'])->name('insert');
             Route::put('/{Id}', [PaymentCustomerController::class, 'update'])->name('update');
-            Route::post('add-unames',[PaymentCustomerController::class,'addUnames'])->name('addUname');
-            Route::get('/deposit/{id}',[PaymentCustomerController::class,'depositDetails'])->name('depositDetails');
-            Route::post('deposit/{id}',[PaymentCustomerController::class,'updateDeposit'])->name('updateDeposit');
-            Route::get('/share-money/{deposit}',[PaymentCustomerController::class,'shareMoney'])->name('shareMoney');
+            Route::post('add-unames', [PaymentCustomerController::class, 'addUnames'])->name('addUname');
+            Route::get('/deposit/{id}', [PaymentCustomerController::class, 'depositDetails'])->name('depositDetails');
+            Route::post('deposit/{id}', [PaymentCustomerController::class, 'updateDeposit'])->name('updateDeposit');
+            Route::get('/share-money/{deposit}', [PaymentCustomerController::class, 'shareMoney'])->name('shareMoney');
         });
 
         Route::get('/customer-debt', [CustomerController::class, 'index'])->name('customer-debt');
@@ -191,7 +193,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
         Route::get('/search-ma-hoa-don', [BillController::class, 'searchBillCode'])->name('searchBillCode');
         Route::get('/search-supplier', [PaymentSupplierController::class, 'searchSupplier'])->name('searchSupplier');
         Route::get('/search-invoice', [PaymentSupplierController::class, 'searchInvoice'])->name('searchInvoice');
-        Route::get('/search-billcode-suplier',[PaymentSupplierController::class,'searchBillCodeSuplier'])->name('searchBillCodeSuplier');
+        Route::get('/search-billcode-suplier', [PaymentSupplierController::class, 'searchBillCodeSuplier'])->name('searchBillCodeSuplier');
     });
 
     Route::prefix('customer')->name('customer.')->group(function () {

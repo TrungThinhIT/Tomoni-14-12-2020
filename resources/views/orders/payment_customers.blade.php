@@ -62,7 +62,7 @@
                                         document.getElementById("uname").value = "",
                                             document.getElementById("note").value = "",
                                             document.getElementById("dateInprice").value = "";
-                                        document.getElementById("dateInsert").value = "";
+                                        // document.getElementById("dateInsert").value = "";
                                         document.getElementById("priceIn").value = "",
                                             document.getElementById("SoHoadon").value = "";
                                     }
