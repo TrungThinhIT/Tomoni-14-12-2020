@@ -10,6 +10,7 @@ use App\Services\Orders\PaymentCustomerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\PaymentCustomer;
+use Carbon\Carbon;
 
 class PaymentCustomerController extends Controller
 {
@@ -42,6 +43,7 @@ class PaymentCustomerController extends Controller
 
         if ($date_inprice && $date_insert) {
             $PCustomers = $PCustomers->whereBetween('dateget', [$date_inprice, $date_insert]);
+            // dd($PCustomers);
         }
 
         if (!empty($Sohoadon)) {
