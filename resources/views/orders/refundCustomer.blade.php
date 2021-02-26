@@ -98,7 +98,7 @@
                     <div class="card-body">
                         <div>
                             <div style="margin: 1% 1% 1% 1%;">
-                                <form action="{{ route('orders.payment-customers.index') }}">
+                                <form action="{{ route('orders.refund-customer.index') }}">
                                     <fieldset>
                                         <div class="form-row" style=" margin-top: 1%;">
                                             <div>
@@ -163,7 +163,7 @@
                                                 </td>
                                                 <td>{{ $item->note }}</td>
                                                 <td>{{ $item->date_in }}</td>
-                                                <td>{{ $item->money }}</td>
+                                                <td>{{ number_format($item->money) }}</td>
                                                 <td><input onchange="update{{ $item->id }}()" class="form-control"
                                                         onkeyup="searchMaHoaDon(this)" type="text"
                                                         value="{{ $item->billcode }}" id="shd{{ $item->id }}"

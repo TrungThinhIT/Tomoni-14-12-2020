@@ -15,10 +15,26 @@ class refundCustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $data = refundCustomerModel::paginate(50);
+        $uname = $request->Uname;
+        $date_inprice = $request->date_inprice;
+        $date_insert = $request->date_insert;
+        $invoice = $request->Sohoadon;
+        $refundCustomer = refundCustomerModel::query();
+        if ($uname) {
+            $refundCustomer = $refundCustomer->where('uname', $uname);
+        }
+
+        // if ($date_inprice && $date_insert) {
+        //     $PCustomers = $PCustomers->whereBetween('dateget', [$date_inprice, $date_insert]);
+        // }
+
+        if ($invoice) {
+            $refundCustomer = $refundCustomer->where('invoice', $invoice);
+        }
+
+        $data = $refundCustomer->paginate(50);
         return view('orders.refundCustomer', compact('data'));
     }
 
