@@ -50,7 +50,7 @@ class paymentCustomerExcel
                 ->setCellValue('I' . $row, $item->type_price)
                 ->setCellValue('J' . $row, $item->cardID)
                 ->setCellValue('K' . $row, $item->note)
-                ->setCellValue('H' . $row, $item->useradmin);
+                ->setCellValue('L' . $row, $item->useradmin);
 
             // ->setCellValue('G' . $row, $item->price)
             // ->setCellValue('H' . $row, '=F' . $row . '*G' . $row); //them dong text vao cot H, su dung ham tinh toan mac dinh trong excel de tinh gia tri
