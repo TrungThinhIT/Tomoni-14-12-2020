@@ -234,7 +234,7 @@
             },
             success: function (data) {
                 $('#data-table').html('').append(data);
-            },
+            }, 
             error: function (result) {
                 alert('error');
             }

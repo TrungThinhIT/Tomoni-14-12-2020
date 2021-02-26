@@ -7,16 +7,23 @@ use App\Models\Bill;
 use App\Models\PaymentCustomer;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Exports\PaymentCustomers\paymentCustomerExcel;
 
 class PaymentCustomerService
 {
+    protected $paymentExcel;
+    public function __construct(paymentCustomerExcel $paymentExcel)
+    {
+        $this->paymentExcel = $paymentExcel;
+    }
     public function indexAll(Request $request)
     {
         $Uname = $request->Uname;
         $date_inprice = $request->date_inprice;
         $date_insert = $request->date_insert;
         $Sohoadon = $request->Sohoadon;
-
+        $checkbox = $request->checkbox;
+        // dd($request->all());
         $PCustomers = PaymentCustomer::query();
 
         if (!empty($Uname)) {
@@ -29,6 +36,12 @@ class PaymentCustomerService
 
         if (!empty($Sohoadon)) {
             $PCustomers = $PCustomers->where('Sohoadon', 'like', '%' . $Sohoadon . '%');
+        }
+        if ($checkbox) {
+            $PCustomers = $PCustomers->orderByDesc('date_insert')->get();
+            return $this->paymentExcel->ExportProduct($PCustomers);
+            // return response()->json(['anhmv' => 'anhmv']);
+            // return $this->paymentExcel->ExportProduct($PCustomers);
         }
 
         $PCustomers = $PCustomers->orderByDesc('date_insert')->get();

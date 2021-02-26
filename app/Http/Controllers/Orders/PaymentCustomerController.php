@@ -24,6 +24,11 @@ class PaymentCustomerController extends Controller
         $data = $this->paymentCustomer->indexAll($request);
         return view('orders.payment_customers', compact('data'));
     }
+    public function exportExcel(Request $request)
+    {
+        return  $this->paymentCustomer->indexAll($request);
+    }
+
 
     public function insert(PaymentCustomerRequest $request)
     {
