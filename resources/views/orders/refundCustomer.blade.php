@@ -102,16 +102,16 @@
                                     <fieldset>
                                         <div class="form-row" style=" margin-top: 1%;">
                                             <div>
-                                                <input class="form-control" value="" type="text" name="Uname" id="Uname"
-                                                    placeholder="User name">
+                                                <input class="form-control" value="{{ $uname }}" type="text"
+                                                    name="Uname" id="Uname" placeholder="User name">
                                             </div>
                                             <div>
-                                                <input class="form-control" value="" type="date" name="date_inprice"
-                                                    id="date_inprice">
+                                                <input class="form-control" value="{{ $date_inprice }}" type="date"
+                                                    name="date_inprice" id="date_inprice">
                                             </div>
                                             <div>
-                                                <input class="form-control" value="" type="date" name="date_insert"
-                                                    id="date_insert">
+                                                <input class="form-control" value="{{ $date_end }}" type="date"
+                                                    name="date_insert" id="date_insert">
                                             </div>
                                             <div>
                                                 <input class="form-control" value="" type="text" name="Sohoadon"
@@ -147,9 +147,9 @@
                                             <th>Uname</th>
                                             <th>Note</th>
                                             <th>date_inprice</th>
+                                            <th>date_insert</th>
                                             <th>Price In</th>
                                             <th>Sohoadon</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="myTable">
@@ -163,6 +163,7 @@
                                                 </td>
                                                 <td>{{ $item->note }}</td>
                                                 <td>{{ $item->date_in }}</td>
+                                                <td>{{ $item->date_insert }}</td>
                                                 <td>{{ number_format($item->money) }}</td>
                                                 <td><input onchange="update{{ $item->id }}()" class="form-control"
                                                         onkeyup="searchMaHoaDon(this)" type="text"
@@ -170,7 +171,6 @@
                                                         list="listbillcode">
                                                     <datalist id="listbillcode"></datalist>
                                                 </td>
-                                                <td></td>
                                             </tr>
                                             <script>
                                                 function update{{ $item->id }}() {

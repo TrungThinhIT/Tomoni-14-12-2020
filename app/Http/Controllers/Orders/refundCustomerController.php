@@ -19,23 +19,22 @@ class refundCustomerController extends Controller
     {
         $uname = $request->Uname;
         $date_inprice = $request->date_inprice;
-        $date_insert = $request->date_insert;
+        $date_end = $request->date_insert;
         $invoice = $request->Sohoadon;
         $refundCustomer = refundCustomerModel::query();
         if ($uname) {
             $refundCustomer = $refundCustomer->where('uname', $uname);
         }
 
-        // if ($date_inprice && $date_insert) {
-        //     $PCustomers = $PCustomers->whereBetween('dateget', [$date_inprice, $date_insert]);
-        // }
-
-        if ($invoice) {
-            $refundCustomer = $refundCustomer->where('invoice', $invoice);
+        if ($date_inprice && $date_end) {
+            $refundCustomer = $refundCustomer->whereBetween('date_in', [$date_inprice, $date_end]);
         }
 
-        $data = $refundCustomer->paginate(50);
-        return view('orders.refundCustomer', compact('data'));
+        if ($invoice) {
+            $refundCustomer = $refundCustomer->where('billcode', $invoice);
+        }
+        $data = $refundCustomer->orderBy('date_insert','DESC')->paginate(50);
+        return view('orders.refundCustomer', compact('data','date_inprice','date_end','uname'));
     }
 
     /**

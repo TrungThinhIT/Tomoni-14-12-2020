@@ -125,7 +125,7 @@
                                             @enderror
                                         </div>
                                         <div class="col-md-2 mb-2">
-                                            <input style="margin-top:13%" type="submit" id="BtnSubmit" name="submit"
+                                            <input style="margin-top:6%" type="submit" id="BtnSubmit" name="submit"
                                                 class="btn btn-primary" value="submit">
                                         </div>
                                     </div>

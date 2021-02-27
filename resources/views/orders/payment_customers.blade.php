@@ -79,9 +79,9 @@
                     </form>
                     {{-- modal --}}
                     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
-                        aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
+                        aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+                        <div class="modal-dialog modal-lg" >
+                            <div class="modal-content" >
                                 {{-- header --}}
                                 <div class="modal-header">
                                     <h5 class="modal-title">Thêm nhiều</h5>
@@ -128,6 +128,7 @@
                                                         <th>Note</th>
                                                         <th>Price In</th>
                                                         <th>Sohoadon</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="bodyForm">
@@ -465,7 +466,7 @@
                 '<td> <input style="border:none" name="note[]" type="text" > </td>' +
                 '<td> <input style="border:none" name="price[]" type="number" min="1" ></td>' +
                 '<td> <input style="border:none" name="hoadon[]" type="text" > </td>' +
-                '<td> <button type="button" onclick=deleteRow(this)>Xóa</button> </td>' +
+                '<td> <button type="button" class="btn btn-danger" onclick=deleteRow(this)>Xóa</button> </td>' +
                 '</tr>'
             )
         }
