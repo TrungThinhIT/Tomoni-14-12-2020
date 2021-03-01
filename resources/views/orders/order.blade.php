@@ -15,45 +15,46 @@
                         <div class="row" style="width: 100%">
                             <div class="card" style=" margin-left:1%; width:100%; ">
                                 <ul class="list-group list-group-flush">
-                                    @foreach ($data['bill'] as $item)
+                                    @foreach ($data['bill'] as $items)
+                                    @foreach ($items->listProduct as $item)
                                         <div class="card " style="width:100%">
                                             <div class="row d-flex justify-content-between px-3 top"
                                                 style="margin: 1% 3% 0% 3% ">
                                                 <div class="d-flex">
                                                     <div class="avatar avatar-xxl">
                                                         <img src="
-                                                                    @if (strpos($item['Product']->urlimg, 'http') === 0) {{ $item['Product']->urlimg }}
+                                                                    @if (strpos($item->urlimg, 'http') === 0) {{ $item->urlimg }}
                                                     @else
-                                                        https://tomoniglobal.com/{{ $item['Product']->urlimg }} @endif" alt="..."
+                                                        https://tomoniglobal.com/{{ $item->urlimg }} @endif" alt="..."
                                                         class="avatar-img rounded">
                                                     </div>
                                                     <h5>ORDER
                                                         <span class="text-primary font-weight-bold">
                                                             <a
-                                                                href="{{ route('orders.bills.getBillDetailById', $item->Codeorder) }}">{{ $item->Codeorder }}
+                                                                href="{{ route('orders.bills.getBillDetailById', $item->codeorder) }}">{{ $item->codeorder }}
                                                             </a>
                                                         </span>
                                                         <div class="">
                                                             <p class="mb-0"><strong>Đơn giá:</strong>
-                                                                {{ number_format($item['Product']->price, 0) }} </p>
+                                                                {{ number_format($item->price, 0) }} </p>
                                                             <p class="mb-0"><strong>Số lượng:</strong>
-                                                                {{ $item['Product']->quantity }}</p>
+                                                                {{ $item->quantity }}</p>
                                                             <p class="mb-0"><strong>Số thùng:
-                                                                </strong>{{ $item['Product']->quantity / $item['Product']->item_in_box }}
+                                                                </strong>{{ $item->quantity / $item->item_in_box }}
                                                             </p>
                                                             <p class="mb-0"><strong>Khối lượng thực tế:
-                                                                </strong>{{ number_format($item->product->ProductStandard->weight * $item['Product']->quantity, 2) }}
+                                                                </strong>{{ number_format($item->ProductStandard->weight * $item->quantity, 2) }}
                                                                 kg</p>
                                                             <p class="mb-0"><strong>Khối lượng thể tích: </strong>
-                                                                {{ number_format($item->totalWeightkhoi * $item['Product']->quantity, 2) }}
+                                                                {{ number_format($item->totalWeightkhoi * $item->quantity, 2) }}
                                                                 khối
                                                             </p>
                                                             <p class="mb-0"><strong>Ngày đặt hàng:
-                                                                </strong>{{ Carbon\Carbon::parse($item['Order']->dateget)->format('d/m/Y') }}
+                                                                </strong>{{ Carbon\Carbon::parse($items['Order']->dateget)->format('d/m/Y') }}
                                                             </p>
                                                             <p class="mb-0"><strong>Ngày thanh toán: </strong>
-                                                                @if ($item['Order']->date_payment)
-                                                                    {{ Carbon\Carbon::parse($item['Order']->date_payment)->format('d/m/Y') }}
+                                                                @if ($items['Order']->date_payment)
+                                                                    {{ Carbon\Carbon::parse($items['Order']->date_payment)->format('d/m/Y') }}
                                                                 @endif
                                                             </p>
                                                         </div>
@@ -61,53 +62,53 @@
                                                 </div>
                                                 <div class="d-flex flex-column text-sm-right">
                                                     <p class="mb-0"><strong>Phương thức vận chuyển:</strong>
-                                                        @foreach ($item['Order']->Transport as $value)
+                                                        @foreach ($items['Order']->Transport as $value)
                                                             {{ $value->ship_method == 0 ? 'Đường biển' : 'Đường hàng không' }}
                                                         @endforeach
                                                     </p>
                                                     <p class="mb-0"><strong>Trạng thái:</strong>
-                                                        @if ($item['Order']->state == 0)
+                                                        @if ($items['Order']->state == 0)
                                                             Xác định hàng
-                                                        @elseif($item['Order']->state == 1)
+                                                        @elseif($items['Order']->state == 1)
                                                             Gửi mail báo giá
-                                                        @elseif($item['Order']->state == 2)
+                                                        @elseif($items['Order']->state == 2)
                                                             Đã cập nhập
-                                                        @elseif($item['Order']->state == 3)
+                                                        @elseif($items['Order']->state == 3)
                                                             Đã báo giá
-                                                        @elseif($item['Order']->state == 4)
+                                                        @elseif($items['Order']->state == 4)
                                                             Đã chấp nhận
-                                                        @elseif($item['Order']->state == 5)
+                                                        @elseif($items['Order']->state == 5)
                                                             Đã thanh toán
-                                                        @elseif($item['Order']->state == 6)
+                                                        @elseif($items['Order']->state == 6)
                                                             Đã gửi mail
-                                                        @elseif($item['Order']->state == 7)
+                                                        @elseif($items['Order']->state == 7)
                                                             Đã mua hàng
-                                                        @elseif($item['Order']->state == 8)
+                                                        @elseif($items['Order']->state == 8)
                                                             Đã kiểm tra
-                                                        @elseif($item['Order']->state == 9)
+                                                        @elseif($items['Order']->state == 9)
                                                             Đang giao hàng
-                                                        @elseif($item['Order']->state == 10)
+                                                        @elseif($items['Order']->state == 10)
                                                             Cập cảng Nhật
-                                                        @elseif($item['Order']->state == 11)
+                                                        @elseif($items['Order']->state == 11)
                                                             Cập cảng Việt
-                                                        @elseif($item['Order']->state == 12)
+                                                        @elseif($items['Order']->state == 12)
                                                             Đang phát hàng
-                                                        @elseif($item['Order']->state == 13)
+                                                        @elseif($items['Order']->state == 13)
                                                             Đang nhận hàng
                                                         @endif
                                                     </p>
                                                     <p class="mb-0"><strong>Jancode:</strong>
-                                                        {{ $item['Product']->jan_code }}</p>
+                                                        {{ $item->jan_code }}</p>
                                                     <p><strong>Name:</strong>
-                                                        {{ $item['Product']->ProductStandard['name'] }}</p>
+                                                        {{ $item->ProductStandard['name'] }}</p>
                                                     @if ((empty($data['bill']->where('locked', 1)->toArray())))
                                                     <div class="blocked">
                                                         <button class="btn btn-primary modalTranfer"
-                                                            data-codeorder="{{ $item->Codeorder }}" type="button">Tranfer
+                                                            data-codeorder="{{ $item->codeorder }}" type="button">Tranfer
                                                             Codeorder</button>
 
                                                         <a class="btn btn-danger removeCodeOrder"
-                                                            href="{{ route('orders.bills.deleteBillCode', $item->Id) }}"
+                                                            href="{{ route('orders.bills.deleteBillCode', $items->Id) }}"
                                                             onclick="return confirm('Are you sure you want to delete this item?');"
                                                             type="button">Remove Codeorder</a>
                                                     </div>
@@ -117,6 +118,8 @@
                         </div>
                     </div>
                     @endforeach
+                    @endforeach
+
                     </ul>
 
                 </div>
@@ -184,7 +187,7 @@
                         </form>
                         <div style="float: left" class="mt-3">
                             <p style="font-weight: bold"> Số dư:
-                                {{ number_format($data['priceIn'] + $data['moneyNeedToPay'], 0) }}&ensp;&ensp;
+                                {{ number_format($data['priceIn'] - $data['moneyNeedToPay'], 0) }}&ensp;&ensp;
                             </p>
                         </div>
                         <div style="float: left" class="mt-3">
