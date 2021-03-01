@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Orders;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Orders\CreateBillRequest;
 use App\Models\Bill;
+use App\Models\Order;
 use App\Services\Orders\BillService;
 use Illuminate\Http\Request;
 
@@ -106,7 +107,13 @@ class BillController extends Controller
     }
     public function updateLock($billcode)
     {
-        $updateLock = Bill::where([['So_Hoadon', $billcode], ['deleted_at', null]])->update(['locked'=>1]);
+        //update lock accountant_order
+        $updateLock = Bill::where([['So_Hoadon', $billcode], ['deleted_at', null]])->update(['locked' => 1]);
+        //update lock oder
+        $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->get();
+        foreach ($bill as $item) {
+            Order::where('codeorder', $item->Codeorder)->update(['locked' => 1]);
+        }
         return response()->json($updateLock);
     }
 }

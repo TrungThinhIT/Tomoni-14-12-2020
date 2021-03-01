@@ -63,7 +63,7 @@ class LedgerService
        foreach($ledgers->get() as $value){
            $sumDebt += $value->Pricedelb;
        }
-        $ledgers = $ledgers->orderBy('Id', 'DESC')->paginate(5);
+        $ledgers = $ledgers->orderBy('Id', 'DESC')->paginate(50);
 
         $data = ['Uname' => $Uname, 'PriceIn' => $PriceInSearch, 'PriceOut' => $PriceOutSearch, 'Pricedelb' => $PricedelbSearch, 'ledgers' => $ledgers, 'sumDebt' => $sumDebt];
         return $data;
