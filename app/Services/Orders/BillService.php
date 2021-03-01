@@ -76,8 +76,7 @@ class BillService
             });
         }
 
-        $bills = $bills
-            ->select()->selectRaw('count(Id) as total')
+        $bills = $bills->select()->selectRaw('count(Id) as total')
             ->selectRaw('sum(PriceOut) as totalPriceOut')
             ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')->get();
 
@@ -86,8 +85,7 @@ class BillService
             $sumDebt += $value->PriceIn - $value->totalPriceOut;
         }
 
-        $bills = $bills
-            ->paginate(50);
+        $bills = $bills->paginate(50);
         return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $Uname, 'Date_Create' => $Date_Create, 'sumDebt' => $sumDebt];
     }
 

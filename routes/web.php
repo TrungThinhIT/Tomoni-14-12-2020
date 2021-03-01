@@ -118,6 +118,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::post('/', [BillController::class, 'create'])->name('create');
             Route::put('/update-fee/{codeorder}', [BillController::class, 'updateFee'])->name('updateFee');
             Route::put('/update-tracking/{codeorder}', [BillController::class, 'updateShipId'])->name('updateShipId');
+            Route::put('/update-lock/{billcode}',[BillController::class,'updateLock'])->name('updateLock');
             Route::post('/comment/{codeorder}', [BillController::class, 'comment'])->name('comment');
         });
         Route::get('/order', function () {
