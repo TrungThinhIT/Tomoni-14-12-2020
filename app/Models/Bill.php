@@ -22,4 +22,8 @@ class Bill extends Model
     public function Product(){
         return $this->belongsTo(Product::class, 'Codeorder', 'codeorder');
     }
+    public function listProduct()
+    {
+        return $this->hasMany(Product::class, 'codeorder', 'Codeorder');
+    }
 }

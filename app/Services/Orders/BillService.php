@@ -13,6 +13,7 @@ use App\Models\NoteWarehouse;
 use App\Models\Order;
 use App\Models\PaymentCustomer;
 use App\Models\Product;
+use App\Models\refundCustomerModel;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Transport;
 use Illuminate\Http\Request;
@@ -199,7 +200,9 @@ class BillService
         $endDate2 = $date->addDays(1)->toDateString();
         $nowDate = now()->addDays(-2)->toDateString();
 
-        $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
+        $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard','listProduct.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
+        // dd($bill);
+        // if($sumMoneyRefund=refundCustomerModel::where('billcode',$bill->first()->So_Hoadon)->selectRaw('sum (billcode) as '));
         $totalWeightReal = 0;
         $totalWeightKhoi = 0;
         foreach ($bill as $value) {

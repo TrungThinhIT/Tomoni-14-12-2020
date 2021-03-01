@@ -13,7 +13,6 @@
                     </div>
                     <div class=" row">
                         <div class="row" style="width: 100%">
-
                             <div class="card" style=" margin-left:1%; width:100%; ">
                                 <ul class="list-group list-group-flush">
                                     @foreach ($data['bill'] as $item)
