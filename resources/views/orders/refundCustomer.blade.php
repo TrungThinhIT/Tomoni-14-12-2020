@@ -156,8 +156,9 @@
                                         @foreach ($data as $item)
                                             <tr>
                                                 <td>{{ $item->deposit }}</td>
-                                                <td><input class="form-control" onchange="update{{ $item->id }}()"
-                                                        type="text" value="{{ $item->uname }}" list="litsusername"
+                                                <td><input class="form-control" style="width:70%;max-height:60% !important"
+                                                        onchange="update{{ $item->id }}()" type="text"
+                                                        value="{{ $item->uname }}" list="litsusername"
                                                         onkeyup="searchUser(this)" id="us{{ $item->id }}">
                                                     <datalist id="litsusername"></datalist>
                                                 </td>
@@ -166,6 +167,7 @@
                                                 <td>{{ $item->date_insert }}</td>
                                                 <td>{{ number_format($item->money) }}</td>
                                                 <td><input onchange="update{{ $item->id }}()" class="form-control"
+                                                        style="width:70%; max-height:60% !important"
                                                         onkeyup="searchMaHoaDon(this)" type="text"
                                                         value="{{ $item->billcode }}" id="shd{{ $item->id }}"
                                                         list="listbillcode">

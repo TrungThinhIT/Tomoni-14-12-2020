@@ -243,9 +243,7 @@
 
     $(document).ready(function () {
         $('#Image').change(function () {
-
             let reader = new FileReader();
-
             reader.onload = (e) => {
                 $('img').removeAttr('hidden');
                 $('#img').attr('src', e.target.result);
