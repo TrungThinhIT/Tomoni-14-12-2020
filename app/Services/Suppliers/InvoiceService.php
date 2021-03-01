@@ -307,42 +307,65 @@ class InvoiceService
 
     public function createMoreInvoiceDetail(AddInvoiceDetailRequest $request, $Invoice)
     {
-        InvoiceDetailSupplier::create([
-            'Codeorder' => $request->Codeorder,
-            'jancode' => $request->Jancode,
-            'Quantity' => $request->Quantity,
-            'Price' => $request->Price,
-            'PriceTax' => $request->PriceTax,
-            'Invoice' => $request->Invoice
-        ]);
-
-        LogInvoiceDetailSupplier::create([
-            'uname' => Auth::user()->uname,
-            'action' => 'insert',
-            'Invoice' => $request->Invoice,
-            'Jancode' => $request->Jancode,
-            'Codeorder' => $request->Codeorder
-        ]);
-
-        $invoiceDetail = InvoiceDetailSupplier::where('Invoice', $Invoice)->where('Jancode', $request->Jancode)->first();
+        //create
+        // InvoiceDetailSupplier::create([
+        //     'Codeorder' => $request->Codeorder,
+        //     'jancode' => $request->Jancode,
+        //     'Quantity' => $request->Quantity,
+        //     'Price' => $request->Price,
+        //     'PriceTax' => $request->PriceTax,
+        //     'Invoice' => $request->Invoice
+        // ]);
+        // //ghi log
+        // LogInvoiceDetailSupplier::create([
+        //     'uname' => Auth::user()->uname,
+        //     'action' => 'insert',
+        //     'Invoice' => $request->Invoice,
+        //     'Jancode' => $request->Jancode,
+        //     'Codeorder' => $request->Codeorder
+        // ]);
+        //Tổng tiền của Jancode mới
+        $priceJandeNew = $request->Quantity * $request->Price;
 
         $Invoice = InvoiceSupplier::where('Invoice', $Invoice)->with('detail.product')->first();
-        $priceDetail = 0;
-        foreach ($Invoice['detail'] as $key => $value) {
-            $priceDetail +=  $value->Quantity * $value->Price;
-        }
-        $totalPriceInvoice = $priceDetail + $Invoice->PurchaseCosts;
-
         $invoiceDetails =  InvoiceDetailSupplier::where('Invoice', $request->Invoice)->get();
 
         $totalPriceInvoiceDetail = 0;
         foreach ($invoiceDetails as $value) {
             $totalPriceInvoiceDetail += $value->Price * $value->Quantity;
         }
-        return response()->json([
-            'invoiceAdd' => $invoiceDetail,
-            'totalPriceInvoice' => $totalPriceInvoice,
-            'totalPriceInvoiceDetail' => $totalPriceInvoiceDetail
-        ]);
+        $totalPriceInvoiceDetails = $totalPriceInvoiceDetail + $priceJandeNew + $Invoice->PurchaseCosts;
+        if ($Invoice->TotalPrice >= $totalPriceInvoiceDetails) {
+            InvoiceDetailSupplier::create([
+                'Codeorder' => $request->Codeorder,
+                'jancode' => $request->Jancode,
+                'Quantity' => $request->Quantity,
+                'Price' => $request->Price,
+                'PriceTax' => $request->PriceTax,
+                'Invoice' => $request->Invoice
+            ]);
+            //ghi log
+            LogInvoiceDetailSupplier::create([
+                'uname' => Auth::user()->uname,
+                'action' => 'insert',
+                'Invoice' => $request->Invoice,
+                'Jancode' => $request->Jancode,
+                'Codeorder' => $request->Codeorder
+            ]);
+            $invoiceDetail = InvoiceDetailSupplier::where('Invoice', $request->Invoice)->where('Jancode', $request->Jancode)->first();
+            $Invoice = InvoiceSupplier::where('Invoice', $request->Invoice)->with('detail.product')->first();
+            $priceDetail = 0;
+            foreach ($Invoice['detail'] as $key => $value) {
+                $priceDetail +=  $value->Quantity * $value->Price;
+            }
+            $totalPriceInvoice = $priceDetail + $Invoice->PurchaseCosts;
+            $totalPriceInvoiceDetail = $totalPriceInvoiceDetail + $priceJandeNew;
+            return response()->json([
+                'invoiceAdd' => $invoiceDetail,
+                'totalPriceInvoice' => $totalPriceInvoice,
+                'totalPriceInvoiceDetail' => $totalPriceInvoiceDetail
+            ]);
+        }
+        return "false";
     }
 }
