@@ -22,7 +22,7 @@ use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Excel as ExcelExcel;
 use Maatwebsite\Excel\Facades\Excel as FacadesExcel;
 use Maatwebsite\Excel\Facedes\Excel;
-
+use Illuminate\Support\Str;
 class BillService
 {
 
@@ -48,14 +48,6 @@ class BillService
                 'uname' => $priceOrder->uname
             ]);
         }
-        // foreach ($billcodes as $value) {
-        //     // dd((DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon))->get());
-        //     $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->selectRaw('sum(price_in) as totalPriceIn')->first();
-        //     // dd($sumPriceIn);
-        //     Bill::where('So_Hoadon', $value->Sohoadon)->update([
-        //         'PriceIn' => $sumPriceIn->totalPriceIn
-        //     ]);
-        // }
         $So_Hoadon = $request->So_Hoadon;
         $Date_Create = $request->Date_Create;
         $Uname = $request->Uname;
@@ -89,7 +81,6 @@ class BillService
                 'PriceIn' => $sumPriceIn->totalPriceIn
             ]);
         }
-        Bill::get()->fresh();
         $bills = $bills->paginate(50);
         return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $Uname, 'Date_Create' => $Date_Create, 'sumDebt' => $sumDebt];
     }
@@ -319,11 +310,20 @@ class BillService
 
     public function createNew(CreateBillRequest $request)
     {
+        
         $check = Order::where('codeorder', $request->Codeorder)->first();
         if ($check === null) {
             $request->flash('request', $request->all());
             Session()->flash('Codeorder', 'Codeorder wrong!');
         } else {
+            $unames = Str::of($request->Codeorder)->explode('-');   
+            $checkbill =Bill::where('So_Hoadon',$request->So_Hoadon)->first();
+            if(!empty($checkbill)){
+                if($unames[1]!=$checkbill->uname){
+                    toastr()->warning('Không được khác uname trong cùng hóa đơn','Notification',['timeOut'=>1100]);
+                    return back();
+                }
+            }
             $listProduct = Product::where('codeorder', $request->Codeorder)->get();
             $sumTotal = 0;
             foreach ($listProduct as $item) {
@@ -358,7 +358,6 @@ class BillService
                 'note' => 'Tạo hoá đơn',
                 'DateAct' => now()
             ]);
-
             toastr()->success('Create successfully!', 'Notifycation');
         }
         return back();
