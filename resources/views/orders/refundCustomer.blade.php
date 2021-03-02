@@ -103,7 +103,7 @@
                                         <div class="form-row" style=" margin-top: 1%;">
                                             <div>
                                                 <input class="form-control" value="{{ $uname }}" type="text"
-                                                    name="Uname" id="Uname" placeholder="User name">
+                                                    name="Uname" list="litsusername" onkeyup="searchUser(this)" id="Uname" placeholder="User name">
                                             </div>
                                             <div>
                                                 <input class="form-control" value="{{ $date_inprice }}" type="date"
