@@ -28,7 +28,7 @@ class returnProductRequest extends FormRequest
             'Jancode'=>'required',
             'Quantity'=>'required',
             'price'=>'required',
-            'SoHoadon'=>'required'
+            'CodeOrder'=>'required|exists:accoutant_order,Codeorder'
         ];
     }
 }
