@@ -157,13 +157,7 @@ class BillService
         $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard', 'listProduct.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
         $totalWeightReal = 0;
         $totalWeightKhoi = 0;
-        // foreach ($bill as $value) {
-        //     $weightKhoi = $value->Product->ProductStandard->length * $value->Product->ProductStandard->width * $value->Product->ProductStandard->height / 1000000;
-        //     $value->setAttribute('totalWeightkhoi', $weightKhoi);
-        //     $totalWeightKhoi += $weightKhoi * $value->Product->quantity;
-        //     $totalWeightReal += $value->Product->ProductStandard->weight * $value->Product->quantity;
-        // }
-        //relation listProduct 1 codeOrder có nhiều product
+        //tính khối và khối thực tế
         foreach ($bill as $value) {
             foreach ($value->listProduct as $item) {
                 $weightKhoi = $item->ProductStandard->length * $item->ProductStandard->width * $item->ProductStandard->height / 1000000;
@@ -186,8 +180,10 @@ class BillService
                 $money +=  $item->total;
             }
         }
+        //tính lại số dư nếu có tiền hoàn trả
+        $listRefund = refundCustomerModel::where('billcode', $billcode)->where('uname', $bill->first()->uname)->orderBy('date_in','DESC')->get();
+        $moneyRefund = $listRefund->sum('money');
 
-        // dd($money);
         if ($startDate && $endDate) {
             $customer = $customer->whereBetween('date_payment', [$startDate, $endDate2]);
             $checkScroll = 1;
@@ -242,7 +238,7 @@ class BillService
             $hien_mau = $hien_mau->groupBy('dateget')->paginate(10);
             return [
                 'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'priceIn' => $priceIn, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
-                'moneyNeedToPay' => $money, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi
+                'moneyNeedToPay' => $money, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi, 'moneyRefund' => $moneyRefund,'listRefund'=>$listRefund
             ];
         }
     }
