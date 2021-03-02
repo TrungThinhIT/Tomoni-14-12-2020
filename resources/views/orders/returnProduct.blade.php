@@ -1,64 +1,56 @@
 @extends('layout')
-@section('title', 'Hoàn tiền khách hàng')
+@section('title', 'Khách trả hàng')
 @section('content')
     <div class="main-panel">
         <div class="content content-documentation">
             <div class="container-fluid">
                 <div class="card card-documentation">
                     <div class="card-header bg-info-gradient text-white bubble-shadow">
-                        <h4>Hoàn tiền khách hàng</h4>
+                        <h4>Khách trả hàng</h4>
                     </div>
-                    <form action="{{ route('orders.refund-customer.store') }}" method="POST">
+                    <form action="{{ route('orders.return-product.create') }}" method="POST">
                         @csrf
                         <fieldset>
                             <div class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">
-                                <div class="col-md-2 mb-2">
-                                    <label for="validationDefault01">DepositID</label>
-                                    <input value="{{ old('depositId') }}" type="text" class="form-control"
-                                        name="depositId" id="depositId" placeholder="Nhập số DepositID">
-                                    @error('depositId')
-                                        <span class="alert-danger-custom">{{ $message }}</span>
-                                    @enderror
-
-                                </div>
                                 <div class="col-md-1 mb-1">
                                     <label for="validationDefault01">User name</label>
-                                    <input class="form-control" value="{{ old('uname') }}" type="text" name="uname"
-                                        id="uname" placeholder="User name" list="litsusername" onkeyup='searchUser(this)'>
+                                    <input class="form-control" value="" type="text" name="uname" id="uname"
+                                        placeholder="User name" list="litsusername" onkeyup='searchUser(this)'>
                                     <datalist id='litsusername'></datalist>
                                     @error('uname')
                                         <span class="alert-danger-custom">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="col-md-1 mb-1">
-                                    <label for="validationDefault01">Note</label>
-                                    <input data-type="currency" value="{{ old('note') }}" type="text" class="form-control"
-                                        name="note" id="note" placeholder="Nhập note">
-                                    @error('note')
+                                <div class="col-md-2 mb-2">
+                                    <label for="validationDefault01">Jancode</label>
+                                    <input value="" type="text" class="form-control" name="Jancode" id="Jancode"
+                                        placeholder="Nhập số Jancode">
+                                    @error('Jancode')
                                         <span class="alert-danger-custom">{{ $message }}</span>
                                     @enderror
+
                                 </div>
                                 <div class="col-md-2 mb-1">
-                                    <label for="validationDefault01">Date Inprice</label>
-                                    <input type="date" value="{{ old('dateInprice') }}" class="form-control"
-                                        name="dateInprice" id="dateInprice" placeholder="Ngày nhập tiền">
-                                    @error('dateInprice')
+                                    <label for="validationDefault01">Quantity</label>
+                                    <input type="number" value="" class="form-control" name="Quantity" id="Quantity"
+                                        placeholder="Ngày nhập tiền">
+                                    @error('Quantity')
                                         <span class="alert-danger-custom">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-1 mb-1">
-                                    <label for="validationDefault01">Price In</label>
-                                    <input class="form-control" value="{{ old('priceIn') }}" type="number" name="priceIn"
-                                        min="1" id="priceIn" placeholder="Price In">
-                                    @error('priceIn')
+                                    <label for="validationDefault01">Price </label>
+                                    <input class="form-control" value="" type="number" name="price" min="1" id="price"
+                                        placeholder="Price In">
+                                    @error('price')
                                         <span class="alert-danger-custom">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-1 mb-1">
                                     <label for="validationDefault01">Số hoá đơn</label>
-                                    <input class="form-control" value="{{ old('SoHoadon') }}" type="text" name="SoHoadon"
-                                        id="SoHoadon" placeholder="So hoa don" list="listbillcode"
-                                        onkeyup='searchMaHoaDon(this)'> <datalist id='listbillcode'></datalist>
+                                    <input class="form-control" value="" type="text" name="SoHoadon" id="SoHoadon"
+                                        placeholder="So hoa don" list="listbillcode" onkeyup='searchMaHoaDon(this)'>
+                                    <datalist id='listbillcode'></datalist>
                                     @error('SoHoadon')
                                         <span class="alert-danger-custom">{{ $message }}</span>
                                     @enderror
@@ -102,16 +94,17 @@
                                     <fieldset>
                                         <div class="form-row" style=" margin-top: 1%;">
                                             <div>
-                                                <input class="form-control" value="{{ $uname }}" type="text"
-                                                    name="Uname" list="litsusername" onkeyup="searchUser(this)" id="Uname" placeholder="User name">
+                                                <input class="form-control" value="" type="text" name="Uname"
+                                                    list="litsusername" onkeyup="searchUser(this)" id="Uname"
+                                                    placeholder="User name">
                                             </div>
                                             <div>
-                                                <input class="form-control" value="{{ $date_inprice }}" type="date"
-                                                    name="date_inprice" id="date_inprice">
+                                                <input class="form-control" value="" type="date" name="date_inprice"
+                                                    id="date_inprice">
                                             </div>
                                             <div>
-                                                <input class="form-control" value="{{ $date_end }}" type="date"
-                                                    name="date_insert" id="date_insert">
+                                                <input class="form-control" value="" type="date" name="date_insert"
+                                                    id="date_insert">
                                             </div>
                                             <div>
                                                 <input class="form-control" value="" type="text" name="Sohoadon"
@@ -138,8 +131,8 @@
                                     </fieldset>
                                     {{-- modal --}}
                                 </form>
-                                <div style="float: right" class="mt-3">
-                                    {!! $data->withQueryString()->links('commons.paginate') !!}</div>
+                                {{-- <div style="float: right" class="mt-3">
+                                    {!! $data->withQueryString()->links('commons.paginate') !!}</div> --}}
                                 <table class="table table-bordered table-striped" style="margin-top: 1%;">
                                     <thead>
                                         <tr>
@@ -153,67 +146,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="myTable">
-                                        @foreach ($data as $item)
-                                            <tr>
-                                                <td>{{ $item->deposit }}</td>
-                                                <td><input class="form-control" style="width:70%;max-height:60% !important"
-                                                        onchange="update{{ $item->id }}()" type="text"
-                                                        value="{{ $item->uname }}" list="litsusername"
-                                                        onkeyup="searchUser(this)" id="us{{ $item->id }}">
-                                                    <datalist id="litsusername"></datalist>
-                                                </td>
-                                                <td>{{ $item->note }}</td>
-                                                <td>{{ $item->date_in }}</td>
-                                                <td>{{ $item->date_insert }}</td>
-                                                <td>{{ number_format($item->money) }}</td>
-                                                <td><input onchange="update{{ $item->id }}()" class="form-control"
-                                                        style="width:70%; max-height:60% !important"
-                                                        onkeyup="searchMaHoaDon(this)" type="text"
-                                                        value="{{ $item->billcode }}" id="shd{{ $item->id }}"
-                                                        list="listbillcode">
-                                                    <datalist id="listbillcode"></datalist>
-                                                </td>
-                                            </tr>
-                                            <script>
-                                                function update{{ $item->id }}() {
-                                                    var id = {{ $item->id }};
-                                                    var us = $("#us{{ $item->id }}").val();
-                                                    var shd = $("#shd{{ $item->id }}").val();
-                                                    $.ajax({
-                                                        headers: {
-                                                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                                                'content')
-                                                        },
-                                                        type: 'PUT',
-                                                        url: "refund-customer/" + id,
-                                                        data: {
-                                                            uname: us,
-                                                            sohoadon: shd
-                                                        },
-                                                        success: function(response) {
-                                                            console.log(response)
-                                                            if (response == "ErrorUname") {
-                                                                toastr.warning(us + ' không tồn tại',
-                                                                    'Notifycation', {
-                                                                        timeOut: 1000
-                                                                    })
-                                                            } else if (response == "ErrorSHD") {
-                                                                toastr.warning('Số hóa đơn ' + shd +
-                                                                    ' không tồn tại', 'Notifycation', {
-                                                                        timeOut: 1000
-                                                                    })
-                                                            } else {
-                                                                toastr.success('Cập nhập thành công.',
-                                                                    'Notifycation', {
-                                                                        timeOut: 1000
-                                                                    })
-                                                            }
-                                                        }
-                                                    });
-                                                }
 
-                                            </script>
-                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

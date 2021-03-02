@@ -13,6 +13,7 @@ use App\Models\NoteWarehouse;
 use App\Models\Order;
 use App\Models\PaymentCustomer;
 use App\Models\Product;
+use App\Models\refundCustomerModel;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Transport;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Excel as ExcelExcel;
 use Maatwebsite\Excel\Facades\Excel as FacadesExcel;
 use Maatwebsite\Excel\Facedes\Excel;
-
+use Illuminate\Support\Str;
 class BillService
 {
 
@@ -40,28 +41,18 @@ class BillService
     public function getALl(Request $request)
     {
         $codeOrderByBill = Bill::select('Codeorder')->get()->toArray();
-        $billcodes = DB::table('quanlythe')->where('Sohoadon', '!=', null)->select('Sohoadon')->distinct()->get()->toArray();
         foreach ($codeOrderByBill as  $value) {
-            $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
+            $priceOrder = DB::table('product')->where('codeorder', $value)->select('uname')->selectRaw('sum(total) as totalPriceIn')->first();
             Bill::where('Codeorder', $value)->update([
-                'PriceOut' => $priceOrder->total,
+                'PriceOut' => $priceOrder->totalPriceIn,
                 'uname' => $priceOrder->uname
             ]);
         }
-
-        foreach ($billcodes as $value) {
-            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->selectRaw('sum(price_in) as totalPriceIn')->first();
-            Bill::where('So_Hoadon', $value->Sohoadon)->update([
-                'PriceIn' => $sumPriceIn->totalPriceIn
-            ]);
-        }
-
         $So_Hoadon = $request->So_Hoadon;
         $Date_Create = $request->Date_Create;
         $Uname = $request->Uname;
 
         $bills = $bills = Bill::with('Order')->where('deleted_at',  null);
-
         if (!empty($So_Hoadon)) {
             $bills = $bills->where('So_Hoadon', 'like', '%' . $So_Hoadon);
         }
@@ -76,8 +67,7 @@ class BillService
             });
         }
 
-        $bills = $bills
-            ->select()->selectRaw('count(Id) as total')
+        $bills = $bills->select()->selectRaw('count(Id) as total')
             ->selectRaw('sum(PriceOut) as totalPriceOut')
             ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')->get();
 
@@ -85,62 +75,16 @@ class BillService
         foreach ($bills as $value) {
             $sumDebt += $value->PriceIn - $value->totalPriceOut;
         }
-
-        $bills = $bills
-            ->paginate(50);
+        foreach ($bills as $value) {
+            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->So_Hoadon)->where('uname', $value->uname)->selectRaw('sum(price_in) as totalPriceIn')->first();
+            $a = Bill::where('So_Hoadon', $value->So_Hoadon)->update([
+                'PriceIn' => $sumPriceIn->totalPriceIn
+            ]);
+        }
+        $bills = $bills->paginate(50);
         return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $Uname, 'Date_Create' => $Date_Create, 'sumDebt' => $sumDebt];
     }
 
-    // public function BillExportExcel(Request $request)
-    // {
-    //     $codeOrderByBill = Bill::select('Codeorder')->get()->toArray();
-    //     $billcodes = DB::table('quanlythe')->where('Sohoadon', '!=', null)->select('Sohoadon')->distinct()->get()->toArray();
-    //     foreach ($codeOrderByBill as  $value) {
-    //         $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
-    //         Bill::where('Codeorder', $value)->update([
-    //             'PriceOut' => $priceOrder->total,
-    //             'uname' => $priceOrder->uname
-    //         ]);
-    //     }
-
-    //     foreach ($billcodes as $value) {
-    //         $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->selectRaw('sum(price_in) as totalPriceIn')->first();
-    //         Bill::where('So_Hoadon', $value->Sohoadon)->update([
-    //             'PriceIn' => $sumPriceIn->totalPriceIn
-    //         ]);
-    //     }
-
-    //     $So_Hoadon = $request->So_Hoadon;
-    //     $Date_Create = $request->Date_Create;
-    //     $Uname = $request->Uname;
-
-    //     $bills = $bills = Bill::with('Order')->where('deleted_at',  null);
-
-    //     if (!empty($So_Hoadon)) {
-    //         $bills = $bills->where('So_Hoadon', 'like', '%' . $So_Hoadon);
-    //     }
-
-    //     if (!empty($Date_Create)) {
-    //         $bills = $bills->whereDate('Date_Create', $Date_Create);
-    //     }
-
-    //     if (!empty($Uname)) {
-    //         $bills = $bills->whereHas('Order', function ($query) use ($Uname) {
-    //             return $query->where('uname', $Uname);
-    //         });
-    //     }
-
-    //     $bills = $bills
-    //         ->select()->selectRaw('count(Id) as total')
-    //         ->selectRaw('sum(PriceOut) as totalPriceOut')
-    //         ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')->get();
-
-    //     $sumDebt = 0;
-    //     foreach ($bills as $value) {
-    //         $sumDebt += $value->PriceIn - $value->totalPriceOut;
-    //     }
-    //     return FacadesExcel::download(new BillExportExcel($bills), now() . '.xlsx');
-    // }
 
     public function getALlBillByUname(Request $request, $uname)
     {
@@ -201,24 +145,34 @@ class BillService
         $endDate2 = $date->addDays(1)->toDateString();
         $nowDate = now()->addDays(-2)->toDateString();
 
-        $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
+        $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard', 'listProduct.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
         $totalWeightReal = 0;
         $totalWeightKhoi = 0;
+        //tính khối và khối thực tế
         foreach ($bill as $value) {
-            $weightKhoi = $value->Product->ProductStandard->length * $value->Product->ProductStandard->width * $value->Product->ProductStandard->height / 1000000;
-            $value->setAttribute('totalWeightkhoi', $weightKhoi);
-            $totalWeightKhoi += $weightKhoi * $value->Product->quantity;
-            $totalWeightReal += $value->Product->ProductStandard->weight * $value->Product->quantity;
+            foreach ($value->listProduct as $item) {
+                $weightKhoi = $item->ProductStandard->length * $item->ProductStandard->width * $item->ProductStandard->height / 1000000;
+                $item->setAttribute('totalWeightkhoi', $weightKhoi);
+                $totalWeightKhoi += $weightKhoi * $item->quantity;
+                $totalWeightReal += $item->ProductStandard->weight * $item->quantity;
+            }
         }
-
         $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->where('uname', $bill->first()->uname)->get();
         $codeorders = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->get('Codeorder')->toArray();
         $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
-
         $deDebt = 0;
+        $money = 0;
         $moneyNeedToPay = 0;
-
+        foreach ($bill as $item) {
+            $listProduct  = Product::where('codeorder', $item->Codeorder)->get();
+            foreach ($listProduct as $item) {
+                $money +=  $item->total;
+            }
+        }
+        //tính lại số dư nếu có tiền hoàn trả
+        $listRefund = refundCustomerModel::where('billcode', $billcode)->where('uname', $bill->first()->uname)->orderBy('date_in','DESC')->get();
+        $moneyRefund = $listRefund->sum('money');
         if ($startDate && $endDate) {
             $customer = $customer->whereBetween('date_payment', [$startDate, $endDate2]);
             $checkScroll = 1;
@@ -253,7 +207,6 @@ class BillService
         }
         $hien_mau = PaymentCustomer::where('uname', $bill->first()->uname)->where('Sohoadon', $billcode)->orderBy('dateget', 'ASC')->get();
         $priceIn = 0;
-
         foreach ($hien_mau as $value) {
             $value->setAttribute('priceIn', $priceIn += $value->price_in);
         }
@@ -274,7 +227,7 @@ class BillService
             $hien_mau = $hien_mau->groupBy('dateget')->paginate(10);
             return [
                 'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'priceIn' => $priceIn, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
-                'moneyNeedToPay' => $moneyNeedToPay, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi
+                'moneyNeedToPay' => $money, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi, 'moneyRefund' => $moneyRefund,'listRefund'=>$listRefund
             ];
         }
     }
@@ -305,7 +258,8 @@ class BillService
                 'Note' => 'Di chuyển từ số hoá đơn ' . $currentSoHoadon . ' đến ' . $request->sohoadon,
                 'DateAct' => now()
             ]);
-            if ($checkBill != null) {
+            // return response()->json($checkBill);
+            if (!empty($checkBill)) {
                 return 1;
             } else {
                 return 3;
@@ -354,15 +308,35 @@ class BillService
 
     public function createNew(CreateBillRequest $request)
     {
+        
         $check = Order::where('codeorder', $request->Codeorder)->first();
         if ($check === null) {
             $request->flash('request', $request->all());
             Session()->flash('Codeorder', 'Codeorder wrong!');
         } else {
+            $unames = Str::of($request->Codeorder)->explode('-');  
+            $checkLocked = Bill::where('So_Hoadon',$request->So_Hoadon)->where('locked','!=',0)->get()->toArray();
+            if(!empty($checkLocked)){
+                toastr()->warning('Hóa đơn đã khóa sổ','Notification',['timeOut'=>1100]);
+                return back();
+            } 
+            $checkbill =Bill::where('So_Hoadon',$request->So_Hoadon)->first();
+            if(!empty($checkbill)){
+                if($unames[1]!=$checkbill->uname){
+                    toastr()->warning('Không được khác uname trong cùng hóa đơn','Notification',['timeOut'=>1100]);
+                    return back();
+                }
+            }
+            $listProduct = Product::where('codeorder', $request->Codeorder)->get();
+            $sumTotal = 0;
+            foreach ($listProduct as $item) {
+                $sumTotal += $item->total;
+            }
             $bill = Bill::create([
                 'So_Hoadon' => $request->So_Hoadon,
                 'Codeorder' => $request->Codeorder,
-                'note' => $request->note
+                'note' => $request->note,
+                'PriceOut' => $sumTotal
             ]);
             $codeorder = Order::where('codeorder', $request->Codeorder)->with('Product')->first();
             Inventory::create([
@@ -387,7 +361,6 @@ class BillService
                 'note' => 'Tạo hoá đơn',
                 'DateAct' => now()
             ]);
-
             toastr()->success('Create successfully!', 'Notifycation');
         }
         return back();
@@ -429,7 +402,9 @@ class BillService
 
     public function deleteCoceorderInBill($id)
     {
+
         $codeorder = Bill::where('Id', $id)->with('Order.Product')->first();
+        // dd($codeorder);
         $billcode = $codeorder->So_Hoadon;
         $log = LogAccountant::create([
             'jan_code' => $codeorder->Order->Product->jan_code,

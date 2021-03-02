@@ -12,6 +12,7 @@ use App\Http\Controllers\Orders\CustomerController;
 use App\Http\Controllers\Orders\LedgerController;
 use App\Http\Controllers\Orders\PaymentCustomerController;
 use App\Http\Controllers\Orders\refundCustomerController;
+use App\Http\Controllers\Orders\returnProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Suppliers\InvoiceController;
 use App\Http\Controllers\Suppliers\PaymentSupplierController;
@@ -118,6 +119,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::post('/', [BillController::class, 'create'])->name('create');
             Route::put('/update-fee/{codeorder}', [BillController::class, 'updateFee'])->name('updateFee');
             Route::put('/update-tracking/{codeorder}', [BillController::class, 'updateShipId'])->name('updateShipId');
+            Route::put('/update-lock/{billcode}',[BillController::class,'updateLock'])->name('updateLock');
             Route::post('/comment/{codeorder}', [BillController::class, 'comment'])->name('comment');
         });
         Route::get('/order', function () {
@@ -151,7 +153,10 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::get('/share-money/{deposit}', [PaymentCustomerController::class, 'shareMoney'])->name('shareMoney');
             Route::get('export-excel',[PaymentCustomerController::class,'exportExcel'])->name('exportExcel');
         });
-
+        Route::prefix('return-product')->name('return-product.')->group(function (){
+            Route::get('/',[returnProductController::class,'index'])->name('index');
+            Route::post('/',[returnProductController::class,'create'])->name('create');
+        });
         Route::get('/customer-debt', [CustomerController::class, 'index'])->name('customer-debt');
     });
 

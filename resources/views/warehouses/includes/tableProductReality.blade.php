@@ -70,7 +70,6 @@
         })
     }
     $('.modalImage').click(function (e) {
-        console.log(e);
         const img = $(this).find('a').data('img');
         $.ajax({
             headers: {

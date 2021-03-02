@@ -58,7 +58,13 @@
                                 toán</a></li>
                         <li><a class="dropdown-item" href="{{ route('orders.customer-debt') }}">Công nợ khách hàng</a>
                         </li>
-                        <li><a class="dropdown-item" href="{{ route('orders.refund-customer.index') }}">Hoàn tiền khách
+                        <li>
+                            <a class="dropdown-item" href="{{ route('orders.refund-customer.index') }}">Hoàn tiền
+                                khách
+                                hàng</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('orders.return-product.index') }}">Khách trả
                                 hàng</a>
                         </li>
                     </ul>
@@ -73,8 +79,10 @@
                     <ul class="dropdown-menu departments" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="{{ route('warehouses.imported.index') }}">Hàng Nhập </a>
                         </li>
-                        <li><a class="dropdown-item" href="{{ route('warehouses.exported.index') }}">Hàng xuất</a></li>
-                        <li><a class="dropdown-item" href="{{ route('warehouses.inventory.index') }}">Tồn kho</a></li>
+                        <li><a class="dropdown-item" href="{{ route('warehouses.exported.index') }}">Hàng xuất</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('warehouses.inventory.index') }}">Tồn kho</a>
+                        </li>
                         <li><a class="dropdown-item" href="{{ route('warehouses.productReality.index') }}">Hàng thực
                                 tế</a></li>
 

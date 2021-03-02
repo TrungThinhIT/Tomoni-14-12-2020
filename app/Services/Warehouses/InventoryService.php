@@ -96,47 +96,13 @@ class InventoryService
 
         $inventories = $inventories->groupBy('Jancode');
 
-        $inventories = $inventories->sortBy('Dateinsert')->paginate(10);
+        $inventories = $inventories->sortBy('Dateinsert')->paginate(50);
         return ['inventories' => $inventories, 'jan_code' => $janCode, 'status' => $status];
     }
 
     public function detailInventory(Request $request, $jancode)
     {
         $status = $request->status;
-        // $imported = InvoiceDetailSupplier::where('Jancode', $jancode)->orderBy('Dateinsert', 'DESC')->get();
-
-        // $exported = Bill::where('deleted_at', null)->select()->distinct()->join(
-        //     'product',
-        //     'product.codeorder',
-        //     '=',
-        //     'accoutant_order.Codeorder'
-        // )->where('jan_code', $jancode);
-        // if($request->status == 1){
-        //     $exported = $exported->whereHas('Product.Inventory', function ($query) {
-        //         return $query->where('action', 'Xuất order');                
-        //     });
-        // }
-        // if($request->status == 2){
-        //     $exported = $exported->whereHas('Product.Inventory', function ($query) {
-        //         return $query->where('action', 'Trả lại hàng mua');                
-        //     });
-        // }
-        // $exported = $exported->get();
-        // foreach ($exported as $item) {
-        //     $item->setAttribute('Dateinsert', $item->Date_Create);
-        //     $item->setAttribute('Jancode', $item->jan_code);
-        // }
-        // $inventory = collect($imported)->merge($exported)->sortBy('Dateinsert');
-
-        // $debtQuantity = 0;
-
-        // foreach ($inventory as $item) {
-        //     if ($item->jan_code) {
-        //         $item->setAttribute('debtQuantity', $debtQuantity -= $item->quantity);
-        //     } else {
-        //         $item->setAttribute('debtQuantity', $debtQuantity += $item->Quantity);
-        //     }
-        // }
         $inventories = Inventory::where('jancode', $jancode)->get();
         if($status == 1){
             $inventories = $inventories->where('action', 'Xuất order');

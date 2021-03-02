@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Orders;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Orders\CreateBillRequest;
+use App\Models\Bill;
+use App\Models\Order;
 use App\Services\Orders\BillService;
 use Illuminate\Http\Request;
 
@@ -16,11 +18,13 @@ class BillController extends Controller
         $this->billService = $billService;
     }
 
-    public function searchBillCode(Request $request){
+    public function searchBillCode(Request $request)
+    {
         return $this->billService->searchBillCode($request);
     }
 
-    public function indexALl(Request $request){
+    public function indexALl(Request $request)
+    {
         $data = $this->billService->getALl($request);
         return view('orders.bill', compact('data'));
     }
@@ -29,62 +33,87 @@ class BillController extends Controller
     //     return $this->billService->BillExportExcel($request);
     // }
 
-    public function indexAllByUname(Request $request, $uname){
+    public function indexAllByUname(Request $request, $uname)
+    {
         $data =  $this->billService->getALlBillByUname($request, $uname);
         return view('orders.billByUname', compact('data'));
     }
 
-    public function getBillById(Request $request, $billcode){
+    public function getBillById(Request $request, $billcode)
+    {
         $data = $this->billService->getBillById($request, $billcode);
         return view('orders.order', compact('data'));
-    }   
-    
-    public function exportBillById(Request $request, $billcode){
+    }
+
+    public function exportBillById(Request $request, $billcode)
+    {
         return $this->billService->getBillById($request, $billcode);
     }
 
-    public function getTranfer(Request $request, $codeorder){
+    public function getTranfer(Request $request, $codeorder)
+    {
         return $this->billService->getTranfer($request, $codeorder);
     }
 
-    public function putTranfer(Request $request, $codeorder){
+    public function putTranfer(Request $request, $codeorder)
+    {
         return $this->billService->putTranfer($request, $codeorder);
     }
 
-    public function getPaymentDetail(Request $request, $billcode){
+    public function getPaymentDetail(Request $request, $billcode)
+    {
         return $this->billService->getPaymentByBillCodeAndDate($request, $billcode);
     }
 
-    public function getBillDetailById($codeorder){
+    public function getBillDetailById($codeorder)
+    {
         $billDetail = $this->billService->getBillDetailById($codeorder);
         return view('orders.order_detail', compact('billDetail'));
     }
 
-    public function UpdateBillDetailById(Request $request, $codeorder){
+    public function UpdateBillDetailById(Request $request, $codeorder)
+    {
         return $this->billService->UpdateBillDetailById($request, $codeorder);
     }
 
-    public function create(CreateBillRequest $request){
+    public function create(CreateBillRequest $request)
+    {
         return $this->billService->createNew($request);
     }
 
-    public function updateFee(Request $request, $codeorder){
+    public function updateFee(Request $request, $codeorder)
+    {
         return $this->billService->updateFee($request, $codeorder);
     }
 
-    public function updateShipId(Request $request, $codeorder){
+    public function updateShipId(Request $request, $codeorder)
+    {
         return $this->billService->updateShipId($request, $codeorder);
     }
 
-    public function loadLog($codeorder){
+    public function loadLog($codeorder)
+    {
         return $this->billService->loadLog($codeorder);
     }
 
-    public function comment(Request $request, $codeorder){
+    public function comment(Request $request, $codeorder)
+    {
         return $this->billService->createComment($request, $codeorder);
     }
 
-    public function deleteBillCode($id){
+    public function deleteBillCode($id)
+    {
         return $this->billService->deleteCoceorderInBill($id);
+    }
+    public function updateLock($billcode)
+    {
+        //update lock accountant_order
+        $updateLock = Bill::where([['So_Hoadon', $billcode], ['deleted_at', null]])->update(['locked' => 1]);
+        //update lock oder
+        $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->get();
+        foreach ($bill as $item) {
+            Order::where('codeorder', $item->Codeorder)->update(['locked' => 1]);
+        }
+        return response()->json($updateLock);
     }
 }
