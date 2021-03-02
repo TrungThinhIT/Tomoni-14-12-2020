@@ -161,7 +161,6 @@ class BillService
         $codeorders = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->get('Codeorder')->toArray();
         $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
-
         $deDebt = 0;
         $money = 0;
         $moneyNeedToPay = 0;
@@ -174,7 +173,6 @@ class BillService
         //tính lại số dư nếu có tiền hoàn trả
         $listRefund = refundCustomerModel::where('billcode', $billcode)->where('uname', $bill->first()->uname)->orderBy('date_in','DESC')->get();
         $moneyRefund = $listRefund->sum('money');
-
         if ($startDate && $endDate) {
             $customer = $customer->whereBetween('date_payment', [$startDate, $endDate2]);
             $checkScroll = 1;
@@ -316,7 +314,12 @@ class BillService
             $request->flash('request', $request->all());
             Session()->flash('Codeorder', 'Codeorder wrong!');
         } else {
-            $unames = Str::of($request->Codeorder)->explode('-');   
+            $unames = Str::of($request->Codeorder)->explode('-');  
+            $checkLocked = Bill::where('So_Hoadon',$request->So_Hoadon)->where('locked','!=',0)->get()->toArray();
+            if(!empty($checkLocked)){
+                toastr()->warning('Hóa đơn đã khóa sổ','Notification',['timeOut'=>1100]);
+                return back();
+            } 
             $checkbill =Bill::where('So_Hoadon',$request->So_Hoadon)->first();
             if(!empty($checkbill)){
                 if($unames[1]!=$checkbill->uname){
