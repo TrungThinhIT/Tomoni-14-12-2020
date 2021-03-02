@@ -27,6 +27,7 @@ class refundCustomerRequest extends FormRequest
             'depositId'=>'required',
             'dateInprice'=>'required|date',
             'priceIn'=>'required|',
+            'uname'=>'required|exists:users,uname'
         ];
     }
 }

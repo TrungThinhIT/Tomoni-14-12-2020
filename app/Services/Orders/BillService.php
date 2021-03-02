@@ -48,7 +48,6 @@ class BillService
                 'uname' => $priceOrder->uname
             ]);
         }
-
         // foreach ($billcodes as $value) {
         //     // dd((DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon))->get());
         //     $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->selectRaw('sum(price_in) as totalPriceIn')->first();
@@ -85,11 +84,12 @@ class BillService
             $sumDebt += $value->PriceIn - $value->totalPriceOut;
         }
         foreach ($bills as $value) {
-            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->So_Hoadon)->where('uname',$value->uname)->selectRaw('sum(price_in) as totalPriceIn')->first();
-            Bill::where('So_Hoadon', $value->So_Hoadon)->update([
+            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->So_Hoadon)->where('uname', $value->uname)->selectRaw('sum(price_in) as totalPriceIn')->first();
+            $a = Bill::where('So_Hoadon', $value->So_Hoadon)->update([
                 'PriceIn' => $sumPriceIn->totalPriceIn
             ]);
         }
+        Bill::get()->fresh();
         $bills = $bills->paginate(50);
         return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $Uname, 'Date_Create' => $Date_Create, 'sumDebt' => $sumDebt];
     }
@@ -273,7 +273,8 @@ class BillService
                 'Note' => 'Di chuyển từ số hoá đơn ' . $currentSoHoadon . ' đến ' . $request->sohoadon,
                 'DateAct' => now()
             ]);
-            if ($checkBill != null) {
+            // return response()->json($checkBill);
+            if (!empty($checkBill)) {
                 return 1;
             } else {
                 return 3;

@@ -80,6 +80,7 @@ function tranferCodeorder(){
                                             sohoadon: billSelect
                                         },
                                         success: function(response) {
+                                            console.log(response);
                                             if(response == 1){
                                                 alert('Chúc mừng bạn di chuyển thành công')
                                                 location.reload();
