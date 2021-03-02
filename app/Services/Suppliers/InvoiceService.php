@@ -14,6 +14,7 @@ use App\Models\ProductStandard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Inventory;
 
 class InvoiceService
 {
@@ -230,6 +231,15 @@ class InvoiceService
             'Codeorder' => $request->CodeorderItem
         ]);
 
+        Inventory::create([
+            'jancode' => $request->Jancode,
+            'codeorder' => $request->CodeorderItem,
+            'uname' => Auth::user()->uname,
+            'action' => 'Thêm mới hoá đơn',
+            'quantityUpdate' => $request->quantity,
+            'created_at' => now()
+        ]);
+
         if ($invoiceDetail) {
             return 1;
         }
@@ -298,6 +308,16 @@ class InvoiceService
                 'Jancode' => $request->Jancode,
                 'Codeorder' => $request->codeorder
             ]);
+
+            Inventory::create([
+                'jancode' => $request->Jancode,
+                'codeorder' => $request->codeorder,
+                'uname' => Auth::user()->uname,
+                'action' => $currentInvoiceDetail->quantity <= $request->quantity ? 'Xuất order' : 'Trả lại hàng mua',
+                'quantityUpdate' => $request->quantity,
+                'created_at' => now()
+            ]);
+
             $currentTotalPrice = $totalPriceInvoiceDetails + ($request->quantity * $request->price);
             return [1, $currentTotalPrice];
         } else {
