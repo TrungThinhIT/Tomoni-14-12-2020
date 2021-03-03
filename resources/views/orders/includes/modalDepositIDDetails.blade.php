@@ -32,7 +32,7 @@
                 <td>{{$item->note}}</td>
                 <td>{{($item->dateget)}}</td>
                 <td>{{($item->date_insert)}}</td>
-                <td>{{($item->price_in)}}</td>
+                <td>{{number_format($item->price_in)}}</td>
                 <td> <input type="text" class="form-control" style="width: auto" id="shd{{$item->Id}}"
                         value="{{$item->Sohoadon}}" onchange="update{{$item->Id}}()" placeholder="So hoa don"
                         list="listbillcode" onkeyup='searchMaHoaDon(this)'>

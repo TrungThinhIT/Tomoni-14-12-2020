@@ -73,21 +73,8 @@
                                     <td>{{number_format($item->PriceIn, 0)}}</td>
                                     <td>{{number_format($item->PriceOut, 0)}}</td>
                                     <td>{{number_format($item->Pricedelb, 0)}}</td>
-                                    {{-- <td>
-                                        <a href="#" data-id="{{$item->Id}}" class="view_transaction" type="button"><i class="fas fa-pen-alt fa-2x"></i></a>
-                                        |
-                                        <a href="#" onclick="functionDelete{{$item->Id}}()" type="button"><i class="far fa-trash-alt fa-2x" style="color: red"></i></a>
-                                    </td> --}}
+                               
                                   </tr>
-                                  {{-- <script>
-                                      var Id = {{$item->Id}};
-                                    function functionDelete{{$item->Id}}() {
-                                      var txt;
-                                      if (confirm("Press a button delete!")) {
-                                        window.location.href= 'ledgers/delete' +'/' + {{$item->Id}};
-                                      }
-                                    }
-                                    </script> --}}
                                    @php $count ++; @endphp
                                 @endforeach
                               </tbody>

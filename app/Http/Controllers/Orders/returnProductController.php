@@ -15,7 +15,8 @@ class returnProductController extends Controller
     //
     public function index()
     {
-        return view('orders.returnProduct');
+        $data = returnProductModel::paginate(50);
+        return view('orders.returnProduct', compact('data'));
     }
     public function create(returnProductRequest $request)
     {
@@ -23,14 +24,15 @@ class returnProductController extends Controller
             'jancode' => $request->Jancode,
             'price' => $request->price,
             'quantity' => $request->Quantity,
-            'uname' => $request->uname
+            'uname' => $request->uname,
+            'codeorder' => $request->CodeOrder
         ]);
         if ($check) {
             Inventory::create([
                 'jancode' => $request->Jancode,
                 'codeorder' => $request->CodeOrder,
                 'uname' => $request->uname,
-                'action' => "Khách trả hàng",
+                'action' => "Trả lại hàng mua",
                 'quantityUpdate' => $request->Quantity,
                 'created_at' => now()
             ]);

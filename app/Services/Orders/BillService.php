@@ -77,7 +77,7 @@ class BillService
         }
         foreach ($bills as $value) {
             $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->So_Hoadon)->where('uname', $value->uname)->selectRaw('sum(price_in) as totalPriceIn')->first();
-            $a = Bill::where('So_Hoadon', $value->So_Hoadon)->update([
+             Bill::where('So_Hoadon', $value->So_Hoadon)->where('uname',$value->uname)->update([
                 'PriceIn' => $sumPriceIn->totalPriceIn
             ]);
         }
@@ -87,20 +87,26 @@ class BillService
 
 
     public function getALlBillByUname(Request $request, $uname)
-    {
+    {   
         $codeOrderByBill = Bill::select('Codeorder')->get()->toArray();
         $billcodes = DB::table('quanlythe')->where('Sohoadon', '!=', null)->select('Sohoadon')->distinct()->get()->toArray();
+        
         foreach ($codeOrderByBill as  $value) {
-            $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
+            $priceO = 0;
+            $priceOrder = DB::table('product')->where('codeorder', $value)->get();
+            foreach($priceOrder as $item){
+                $priceO +=$item->total;
+                $uname2 = $item->uname;
+            }
             Bill::where('Codeorder', $value)->update([
-                'PriceOut' => $priceOrder->total,
-                'uname' => $priceOrder->uname
+                'PriceOut' => $priceO,
+                'uname' => $uname2
             ]);
         }
 
         foreach ($billcodes as $value) {
-            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->selectRaw('sum(price_in) as totalPriceIn')->first();
-            Bill::where('So_Hoadon', $value->Sohoadon)->update([
+            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->where('uname',$uname)->selectRaw('sum(price_in) as totalPriceIn')->first();
+            Bill::where('So_Hoadon', $value->Sohoadon)->where('uname',$uname)->update([
                 'PriceIn' => $sumPriceIn->totalPriceIn
             ]);
         }
@@ -120,7 +126,6 @@ class BillService
         if (!empty($Date_Create)) {
             $bills = $bills->whereDate('Date_Create', $Date_Create);
         }
-
         $bills = $bills->where('deleted_at', null)
             ->select()->selectRaw('count(Id) as total')
             ->selectRaw('sum(PriceOut) as totalPriceOut')
@@ -210,7 +215,6 @@ class BillService
         foreach ($hien_mau as $value) {
             $value->setAttribute('priceIn', $priceIn += $value->price_in);
         }
-
         $hien_mau = $hien_mau->sortByDesc('dateget');
         $customer = $customer->sortByDesc('dateget');
         // dd($customer);

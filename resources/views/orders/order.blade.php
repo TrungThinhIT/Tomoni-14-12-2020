@@ -222,10 +222,10 @@
                                 @php
                                     $count = 1;
                                 @endphp
-
                                 @foreach ($data['hien_mau'] as $item)
                                     @php
                                         $allPriceIn = 0;
+                                        $priceDebt = 0;
                                     @endphp
                                     <tr>
                                         <td>{{ $data['hien_mau']->perPage() * ($data['hien_mau']->currentPage() - 1) + $count }}
@@ -256,16 +256,14 @@
                                         </td>
                                         <td>
                                             @if (count($item) >= 2)
-                                                @php
-                                                    $index = count($item) - 1;
-                                                @endphp
-                                                {{ number_format($item[$index]->priceIn, 0) }}
+                                                {{ number_format($item->max('priceIn'), 0) }}
                                             @else
                                                 {{ number_format($item[0]->priceIn, 0) }}
                                             @endif
                                         </td>
                                     </tr>
-                                    @php $count++; @endphp
+                                    @php $count++;
+                                    @endphp
                                 @endforeach
                             </tbody>
                     </div>

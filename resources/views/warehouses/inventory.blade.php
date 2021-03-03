@@ -64,7 +64,6 @@
                             <tbody id="myTable">
                                 @php $count = 1; @endphp
                                 @foreach ($data['inventories'] as $item)
-                                {{-- {{dd($item)}} --}}
                                 <tr id="{{$item[0]->Jancode}}" @if ($item[0]->weight <= 0 || $item[0]->width <= 0 || $item[0]->length <= 0 || $item[0]->height <= 0)
                                     class="table-danger"
                                 @endif>
@@ -72,8 +71,9 @@
                                     <td data-code="{{$item[0]->Jancode}}" class="view_transaction">{{$item[0]->Jancode}}</td>
                                     <td>{{$item[0]->name}}</td>
                                     <td>@if ($item[0]->name_2)
-                                        {{$item[0]->totalQuantity}}
-                                        @endif</td>
+                                            {{$item[0]->totalQuantity}}
+                                        @endif
+                                    </td>
                                         <td>@if (count($item) > 1)
                                             {{$item[1]->totalQuantity}}
                                             @else
@@ -83,9 +83,9 @@
                                                 @endif
                                             @endif</td>
 
-                                            <td id="totalQuantity_{{$item[0]->Jancode}}">
-                                                {{$item[0]->TotalQuantity}}
-                                                </td>
+                                        <td id="totalQuantity_{{$item[0]->Jancode}}">
+                                            {{$item[0]->TotalQuantity}}
+                                        </td>
                                     <td id="weight_{{$item[0]->Jancode}}">@if ($item[0]->weight)
                                         {{{number_format($item[0]->weight * $item[0]->TotalQuantity, 2)}}} @else 0
                                     @endif kg</td>

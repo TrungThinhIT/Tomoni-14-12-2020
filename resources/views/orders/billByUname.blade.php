@@ -33,22 +33,6 @@
                                         <div >
                                             <input class="form-control" type="date" value="{{$data['Date_Create']}}" name="Date_Create" id="Date_Create">
                                         </div>
-                                        {{-- <input
-                                            type="text"
-                                            class="form-control ml-2"
-                                            value="{{$data['PriceIn']}}"
-                                            name="priceIn"
-                                            id="priceIn"
-                                            placeholder="Nhập price in"
-                                            style="width: 11%;"/>
-                                        <input
-                                            type="text"
-                                            class="form-control ml-2"
-                                            value="{{$data['PriceOut']}}"
-                                            name="priceOut"
-                                            id="priceOut"
-                                            placeholder="Nhập price out"
-                                            style="width: 11%;"/> --}}
                                             <div>
                                                 <button type="button" onclick="resetFormSearch()" class="btn btn-info ml-2" style="margin-left: 2%;">Reset</button>
                                                 <script>

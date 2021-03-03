@@ -69,7 +69,7 @@ class PaymentCustomerController extends Controller
     public function addUnames(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "deposit" => "unique:quanlythe,depositID",
+            "deposit" => "required",
             "getDate" => "required|date",
             "uname.*" => "exists:users,uname",
         ]);
@@ -78,6 +78,7 @@ class PaymentCustomerController extends Controller
             $er = $validator->errors();
             return response()->json([$er]);
         }
+        PaymentCustomer::where('depositID', $request->deposit)->delete();
         for ($i = 0; $i < count($request->uname); $i++) {
             $create = PaymentCustomer::create([
                 'uname' =>   $request->uname[$i],

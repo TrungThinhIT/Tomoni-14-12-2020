@@ -9,6 +9,7 @@ use App\Models\Inventory;
 use App\Models\NoteWarehouse;
 use App\Models\Product;
 use App\Models\ProductStandard;
+use App\Models\returnProductModel;
 use Illuminate\Support\Facades\Auth;
 
 class InventoryService
@@ -44,12 +45,10 @@ class InventoryService
             '=',
             'product.jan_code',
         );
-
         $exporteds = $exporteds->select('product.quantity')->select('product.item_in_box')->selectRaw('product_standard.name')
             ->selectRaw('product_standard.weight')->selectRaw('product_standard.length')->selectRaw('product_standard.width')->selectRaw('product_standard.height')
             ->selectRaw('product.jan_code')->selectRaw('sum(quantity) as totalQuantity')->selectRaw('sum(product.item_in_box) as itemInBox')
             ->groupBy('product.jan_code')->get();
-
         if ($janCode) {
             $exporteds = $exporteds->where('jan_code', $janCode);
         }
@@ -58,14 +57,13 @@ class InventoryService
             $value->setAttribute('Jancode', $value->jan_code);
         }
         $inventories = collect($importeds)->merge($exporteds)->groupBy('Jancode');
-
         foreach ($inventories as $value) {
-            if (count($value) > 1) {
-                $TotalQuantity = $value[0]->totalQuantity - $value[1]->totalQuantity;
-                $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
-            } else {
-                $value[0]->setAttribute('TotalQuantity', ($value[0]->totalQuantity));
-            }
+            // if (count($value) > 1) {
+            //     $TotalQuantity = $value[0]->totalQuantity - $value[1]->totalQuantity;
+            //     $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
+            // } else {
+            //     $value[0]->setAttribute('TotalQuantity', ($value[0]->totalQuantity));
+            // }
             if (count($value) > 1) {
                 $TotalQuantity = $value[0]->totalQuantity - $value[1]->totalQuantity;
                 $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
@@ -74,7 +72,8 @@ class InventoryService
                     $TotalQuantity = $value[0]->totalQuantity;
                     $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
                 } else {
-                    $TotalQuantity =  - ($value[0]->totalQuantity);
+                    $returnProduct = returnProductModel::where('jancode',$value[0]->jan_code)->selectRaw('sum(quantity) as totalQuantity')->first();
+                    $TotalQuantity =  - ($value[0]->totalQuantity) + $returnProduct->totalQuantity;
                     $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
                 }
             }

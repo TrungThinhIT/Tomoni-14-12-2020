@@ -26,8 +26,18 @@ class LedgerService
         $PriceOutSearch = $request->PriceOut;
         $PricedelbSearch = $request->Pricedelb;
         $users = Ledger::get()->toArray();
-
-        foreach($users as $item){
+        //update lại bills
+        $bills = $bills = Bill::with('Order')->where('deleted_at',  null)->select()->selectRaw('count(Id) as total')
+            ->selectRaw('sum(PriceOut) as totalPriceOut')
+            ->groupBy('So_Hoadon')->orderBy('Date_Create', 'DESC')->get();
+        foreach ($bills as $value) {
+            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->So_Hoadon)->where('uname', $value->uname)->selectRaw('sum(price_in) as totalPriceIn')->first();
+            Bill::where('So_Hoadon', $value->So_Hoadon)->where('uname', $value->uname)->update([
+                'PriceIn' => $sumPriceIn->totalPriceIn
+            ]);
+        }
+        //
+        foreach ($users as $item) {
             $RawPriceIn = Bill::where('uname', $item['Uname'])->where('deleted_at', null)->select('PriceIn')->distinct()->get();
             $priceIn = 0;
             foreach ($RawPriceIn as $value) {
@@ -42,27 +52,27 @@ class LedgerService
             ]);
         }
 
-       $ledgers = Ledger::select();
+        $ledgers = Ledger::select();
 
-       if($Uname){
-          $ledgers =  $ledgers->where('Uname', $Uname);
-       }
+        if ($Uname) {
+            $ledgers =  $ledgers->where('Uname', $Uname);
+        }
 
-       if($PriceInSearch){
-           $ledgers = $ledgers->where('PriceIn', $PriceInSearch);
-       }
-       
-       if($PriceOutSearch){
-           $ledgers = $ledgers->where('PriceOut', '=', $PriceOutSearch);
-       }
+        if ($PriceInSearch) {
+            $ledgers = $ledgers->where('PriceIn', $PriceInSearch);
+        }
 
-       if($PricedelbSearch){
-           $ledgers = $ledgers->where('Pricedelb', $PricedelbSearch);
-       }
-       $sumDebt =0;
-       foreach($ledgers->get() as $value){
-           $sumDebt += $value->Pricedelb;
-       }
+        if ($PriceOutSearch) {
+            $ledgers = $ledgers->where('PriceOut', '=', $PriceOutSearch);
+        }
+
+        if ($PricedelbSearch) {
+            $ledgers = $ledgers->where('Pricedelb', $PricedelbSearch);
+        }
+        $sumDebt = 0;
+        foreach ($ledgers->get() as $value) {
+            $sumDebt += $value->Pricedelb;
+        }
         $ledgers = $ledgers->orderBy('Id', 'DESC')->paginate(50);
 
         $data = ['Uname' => $Uname, 'PriceIn' => $PriceInSearch, 'PriceOut' => $PriceOutSearch, 'Pricedelb' => $PricedelbSearch, 'ledgers' => $ledgers, 'sumDebt' => $sumDebt];
@@ -93,11 +103,12 @@ class LedgerService
             'PriceOut' => $request->ePriceOut,
             'Pricedelb' => $request->ePricedelb,
         ]);
-            toastr()->success('Update successfully!', 'Notifycation');
-            return 1;
+        toastr()->success('Update successfully!', 'Notifycation');
+        return 1;
     }
 
-    public function deleteById($Id){
+    public function deleteById($Id)
+    {
         Ledger::where('ID', $Id)->delete();
         toastr()->info('Delete successfully!', 'Notifycation');
         return back();
