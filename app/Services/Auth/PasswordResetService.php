@@ -8,8 +8,8 @@ use App\Models\User;
 use App\Models\PasswordReset;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class PasswordResetService
 {
@@ -78,9 +78,10 @@ class PasswordResetService
 
         if ($checkToken) {
             $findEmail = PasswordReset::where('token', $token)->get()->first();
-            $user = User::where('email', $findEmail->email)->get()->first();
-            $user->password = Hash::make($rePassword);
-            $user->save();
+            $user = User::where('email', $findEmail->email)->first();
+            User::where('email', $findEmail->email)->update([
+                'password' => md5($rePassword)
+             ]);
             if ($user) {
                 Auth::login($user);
                 PasswordReset::where('token', $token)->delete();
