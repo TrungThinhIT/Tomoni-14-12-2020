@@ -167,14 +167,11 @@ class InvoiceService
         }
     }
 
-    // toastr()->success('Delete success fully!', 'Notifycation');
 
     public function searchCodeOrder(Request $request)
     {
-        // $codeOrders = DB::table('oder')->where('codeorder', 'like', '%' . $request->search_ordercode . "%")->orderBy('codeorder', 'DESC')->limit(10)->orderBy('dateget', 'DESC')->get();
         $codeOrders = DB::table('oder')->where('codeorder', 'like', '%' . $request->search_ordercode . "%")->limit(10)->orderBy('dateget', 'DESC')->get();
 
-        // dd($codeOrders);
         return response()->json($codeOrders);
     }
 
@@ -236,7 +233,7 @@ class InvoiceService
             'codeorder' => $request->CodeorderItem,
             'uname' => Auth::user()->uname,
             'action' => 'Thêm mới hoá đơn',
-            'quantityUpdate' => $request->quantity,
+            'quantityUpdate' => $request->Quantity,
             'created_at' => now()
         ]);
 

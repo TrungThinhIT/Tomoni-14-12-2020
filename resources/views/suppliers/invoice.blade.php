@@ -341,7 +341,6 @@
        a.attr("id","color")
     }
     })
-    console.log(td)
     $(document).ready(function () {
         $('.view_transaction').click(function () {
             const id = $(this).data('id');
@@ -409,7 +408,6 @@
                     })
                 },
                 success: function (response) {
-                    console.log(response)
                     document.getElementById("hiddenAll").style.display="block";
                     if (response == 1) {
                         $("#hiddenAll").html(
@@ -532,6 +530,7 @@
                     PriceTax: PriceTax
                 },
                 success: function (response) {
+                    return
                     if (response == 1) {
                         alert('Chúc mừng bạn nhập thành công')
                         location.reload();

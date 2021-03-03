@@ -45,10 +45,12 @@ class InventoryService
             '=',
             'product.jan_code',
         );
+
         $exporteds = $exporteds->select('product.quantity')->select('product.item_in_box')->selectRaw('product_standard.name')
             ->selectRaw('product_standard.weight')->selectRaw('product_standard.length')->selectRaw('product_standard.width')->selectRaw('product_standard.height')
             ->selectRaw('product.jan_code')->selectRaw('sum(quantity) as totalQuantity')->selectRaw('sum(product.item_in_box) as itemInBox')
             ->groupBy('product.jan_code')->get();
+
         if ($janCode) {
             $exporteds = $exporteds->where('jan_code', $janCode);
         }
@@ -56,23 +58,29 @@ class InventoryService
         foreach ($exporteds as $value) {
             $value->setAttribute('Jancode', $value->jan_code);
         }
+
         $inventories = collect($importeds)->merge($exporteds)->groupBy('Jancode');
+
         foreach ($inventories as $value) {
             // if (count($value) > 1) {
-            //     $TotalQuantity = $value[0]->totalQuantity - $value[1]->totalQuantity;
+            //     $returnProduct = returnProductModel::where('jancode', $value[0]->jan_code)->selectRaw('sum(quantity) as totalQuantity')->first();
+            //     $TotalQuantity = $value[0]->totalQuantity - $value[1]->totalQuantity + $returnProduct->totalQuantity;
             //     $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
             // } else {
-            //     $value[0]->setAttribute('TotalQuantity', ($value[0]->totalQuantity));
+            //     $returnProduct = returnProductModel::where('jancode', $value[0]->jan_code)->selectRaw('sum(quantity) as totalQuantity')->first();
+            //     $value[0]->setAttribute('TotalQuantity', ($value[0]->totalQuantity + $returnProduct->totalQuantity));
             // }
             if (count($value) > 1) {
-                $TotalQuantity = $value[0]->totalQuantity - $value[1]->totalQuantity;
+                $returnProduct = returnProductModel::where('jancode', $value[0]->jan_code)->selectRaw('sum(quantity) as totalQuantity')->first();
+                $TotalQuantity = $value[0]->totalQuantity - $value[1]->totalQuantity + $returnProduct->totalQuantity;
                 $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
             } else {
                 if ($value[0]->name_2) {
-                    $TotalQuantity = $value[0]->totalQuantity;
+                    $returnProduct = returnProductModel::where('jancode', $value[0]->jan_code)->selectRaw('sum(quantity) as totalQuantity')->first();
+                    $TotalQuantity = $value[0]->totalQuantity + $returnProduct->totalQuantity;
                     $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
                 } else {
-                    $returnProduct = returnProductModel::where('jancode',$value[0]->jan_code)->selectRaw('sum(quantity) as totalQuantity')->first();
+                    $returnProduct = returnProductModel::where('jancode', $value[0]->jan_code)->selectRaw('sum(quantity) as totalQuantity')->first();
                     $TotalQuantity =  - ($value[0]->totalQuantity) + $returnProduct->totalQuantity;
                     $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
                 }
@@ -94,7 +102,7 @@ class InventoryService
         }
 
         $inventories = $inventories->groupBy('Jancode');
-// dd($inventories);
+        // dd($inventories);
         $inventories = $inventories->sortBy('Dateinsert')->paginate(50);
         return ['inventories' => $inventories, 'jan_code' => $janCode, 'status' => $status];
     }
@@ -103,28 +111,28 @@ class InventoryService
     {
         $status = $request->status;
         $inventories = Inventory::where('jancode', $jancode)->get();
-        if($status == 1){
+        if ($status == 1) {
             $inventories = $inventories->where('action', 'Xuất order');
         }
-        if($status == 2){            
+        if ($status == 2) {
             $inventories = $inventories->where('action', 'Trả lại hàng mua');
         }
         $inventories = collect($inventories)->groupBy('codeorder');
 
-            foreach($inventories as $value){
-                $i = 0; 
-                foreach($value->sortBy('created_at') as $item){
-                    if($item[0]){
-                        $item->setAttribute('debtQuantity', 0);
-                        $i = $item->quantityUpdate;
-                    }else{
-                        $item->setAttribute('debtQuantity', $item->quantityUpdate - $i);
-                        $i = $item->quantityUpdate;
-                    }
+        foreach ($inventories as $value) {
+            $i = 0;
+            foreach ($value->sortBy('created_at') as $item) {
+                if ($item[0]) {
+                    $item->setAttribute('debtQuantity', 0);
+                    $i = $item->quantityUpdate;
+                } else {
+                    $item->setAttribute('debtQuantity', $item->quantityUpdate - $i);
+                    $i = $item->quantityUpdate;
                 }
-                $value = $value->sortByDesc('created_at');
             }
-            $inventories = $inventories->values();
+            $value = $value->sortByDesc('created_at');
+        }
+        $inventories = $inventories->values();
         if ($request->ajax() || 'NULL') {
             $inventory = $inventories->paginate(1);
             return view('warehouses.includes.modalInventory', compact('inventory', 'jancode', 'status'));
