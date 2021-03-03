@@ -15,8 +15,14 @@ class LoginService
     public function doLogin(LoginRequest $request)
     {
         $remember = ($request->remember_me) ? true : false;
-        if (Auth::attempt((['uname' => $request->uname, 'password' => $request->password]), $remember)) {
-            $user = Auth::user();
+
+        $user = \App\Models\User::where([
+            'uname' => $request->uname,
+            'password' => md5($request->password)
+        ])->first();
+
+        if ($user) {
+            Auth::login($user, $remember);
             if($user->type != 2){
                 return redirect()->intended(route('customer.index'));
             }else{
