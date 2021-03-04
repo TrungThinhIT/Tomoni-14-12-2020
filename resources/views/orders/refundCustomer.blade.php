@@ -12,16 +12,8 @@
                         @csrf
                         <fieldset>
                             <div class="form-row" style="margin-left: 2%; margin-top: 1%; margin-right: 1%;">
-                                <div class="col-md-2 mb-2">
-                                    <label for="validationDefault01">DepositID</label>
-                                    <input value="{{ old('depositId') }}" type="text" class="form-control"
-                                        name="depositId" id="depositId" placeholder="Nhập số DepositID">
-                                    @error('depositId')
-                                        <span class="alert-danger-custom">{{ $message }}</span>
-                                    @enderror
-
-                                </div>
-                                <div class="col-md-1 mb-1">
+                                
+                                <div class="col-md-2 mb-1">
                                     <label for="validationDefault01">User name</label>
                                     <input class="form-control" value="{{ old('uname') }}" type="text" name="uname"
                                         id="uname" placeholder="User name" list="litsusername" onkeyup='searchUser(this)'>
@@ -30,7 +22,7 @@
                                         <span class="alert-danger-custom">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="col-md-1 mb-1">
+                                <div class="col-md-2 mb-1">
                                     <label for="validationDefault01">Note</label>
                                     <input data-type="currency" value="{{ old('note') }}" type="text" class="form-control"
                                         name="note" id="note" placeholder="Nhập note">
@@ -46,7 +38,7 @@
                                         <span class="alert-danger-custom">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="col-md-1 mb-1">
+                                <div class="col-md-2 mb-1">
                                     <label for="validationDefault01">Price In</label>
                                     <input class="form-control" value="{{ old('priceIn') }}" type="number" name="priceIn"
                                         min="1" id="priceIn" placeholder="Price In">
@@ -54,7 +46,7 @@
                                         <span class="alert-danger-custom">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="col-md-1 mb-1">
+                                <div class="col-md-2 mb-1">
                                     <label for="validationDefault01">Số hoá đơn</label>
                                     <input class="form-control" value="{{ old('SoHoadon') }}" type="text" name="SoHoadon"
                                         id="SoHoadon" placeholder="So hoa don" list="listbillcode"
@@ -71,7 +63,6 @@
                                         style="margin-top: 20px;">Reset</button>
                                     <script>
                                         function resetFormInsert() {
-                                            document.getElementById("depositId").value = "";
                                             document.getElementById("uname").value = "",
                                                 document.getElementById("note").value = "",
                                                 document.getElementById("dateInprice").value = "";
@@ -143,7 +134,6 @@
                                 <table class="table table-bordered table-striped" style="margin-top: 1%;">
                                     <thead>
                                         <tr>
-                                            <th>DepositID</th>
                                             <th>Uname</th>
                                             <th>Note</th>
                                             <th>date_inprice</th>
@@ -155,7 +145,6 @@
                                     <tbody id="myTable">
                                         @foreach ($data as $item)
                                             <tr>
-                                                <td>{{ $item->deposit }}</td>
                                                 <td><input class="form-control" style="width:70%;max-height:60% !important"
                                                         onchange="update{{ $item->id }}()" type="text"
                                                         value="{{ $item->uname }}" list="litsusername"
