@@ -121,7 +121,7 @@
                                         <tr>
                                             <td>{{$data['bills']->perPage()*($data['bills']->currentPage()-1)+$count}}</td>
                                             <td>
-                                                <a href="{{route('orders.bills.getBillById', $item->So_Hoadon)}}">{{$item->So_Hoadon}}</a>
+                                                <a target="_blank" href="{{route('orders.bills.getBillById', $item->So_Hoadon)}}">{{$item->So_Hoadon}}</a>
                                             </td>
                                             <td>{{$item['Order']->uname}}</td>
                                             <td>{{number_format($item->fresh()->PriceIn, 0)}}</td>

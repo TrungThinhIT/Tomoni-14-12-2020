@@ -152,6 +152,11 @@ class BillService
         $nowDate = now()->addDays(-2)->toDateString();
 
         $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard', 'listProduct.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
+        
+        foreach($bill as $value){
+            $value->setAttribute('date_payment', $value->Order->date_payment);
+        }
+
         $totalWeightReal = 0;
         $totalWeightKhoi = 0;
         //tính khối và khối thực tế
@@ -165,7 +170,7 @@ class BillService
         }
         $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->where('uname', $bill->first()->uname)->get();
         $codeorders = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->get('Codeorder')->toArray();
-        $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
+        $mua = Order::query()->whereIn('codeorder', $codeorders)->get();        
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
         $deDebt = 0;
         $money = 0;
@@ -183,20 +188,15 @@ class BillService
             $customer = $customer->whereBetween('date_payment', [$startDate, $endDate2]);
             $checkScroll = 1;
             foreach ($customer as $value) {
-                if ($value->depositID) {
-                    $deDebt += $value->price_in;
-                } else {
                     if ($value->date_payment < $endDate2) {
                         $deDebt -= $value->total;
-                        $moneyNeedToPay -= $value->total;
+                        $money -= $value->total;
                     }
-                }
                 $value->setAttribute('deDebt', $deDebt);
             }
         } else {
             $checkScroll = 0;
             $mua = $mua->sortBy('dateget');
-            // dd($mua);
             foreach ($mua as $value) {
                 if ($value->date_payment < $nowDate) {
                     $moneyNeedToPay -= $value->total;
@@ -218,7 +218,6 @@ class BillService
         }
         $hien_mau = $hien_mau->sortByDesc('dateget');
         $customer = $customer->sortByDesc('dateget');
-        // dd($customer);
 
         if (count($customer) >= 1) {
             $priceDebt = $customer->first()->deDebt;
@@ -230,6 +229,7 @@ class BillService
             return $this->orderExportExcel->ExportOrder($bill, $hien_mau);
         } else {
             $hien_mau = $hien_mau->groupBy('dateget')->paginate(10);
+            $bill = $bill->sortByDesc('date_payment');
             return [
                 'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'priceIn' => $priceIn, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
                 'moneyNeedToPay' => $money, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi, 'moneyRefund' => $moneyRefund, 'listRefund' => $listRefund

@@ -15,6 +15,7 @@
                         <div class="row" style="width: 100%">
                             <div class="card" style=" margin-left:1%; width:100%; ">
                                 <ul class="list-group list-group-flush">
+                                    
                                     @foreach ($data['bill'] as $items)
                                     @foreach ($items->listProduct as $item)
                                         <div class="card " style="width:100%">
@@ -192,7 +193,7 @@
                         </div>
                         <div style="float: left" class="mt-3">
                             <p style="font-weight: bold"> Số tiền cần thanh toán:
-                                {{ number_format($data['moneyNeedToPay'], 0) }}&ensp;&ensp;</p>
+                                {{ number_format($data['moneyNeedToPay'], 2) }}&ensp;&ensp;</p>
                         </div>
                         <div style="float: left" class="mt-3">
                             <p style="font-weight: bold"> Tổng khối lượng thực tế:
