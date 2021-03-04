@@ -143,12 +143,13 @@
                     <div style="float:left">
                         <div>
                             {{-- {{dd($data['priceDebt'])}} --}}
-                            Công nợ: {{number_format($data['priceDebt'], 0)}}
+                            {{-- Công nợ: {{number_format($data['priceDebt'], 0)}} --}}
                         </div>
-                        <div style="float: left" class="mt-3"><p style="font-weight: bold"> Số dư:  {{number_format($data['priceDebt'], 0)}}&ensp;&ensp;</p></div>
+                        <div style="float: left" class="mt-3"><p style="font-weight: bold"> Số dư:  {{number_format($data['priceIn']-$data['moneyNeedToPay']+$data['moneyRefund'], 0)}}&ensp;&ensp;</p></div>
                         <div style="float: left" class="mt-3"><p style="font-weight: bold"> Số tiền cần thanh toán:  {{number_format($data['moneyNeedToPay'], 0)}}&ensp;&ensp;</p></div>
                         <div style="float: left" class="mt-3"><p style="font-weight: bold"> Tổng khối lượng thực tế:  {{number_format($data['totalWeightReal'], 2)}} kg&ensp;&ensp;</p></div>
-                        <div style="float: left" class="mt-3"><p style="font-weight: bold"> Tổng khối lượng:  {{number_format($data['totalWeightKhoi'], 2)}} khối</p></div>
+                        <div style="float: left" class="mt-3"><p style="font-weight: bold"> Tổng khối lượng:  {{number_format($data['totalWeightKhoi'], 2)}} khối&ensp;&ensp;</p></div>
+                        <div style="float: left" class="mt-3 text-danger"><p style="font-weight: bold"> (Hoàn tiền:  {{number_format($data['moneyRefund'], 2)}}) </p></div>
                         <div class="mt-3" style="float:right">
                             {!! $data['hien_mau']->withQueryString()->links('commons.paginate') !!}
                         </div>
@@ -208,7 +209,46 @@
                         </tbody>
                     </div>
                     </table>
-                   
+                   <div>
+                    <h3>Tiền hoàn trả</h3>
+                    <table class="table table-bordered table-striped" style="margin-top: 1%;" id="paginateScroll">
+                        <thead>
+                            <tr>
+                                <th>Stt</th>
+                                <th>Date Time</th>
+                                <th>Note</th>
+                                <th>Refund</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="myTable">
+                            @php
+                                $count = 1;
+                            @endphp
+
+                            @foreach ($data['listRefund'] as $item)
+                                @php
+                                    $allPriceIn = 0;
+                                @endphp
+                                <tr>
+                                    <td>{{ $data['hien_mau']->perPage() * ($data['hien_mau']->currentPage() - 1) + $count }}
+                                    </td>
+                                    <td >
+                                        {{ Carbon\Carbon::parse($item->date_in)->format('d/m/Y') }}
+                                    </td>
+                                    <td>
+                                       {{$item->note}}
+                                    </td>
+                                    <td>
+                                        {{number_format($item->money)}}
+                                    </td>
+                                </tr>
+                                @php $count++; @endphp
+                            @endforeach
+                        </tbody>
+                    
+                </table>
+                   </div>
                     <div class="modal" id="modalDetail">
                         <div class="modal-dialog modal-lg" style="min-width: 40%;" >
                           <div class="modal-content">

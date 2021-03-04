@@ -10,6 +10,8 @@ use App\Models\LogAccountant;
 use App\Models\LogAdmin;
 use App\Models\Order;
 use App\Models\PaymentCustomer;
+use App\Models\Product;
+use App\Models\refundCustomerModel;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Transport;
 use Illuminate\Http\Request;
@@ -23,24 +25,37 @@ class BillService
     }
     public function getALlBillByUname(Request $request)
     {
+        $uname = Auth::user()->uname;
         $codeOrderByBill = Bill::select('Codeorder')->get()->toArray();
         $billcodes = DB::table('quanlythe')->where('Sohoadon', '!=', null)->select('Sohoadon')->distinct()->get()->toArray();
+        // foreach ($codeOrderByBill as  $value) {
+        //     $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
+        //     Bill::where('Codeorder', $value)->update([
+        //         'PriceOut' => $priceOrder->total
+        //     ]);
+        // }
+        // tính lại priceOut
         foreach ($codeOrderByBill as  $value) {
-            $priceOrder = DB::table('oder')->where('codeorder', $value)->first();
+            $priceO = 0;
+            $priceOrder = DB::table('product')->where('codeorder', $value)->get();
+            foreach ($priceOrder as $item) {
+                $priceO += $item->total;
+                $uname2 = $item->uname;
+            }
             Bill::where('Codeorder', $value)->update([
-                'PriceOut' => $priceOrder->total
+                'PriceOut' => $priceO,
+                'uname' => $uname2
             ]);
         }
-
         foreach ($billcodes as $value) {
-            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->selectRaw('sum(price_in) as totalPriceIn')->first();
+            $sumPriceIn = DB::table('quanlythe')->where('Sohoadon', $value->Sohoadon)->where('uname', $uname)->selectRaw('sum(price_in) as totalPriceIn')->first();
             Bill::where('So_Hoadon', $value->Sohoadon)->update([
                 'PriceIn' => $sumPriceIn->totalPriceIn
             ]);
         }
         $So_Hoadon = $request->So_Hoadon;
         $Date_Create = $request->Date_Create;
-        $uname = Auth::user()->uname;
+
 
         $bills = Bill::with('Order')->whereHas('Order', function ($query) use ($uname) {
             return $query->where('uname', $uname);
@@ -60,15 +75,14 @@ class BillService
         $priceDebt = 0;
         foreach ($bills as $value) {
             $priceDebt += ($value->PriceIn - $value->totalPriceOut);
-            $value->setAttribute('totalPriceDebt', $priceDebt);            # code...
+            $value->setAttribute('totalPriceDebt', $priceDebt);
         }
         $sumDebt = 0;
-        // dd($bills);
         foreach ($bills as $value) {
             $sumDebt += $value->PriceIn - $value->totalPriceOut;
         }
         $bills = $bills->sortByDESC('Date_Create')->paginate(10);
-        return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $uname, 'Date_Create' => $Date_Create,'sumDebt'=>$sumDebt];
+        return ['bills' => $bills, 'So_Hoadon' => $So_Hoadon, 'Uname' => $uname, 'Date_Create' => $Date_Create, 'sumDebt' => $sumDebt];
     }
 
     public function ExportALlBillByUname(Request $request)
@@ -127,7 +141,7 @@ class BillService
         $uname = Auth::user()->uname;
         $bill = Bill::where('So_Hoadon', $billcode)->with('Order')->whereHas('Order', function ($query) use ($uname) {
             return $query->where('uname', $uname);
-        })->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
+        })->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard', 'listProduct.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
         $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->get();
         $codeorders = Bill::where('So_Hoadon', $billcode)->where('uname', $uname)->where('deleted_at', null)->get('Codeorder')->toArray();
         $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
@@ -136,6 +150,15 @@ class BillService
         $moneyNeedToPay = 0;
         $totalWeightReal = 0;
         $totalWeightKhoi = 0;
+        $listRefund = refundCustomerModel::where('billcode', $billcode)->where('uname', $bill->first()->uname)->orderBy('date_in', 'DESC')->get();
+        $moneyRefund = $listRefund->sum('money');
+        $money = 0;
+        foreach ($bill as $item) {
+            $listProduct  = Product::where('codeorder', $item->Codeorder)->get();
+            foreach ($listProduct as $item) {
+                $money +=  $item->total;
+            }
+        }
         if ($startDate && $endDate) {
             $customer = $customer->whereBetween('dateget', [$startDate, $endDate2]);
             $checkScroll = 1;
@@ -145,7 +168,7 @@ class BillService
                 } else {
                     if ($value->date_payment < $endDate2) {
                         $deDebt -= $value->total;
-                        $moneyNeedToPay -= $value->total;
+                        $money -= $value->total;
                     }
                 }
                 $value->setAttribute('deDebt', $deDebt);
@@ -204,8 +227,8 @@ class BillService
 
             return [
                 'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
-                'moneyNeedToPay' => $moneyNeedToPay, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi,
-                'customer' => $customer
+                'moneyNeedToPay' => $money, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi,
+                'customer' => $customer, 'priceIn' => $priceIn, 'moneyRefund' => $moneyRefund, 'listRefund' => $listRefund
             ];
         }
     }
