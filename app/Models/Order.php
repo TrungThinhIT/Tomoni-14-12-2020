@@ -29,4 +29,7 @@ class Order extends Model
     public function LogUser(){
         return $this->hasMany(LogUser::class, 'codeorder', 'codeorder');
     }
+    public function listProduct(){
+        return $this->hasMany(Product::class,'codeorder','codeorder');
+    }
 }

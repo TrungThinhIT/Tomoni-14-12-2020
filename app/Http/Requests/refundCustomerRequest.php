@@ -24,10 +24,10 @@ class refundCustomerRequest extends FormRequest
     public function rules()
     {
         return [
-            'depositId'=>'required',
-            'dateInprice'=>'required|date',
-            'priceIn'=>'required|',
-            'uname'=>'required|exists:users,uname'
+            'dateInprice' => 'required|date',
+            'priceIn' => 'required|',
+            'uname' => 'required|exists:users,uname',
+            'SoHoadon' => 'required|exists:accoutant_order,So_Hoadon'
         ];
     }
 }

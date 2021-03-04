@@ -62,6 +62,7 @@ class InventoryService
         $inventories = collect($importeds)->merge($exporteds)->groupBy('Jancode');
 
         foreach ($inventories as $value) {
+            // dd($value);
             // if (count($value) > 1) {
             //     $returnProduct = returnProductModel::where('jancode', $value[0]->jan_code)->selectRaw('sum(quantity) as totalQuantity')->first();
             //     $TotalQuantity = $value[0]->totalQuantity - $value[1]->totalQuantity + $returnProduct->totalQuantity;
@@ -74,6 +75,7 @@ class InventoryService
                 $returnProduct = returnProductModel::where('jancode', $value[0]->jan_code)->selectRaw('sum(quantity) as totalQuantity')->first();
                 $TotalQuantity = $value[0]->totalQuantity - $value[1]->totalQuantity + $returnProduct->totalQuantity;
                 $value[0]->setAttribute('TotalQuantity', $TotalQuantity);
+                $value[1]->totalQuantity -= $returnProduct->totalQuantity;
             } else {
                 if ($value[0]->name_2) {
                     $returnProduct = returnProductModel::where('jancode', $value[0]->jan_code)->selectRaw('sum(quantity) as totalQuantity')->first();
@@ -118,7 +120,6 @@ class InventoryService
             $inventories = $inventories->where('action', 'Trả lại hàng mua');
         }
         $inventories = collect($inventories)->groupBy('codeorder');
-
         foreach ($inventories as $value) {
             $i = 0;
             foreach ($value->sortBy('created_at') as $item) {
@@ -126,13 +127,14 @@ class InventoryService
                     $item->setAttribute('debtQuantity', 0);
                     $i = $item->quantityUpdate;
                 } else {
-                    $item->setAttribute('debtQuantity', $item->quantityUpdate - $i);
+                    $item->setAttribute('debtQuantity',$item->quantityUpdate + $i);
                     $i = $item->quantityUpdate;
                 }
             }
             $value = $value->sortByDesc('created_at');
         }
         $inventories = $inventories->values();
+
         if ($request->ajax() || 'NULL') {
             $inventory = $inventories->paginate(1);
             return view('warehouses.includes.modalInventory', compact('inventory', 'jancode', 'status'));

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Orders;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\refundCustomerRequest;
+use App\Models\Bill;
 use App\Models\refundCustomerModel;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
@@ -55,9 +56,8 @@ class refundCustomerController extends Controller
      */
     public function store(refundCustomerRequest $request)
     {
-        //
+        
         $insert = refundCustomerModel::create([
-            'deposit' => $request->depositId,
             'uname' => $request->uname,
             'note' => $request->note,
             'date_in' => $request->dateInprice,
