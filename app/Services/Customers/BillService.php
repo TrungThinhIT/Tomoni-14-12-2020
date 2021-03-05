@@ -142,6 +142,9 @@ class BillService
         $bill = Bill::where('So_Hoadon', $billcode)->with('Order')->whereHas('Order', function ($query) use ($uname) {
             return $query->where('uname', $uname);
         })->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard', 'listProduct.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
+        foreach ($bill as $value) {
+            $value->setAttribute('date_payment', $value->Order->date_payment);
+        }
         $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->get();
         $codeorders = Bill::where('So_Hoadon', $billcode)->where('uname', $uname)->where('deleted_at', null)->get('Codeorder')->toArray();
         $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
@@ -224,7 +227,7 @@ class BillService
             return $this->orderExportExcel->ExportOrder($bill, $hien_mau);
         } else {
             $hien_mau = $hien_mau->groupBy('dateget')->paginate(10);
-
+            $bill = $bill->sortByDesc('date_payment');
             return [
                 'bill' => $bill, 'priceDebt' => $priceDebt, 'hien_mau' => $hien_mau, 'startDate' => $startDate, 'endDate' => $endDate, 'checkScroll' => $checkScroll,
                 'moneyNeedToPay' => $money, 'totalWeightReal' => $totalWeightReal, 'totalWeightKhoi' => $totalWeightKhoi,

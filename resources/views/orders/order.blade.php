@@ -276,7 +276,7 @@
                                 <tr>
                                     <th>Stt</th>
                                     <th>Date Time</th>
-                                    <th>Deposit</th>
+                                    <th>Note</th>
                                     <th>Refund</th>
                                     
                                 </tr>
@@ -297,7 +297,7 @@
                                             {{ Carbon\Carbon::parse($item->date_in)->format('d/m/Y') }}
                                         </td>
                                         <td>
-                                           {{$item->deposit}}
+                                           {{$item->note}}
                                         </td>
                                         <td>
                                             {{number_format($item->money)}}
