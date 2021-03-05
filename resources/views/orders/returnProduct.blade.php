@@ -21,7 +21,7 @@
                                 <div class="col-md-2 mb-1">
                                     <label for="validationDefault01">CodeOrder</label>
                                     <input class="form-control" value="{{ old('CodeOrder') }}" type="text" name="CodeOrder"
-                                        id="CodeOrder" placeholder="CodeOrder" list="listbillcode"
+                                        id="CodeOrder" placeholder="CodeOrder" list="listbillcode" onchange="getUname(this)"
                                         onkeyup='searchCodeOrder(this)'>
                                     <datalist id='listbillcode'></datalist>
                                     @error('CodeOrder')
@@ -246,6 +246,19 @@
 
         function deleteRow(row) {
             $(row).parent().parent().remove()
+        }
+        function getUname(obj){
+            var codeorder = obj.value;
+            $.ajax({
+                type:"Get",
+                url:"./return-product/get-uname/"+codeorder,
+                success:function(response){
+                    $("#uname").val(response.uname)
+                },error:function(res){
+                    console.log(res)
+                }
+            })
+            return
         }
         $("#delete").click(function() {
             $(this).parent().parent().remove()

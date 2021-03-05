@@ -136,8 +136,8 @@ class BillService
         $startDate = Carbon::create(2020, 10, 1);
         $endDate = $request->endDate;
         $date = Carbon::parse($endDate);
-        $endDate2 = $date->addDays(1);
-        $nowDate = now()->addDays(-2);
+        $endDate2 = $date->addDays(1)->toDateString();
+        $nowDate = now()->addDays(-2)->toDateString();
         $uname = Auth::user()->uname;
         $bill = Bill::where('So_Hoadon', $billcode)->with('Order')->whereHas('Order', function ($query) use ($uname) {
             return $query->where('uname', $uname);
@@ -145,9 +145,9 @@ class BillService
         foreach ($bill as $value) {
             $value->setAttribute('date_payment', $value->Order->date_payment);
         }
-        $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->get();
+        $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->where('uname', $uname)->get();
         $codeorders = Bill::where('So_Hoadon', $billcode)->where('uname', $uname)->where('deleted_at', null)->get('Codeorder')->toArray();
-        $mua = Order::query()->whereIn('codeorder', $codeorders)->get();
+        $mua = Order::query()->whereIn('codeorder', $codeorders)->with('listProduct')->get();
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
         $deDebt = 0;
         $moneyNeedToPay = 0;
@@ -155,6 +155,13 @@ class BillService
         $totalWeightKhoi = 0;
         $listRefund = refundCustomerModel::where('billcode', $billcode)->where('uname', $bill->first()->uname)->orderBy('date_in', 'DESC')->get();
         $moneyRefund = $listRefund->sum('money');
+        ////
+        $hien_mau = PaymentCustomer::query()->where('Sohoadon', $billcode)->where('uname', $uname)->orderBy('dateget', 'ASC')->get();
+        $priceIn = 0;
+        foreach ($hien_mau as $value) {
+            $value->setAttribute('priceIn', $priceIn += $value->price_in);
+        }
+        ////
         $money = 0;
         foreach ($bill as $item) {
             $listProduct  = Product::where('codeorder', $item->Codeorder)->get();
@@ -163,15 +170,18 @@ class BillService
             }
         }
         if ($startDate && $endDate) {
-            $customer = $customer->whereBetween('dateget', [$startDate, $endDate2]);
+            $customer = $customer->whereBetween('date_payment', [$startDate, $endDate2]);
             $checkScroll = 1;
+            $money = 0;
             foreach ($customer as $value) {
                 if ($value->depositID) {
                     $deDebt += $value->price_in;
                 } else {
                     if ($value->date_payment < $endDate2) {
-                        $deDebt -= $value->total;
-                        $money -= $value->total;
+                        foreach ($value->listProduct as $item) {
+                            $deDebt -= $value->total;
+                            $money += $item->total;
+                        }
                     }
                 }
                 $value->setAttribute('deDebt', $deDebt);
@@ -208,11 +218,7 @@ class BillService
         //     }
         //     $value->setAttribute('deDebt', $deDebt);
         // }
-        $hien_mau = PaymentCustomer::query()->where('Sohoadon', $billcode)->where('uname', $uname)->orderBy('dateget', 'ASC')->get();
-        $priceIn = 0;
-        foreach ($hien_mau as $value) {
-            $value->setAttribute('priceIn', $priceIn += $value->price_in);
-        }
+
 
         $hien_mau = $hien_mau->sortByDesc('dateget');
         $customer = $customer->sortByDesc('dateget');

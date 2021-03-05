@@ -55,4 +55,8 @@ class returnProductController extends Controller
         $data = Product::where('jan_code', $jancode)->where('codeorder', $request->codeorder)->select('price', 'quantity')->get();
         return response()->json($data);
     }
+    public function getUname($codeorder){
+        $data = Bill::where('Codeorder',$codeorder)->select('uname')->first();
+        return $data;
+    }
 }

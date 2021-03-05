@@ -271,6 +271,8 @@
                     </table>
                     <div>
                         <h3>Tiền hoàn trả</h3>
+                        <div style="float: right" class="mt-3">
+                            {!! $data['listRefund']->withQueryString()->links('commons.paginateBillOrder') !!}</div>
                         <table class="table table-bordered table-striped" style="margin-top: 1%;" id="paginateScroll">
                             <thead>
                                 <tr>
@@ -291,7 +293,7 @@
                                         $allPriceIn = 0;
                                     @endphp
                                     <tr>
-                                        <td>{{ $data['hien_mau']->perPage() * ($data['hien_mau']->currentPage() - 1) + $count }}
+                                        <td>{{ $data['listRefund']->perPage() * ($data['listRefund']->currentPage() - 1) + $count }}
                                         </td>
                                         <td >
                                             {{ Carbon\Carbon::parse($item->date_in)->format('d/m/Y') }}

@@ -179,8 +179,14 @@ class BillService
                 $money +=  $item->total;
             }
         }
+        ////////////
+        $hien_mau = PaymentCustomer::where('uname', $bill->first()->uname)->where('Sohoadon', $billcode)->orderBy('dateget', 'ASC')->get();
+        $priceIn = 0;
+        foreach ($hien_mau as $value) {
+            $value->setAttribute('priceIn', $priceIn += $value->price_in);
+        }
         //tính lại số dư nếu có tiền hoàn trả
-        $listRefund = refundCustomerModel::where('billcode', $billcode)->where('uname', $bill->first()->uname)->orderBy('date_in', 'DESC')->get();
+        $listRefund = refundCustomerModel::where('billcode', $billcode)->where('uname', $bill->first()->uname)->orderBy('date_in', 'DESC')->get()->paginate(50);
         $moneyRefund = $listRefund->sum('money');
         if ($startDate && $endDate) {
             $customer = $customer->whereBetween('date_payment', [$startDate, $endDate2]);
@@ -212,11 +218,7 @@ class BillService
                 $value->setAttribute('deDebt', $deDebt);
             }
         }
-        $hien_mau = PaymentCustomer::where('uname', $bill->first()->uname)->where('Sohoadon', $billcode)->orderBy('dateget', 'ASC')->get();
-        $priceIn = 0;
-        foreach ($hien_mau as $value) {
-            $value->setAttribute('priceIn', $priceIn += $value->price_in);
-        }
+        
         $hien_mau = $hien_mau->sortByDesc('dateget');
         $customer = $customer->sortByDesc('dateget');
 

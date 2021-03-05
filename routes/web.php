@@ -159,6 +159,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
             Route::get('/search-codeorder', [returnProductController::class, 'searchCodeOrder'])->name('searchCodeOrder');
             Route::get('/search-jancode',[returnProductController::class,'searchJancode'])->name('searchJancode');
             Route::get('/info/{jancode}',[returnProductController::class,'infoJancode'])->name('infoJancode');
+            Route::get('get-uname/{codeorder}',[returnProductController::class,'getUname'])->name('getUname');
         });
         Route::get('/customer-debt', [CustomerController::class, 'index'])->name('customer-debt');
     });
