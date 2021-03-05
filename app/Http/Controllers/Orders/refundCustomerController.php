@@ -56,7 +56,7 @@ class refundCustomerController extends Controller
      */
     public function store(refundCustomerRequest $request)
     {
-        $check = Bill::where([['uname', $request->uname], ['So_Hoadon', $request->So_Hoadon]])->get()->toArray();
+        $check = Bill::where([['uname', $request->uname], ['So_Hoadon', $request->SoHoadon]])->get()->toArray();
         if (!empty($check)) {
             $insert = refundCustomerModel::create([
                 'uname' => $request->uname,

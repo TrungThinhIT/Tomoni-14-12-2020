@@ -36,7 +36,7 @@ class ExportedService {
             $exporteds = $exporteds->where('product_standard.jan_code', $jan_code);
         }
         
-        $exporteds = $exporteds->orderBy('Date_Create', 'DESC')->paginate(10);
+        $exporteds = $exporteds->orderBy('Date_Create', 'DESC')->paginate(50);
         return ['exporteds' => $exporteds, 'jan_code'=> $jan_code, 'name'=> $name];
     }
 

@@ -152,11 +152,9 @@ class BillService
         $nowDate = now()->addDays(-2)->toDateString();
 
         $bill = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->with('Order.Transport', 'Product.ProductStandard', 'listProduct.ProductStandard')->orderBy('Date_Create', 'DESC')->get();
-        
-        foreach($bill as $value){
+        foreach ($bill as $value) {
             $value->setAttribute('date_payment', $value->Order->date_payment);
         }
-
         $totalWeightReal = 0;
         $totalWeightKhoi = 0;
         //tính khối và khối thực tế
@@ -170,7 +168,7 @@ class BillService
         }
         $nap = PaymentCustomer::query()->where('Sohoadon', $billcode)->where('uname', $bill->first()->uname)->get();
         $codeorders = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->get('Codeorder')->toArray();
-        $mua = Order::query()->whereIn('codeorder', $codeorders)->get();        
+        $mua = Order::query()->whereIn('codeorder', $codeorders)->with('listProduct')->get();
         $customer = collect($nap)->merge($mua)->sortBy('dateget');
         $deDebt = 0;
         $money = 0;
@@ -187,11 +185,14 @@ class BillService
         if ($startDate && $endDate) {
             $customer = $customer->whereBetween('date_payment', [$startDate, $endDate2]);
             $checkScroll = 1;
+            $money = 0;
             foreach ($customer as $value) {
-                    if ($value->date_payment < $endDate2) {
-                        $deDebt -= $value->total;
-                        $money -= $value->total;
+                if ($value->date_payment < $endDate2) {
+                    foreach ($value->listProduct as $item) {
+                        $deDebt -= $item->total;
+                        $money += $item->total;
                     }
+                }
                 $value->setAttribute('deDebt', $deDebt);
             }
         } else {
@@ -253,6 +254,9 @@ class BillService
         $currentSoHoadon = $currentBill->So_Hoadon;
         $billNew = Bill::where('Codeorder', $codeorder)->where('deleted_at', null)->update([
             'So_Hoadon' => $request->sohoadon
+        ]);
+        Order::where('codeorder', $codeorder)->where('SohoaDon', $currentBill->So_Hoadon)->update([
+            'SohoaDon' => $request->sohoadon
         ]);
         if ($billNew) {
             $checkBill = Bill::where('So_Hoadon', $currentSoHoadon)->first();
@@ -345,16 +349,16 @@ class BillService
             ]);
             $codeorder = Order::where('codeorder', $request->Codeorder)->with('listProduct')->get();
             foreach ($codeorder as $items) {
-                foreach($items->listProduct as $item){
-                Inventory::create([
-                    'action' => 'Đã bán',
-                    'jancode' => $item->jan_code,
-                    'codeorder' => $request->Codeorder,
-                    'quantityUpdate' => $item->quantity,
-                    'uname' => Auth::user()->uname,
-                    'created_at' => now()
-                ]);
-            }
+                foreach ($items->listProduct as $item) {
+                    Inventory::create([
+                        'action' => 'Đã bán',
+                        'jancode' => $item->jan_code,
+                        'codeorder' => $request->Codeorder,
+                        'quantityUpdate' => $item->quantity,
+                        'uname' => Auth::user()->uname,
+                        'created_at' => now()
+                    ]);
+                }
             }
             $order = Order::where('codeorder', $request->Codeorder)->update([
                 'Sohoadon' => $request->So_Hoadon
@@ -412,7 +416,6 @@ class BillService
     {
 
         $codeorder = Bill::where('Id', $id)->with('Order.Product')->first();
-        // dd($codeorder);
         $billcode = $codeorder->So_Hoadon;
         $log = LogAccountant::create([
             'jan_code' => $codeorder->Order->Product->jan_code,
@@ -422,9 +425,15 @@ class BillService
             'note' => 'Xoá hoá đơn',
             'DateAct' => now()
         ]);
+
         Bill::where('Id', $codeorder->Id)->update([
-            'deleted_at' => now()
+            'deleted_at' => now(),
         ]);
+        //ko delete được
+        Order::where('codeorder', $codeorder->Codeorder)->where('SohoaDon', $codeorder->So_Hoadon)->update([
+            'SohoaDon' => Null
+        ]);
+        //
         if ($log) {
             $status = Bill::where('So_Hoadon', $billcode)->where('deleted_at', null)->first();
             if ($status !== null) {

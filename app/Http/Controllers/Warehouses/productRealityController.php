@@ -83,7 +83,7 @@ class productRealityController extends Controller
             return $this->productRealityExport->ExportProduct($products);
         }
 
-        $product_reality = $product_reality->with('InvoiceBill')->orderBy('delivery_time', 'DESC')->paginate(10);
+        $product_reality = $product_reality->with('InvoiceBill')->orderBy('delivery_time', 'DESC')->paginate(50);
         return view('warehouses.includes.tableProductReality', compact('product_reality'));
     }
 
