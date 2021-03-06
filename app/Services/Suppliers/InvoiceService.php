@@ -232,7 +232,7 @@ class InvoiceService
             'jancode' => $request->Jancode,
             'codeorder' => $request->CodeorderItem,
             'uname' => Auth::user()->uname,
-            'action' => 'Thêm mới hoá đơn',
+            'action' => 'Đã mua',
             'quantityUpdate' => $request->Quantity,
             'created_at' => now()
         ]);

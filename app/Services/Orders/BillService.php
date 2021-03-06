@@ -229,7 +229,7 @@ class BillService
         }
         if ($request->check == 'true') {
             $hien_mau = $hien_mau;
-            return $this->orderExportExcel->ExportOrder($bill, $hien_mau);
+            return $this->orderExportExcel->ExportOrder($bill, $hien_mau,$money,$priceIn);
         } else {
             $hien_mau = $hien_mau->groupBy('dateget')->paginate(10);
             $bill = $bill->sortByDesc('date_payment');
