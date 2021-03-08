@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 
 class OrderExportExcel
 {
+    public $arr = array();
     public function ExportOrder($bills, $hien_mau, $money, $priceIn)
     {
         // $fileType = IOFactory::identify(public_path('excels/template/order.xlsx'));
@@ -34,6 +35,11 @@ class OrderExportExcel
 
         $path = 'excels/exports/' . $nameFileExcel;
         $objWriter->save(public_path($path));
+        foreach($this->arr as $item){
+            if(file_exists(public_path('images/'.$item))){
+                unlink(public_path('images/'.$item));
+            }
+        }
         return redirect($path);
     }
 
@@ -47,7 +53,7 @@ class OrderExportExcel
         foreach ($bills as $key => $items) {
             foreach ($items->listProduct as $item) {
                 if ((strpos($item->urlimg, 'http') === 0)) {
-                    $pic1 = $item->urlimg;
+                    $pic2 = $item->urlimg;
                 } else {
                     $url = Str::after($item->urlimg, '../');
                     $pic2 = 'https://tomoniglobal.com/' . $url;
@@ -58,33 +64,30 @@ class OrderExportExcel
                     $namePic = Str::random(10);
                 }
                 $path = public_path('images/' . $namePic . '.png');
-
-                $check = file_put_contents($path, file_get_contents($pic2));
-                // Convert it to a jpeg file with 100% qualit
-                if ($check) {
-                    $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-                    $drawing->setName('Paid');
-                    $drawing->setDescription('Paid');
-                    $drawing->setPath(public_path('images/' . $namePic . '.png'));
-                    $drawing->setCoordinates('E' . $row);
-                    $drawing->setOffsetX(55);
-                    $drawing->setOffsety(28);
-                    $drawing->setHeight(130);
-                    $objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight(120); //fix chiều cao cột
-                    $drawing->setWorksheet($objPHPExcel->getActiveSheet());
-                }
+                $this->arr[] = $namePic.'.png';
+                (file_put_contents($path, $this->file_get_contents_curl($pic2)));
+                $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+                $drawing->setName('Paid');
+                $drawing->setDescription('Paid');
+                $drawing->setCoordinates('E' . $row);
+                $drawing->setPath(public_path('images/' . $namePic . '.png'));
+                $drawing->setOffsetX(55);
+                $drawing->setOffsetY(20);
+                $drawing->setHeight(130);
+                
+                $objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight(120); //fix chiều cao cột
+                $drawing->setWorksheet($objPHPExcel->getActiveSheet());
                 $setCell
                     ->setCellValue('A' . $row, $index) //date
                     ->setCellValue('B' . $row, $items->Codeorder) //invoice
                     ->setCellValue('C' . $row, $item->jan_code) //jancode
                     ->setCellValue('D' . $row, $item->ProductStandard->name_2) //tên hàng
-                    // ->setCellValue('E' . $row, $item->ProductStandard->name_2)
                     ->setCellValue('F' . $row, $item->item_in_box) //Số thùng
                     ->setCellValue('G' . $row, $item->quantity / $item->item_in_box) //Số lượng trên 1 thùng
                     ->setCellValue('H' . $row, $item->quantity) //tổng số lượng
                     ->setCellValue('I' . $row, $item->price) //đơn giá
                     ->setCellValue('J' . $row, "") //TỔng phụ
-                    ->setCellValue('K' . $row, $item->Tax) //Tax
+                    ->setCellValue('K' . $row, $item->tien_thue) //Tax
                     ->setCellValue('L' . $row, "") //chiết khấu
                     ->setCellValue('M' . $row, $item->quantity * $item->price) // Tổng tiên
                     ->setCellValue('N' . $row, $item->ProductStandard->weight) //Khối lượng
@@ -93,18 +96,18 @@ class OrderExportExcel
                     ->setCellValue('Q' . $row, $item->ProductStandard->width) //rộng
                     ->setCellValue('R' . $row, $item->ProductStandard->weight) //cân nặng
                     ->setCellValue('S' . $row, $item->totalWeightkhoi) //số khối
-                    ->setCellValue('T' . $row, "") //web order
+                    ->setCellValue('T' . $row, $item->link) //web order
                     ->setCellValue('U' . $row, $items->Order->date_payment) //hạn thanh toán
                     ->setCellValue('V' . $row,  $items->Order->date_delivery) //ngày có hàng
                     ->setCellValue('W' . $row, $item->ProductStandard->note); //Tình trạng
                 // ->setCellValue('G' . $row, $item->price)
                 // ->setCellValue('H' . $row, '=F' . $row . '*G' . $row); //them dong text vao cot H, su dung ham tinh toan mac dinh trong excel de tinh gia tri
-
+                // $objPHPExcel->getActiveSheet()->getCell('T'.$row)->getHyperlink()->setUrl($item->link);//set click link
                 $index++;
                 $row++;
-               // chưa xóa hình trong folder
             }
         }
+        $setCell->setCellValue('J6', '=SUM(J8:J' . $row . ')');
         $setCell->setCellValue('W4', $money);
         $setCell->setCellValue('W5', $priceIn);
         $setCell->getColumnDimension('D')->setAutoSize(true);
@@ -113,23 +116,8 @@ class OrderExportExcel
         // $setCell->getColumnDimension('E')->setAutoSize(true);
         $setCell->getColumnDimension('U')->setAutoSize(true);
         $setCell->getColumnDimension('V')->setAutoSize(true);
+        $setCell->getColumnDimension('T')->setAutoSize(true);
         // \PhpOffice\PhpSpreadsheet\Cell\Cell::setValueBinder( new \PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder() );
-        // $setCell->getCell('A'.$row)->setValue('Please remit payment to the following bank account Bank Name： RAKUTEN BANK, LTD.\n
-        // Branch Name： HEAD OFFICE\n
-        // SWIFT Code / BIC　:RAKTJPJT( RAKTJPJTXXX)\n
-        // Address： 2-16-5 KONAN, MINATO-KU, TOKYO, JAPAN\n
-        // Account Number: 7991468 \n
-        // Beneficiary Name: TOMONILOGISTICS CO.,LTD\n
-        // Beneficiary Address: OAZA KAMINOKAWA 5101-1,KAWACHI GUN,KAMINOKAWAMACHI,\n
-        // TOCHIGI KEN,329-0611,JAPAN ');
-        // $setCell->setCellValue('A' . $row, 'Please remit payment to the following bank account Bank Name： RAKUTEN BANK, LTD.
-        // Branch Name： HEAD OFFICE
-        // SWIFT Code / BIC　:RAKTJPJT( RAKTJPJTXXX)
-        // Address： 2-16-5 KONAN, MINATO-KU, TOKYO, JAPAN\n
-        // Account Number: 7991468 
-        // Beneficiary Name: TOMONILOGISTICS CO.,LTD
-        // Beneficiary Address: OAZA KAMINOKAWA 5101-1,KAWACHI GUN,KAMINOKAWAMACHI,
-        // TOCHIGI KEN,329-0611,JAPAN ')->getStyle('A' . $row)->getAlignment()->setWrapText(true);
         // $setCell->getColumnDimension('A')->setAutoSize(true);
         // $setCell->getRowDimension($row)->setRowHeight(140);
     }
