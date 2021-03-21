@@ -35,11 +35,7 @@ class OrderExportExcel
 
         $path = 'excels/exports/' . $nameFileExcel;
         $objWriter->save(public_path($path));
-        foreach($this->arr as $item){
-            if(file_exists(public_path('images/'.$item))){
-                unlink(public_path('images/'.$item));
-            }
-        }
+       
         return redirect($path);
     }
 
@@ -74,7 +70,6 @@ class OrderExportExcel
                 $drawing->setOffsetX(55);
                 $drawing->setOffsetY(20);
                 $drawing->setHeight(130);
-                
                 $objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight(120); //fix chiều cao cột
                 $drawing->setWorksheet($objPHPExcel->getActiveSheet());
                 $setCell
